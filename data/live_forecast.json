@@ -2,65 +2,418 @@
   "status": "ok",
   "symbol": "GC=F",
   "instrument": "COMEX Gold Futures",
-  "updated_utc": "2026-08-09T03:30:36.064980+00:00",
+  "updated_utc": "2026-08-09T03:40:13.216448+00:00",
   "latest_market_time": "2026-08-07T16:00:00-04:00",
   "latest_price": 4399.7,
   "change_pct": 3.718,
+  "regime": {
+    "overall": "Neutral / mixed",
+    "trend": "Mixed / transitional",
+    "macro": "Mixed",
+    "macro_score": 0,
+    "volatility": "Normal",
+    "volatility_percentile": 0.4881
+  },
   "indicators": {
     "ema20": 4129.05,
     "ema50": 4202.1,
+    "ema200": 4277.75,
     "rsi14": 64.92,
-    "atr14_pct": 1.82,
-    "trend": "Downtrend"
+    "atr14_pct": 1.82
+  },
+  "levels": {
+    "daily_close_reference": 4340.7,
+    "support_20d": 3964.2,
+    "resistance_20d": 4371.5,
+    "support_60d": 3962.5,
+    "resistance_60d": 4722.7,
+    "atr14_dollars": 78.79,
+    "expected_move_1d": [
+      4261.91,
+      4419.49
+    ],
+    "expected_move_5d": [
+      4164.52,
+      4516.88
+    ]
+  },
+  "factors": [
+    {
+      "key": "dxy",
+      "name": "US Dollar Index",
+      "symbol": "DX-Y.NYB",
+      "value": 99.6,
+      "change_5d_pct": -0.2,
+      "change_20d_pct": -1.36,
+      "impact": "Supportive",
+      "reason": "Dollar has weakened over 20 trading days"
+    },
+    {
+      "key": "us10y",
+      "name": "US 10Y Yield",
+      "symbol": "^TNX",
+      "value": 4.66,
+      "change_5d_pct": -1.79,
+      "change_20d_pct": 1.99,
+      "impact": "Neutral",
+      "reason": "10Y yield is range-bound"
+    },
+    {
+      "key": "silver",
+      "name": "Silver Futures",
+      "symbol": "SI=F",
+      "value": 63.332,
+      "change_5d_pct": 9.97,
+      "change_20d_pct": 5.89,
+      "impact": "Neutral",
+      "reason": "Silver breadth is mixed"
+    },
+    {
+      "key": "vix",
+      "name": "VIX",
+      "symbol": "^VIX",
+      "value": 14.9,
+      "change_5d_pct": -6.82,
+      "change_20d_pct": -0.86,
+      "impact": "Risk-on",
+      "reason": "Low equity-volatility regime"
+    },
+    {
+      "key": "spy",
+      "name": "S&P 500 ETF",
+      "symbol": "SPY",
+      "value": 773.26,
+      "change_5d_pct": 3.51,
+      "change_20d_pct": 2.43,
+      "impact": "Neutral",
+      "reason": "Equity trend is mixed"
+    },
+    {
+      "key": "tlt",
+      "name": "20+Y Treasury ETF",
+      "symbol": "TLT",
+      "value": 82.76,
+      "change_5d_pct": 0.62,
+      "change_20d_pct": -2.02,
+      "impact": "Headwind",
+      "reason": "Long-duration bonds are weak"
+    }
+  ],
+  "factor_availability": {
+    "silver": true,
+    "dxy": true,
+    "us10y": true,
+    "vix": true,
+    "spy": true,
+    "tlt": true
   },
   "forecasts": [
     {
       "horizon_days": 1,
-      "probability_up": 0.4487,
+      "probability_up": 0.4684,
+      "probability_down": 0.5316,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4344.1,
+      "forecast_mid": 4342.57,
       "range_20_80": [
-        4309.42,
-        4382.13
+        4311.51,
+        4376.26
       ],
-      "backtest_accuracy": 0.5198,
+      "backtest_accuracy": 0.5465,
       "naive_baseline": 0.5635,
-      "brier_score": 0.2619,
-      "test_observations": 252
+      "backtest_edge": -0.017,
+      "brier_score": 0.2545,
+      "model_agreement": 0.75,
+      "test_observations": 252,
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.3824,
+          "backtest_accuracy": 0.5119,
+          "brier_score": 0.2663,
+          "weight": 0.2127
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.4452,
+          "backtest_accuracy": 0.5595,
+          "brier_score": 0.2488,
+          "weight": 0.2715
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.3415,
+          "backtest_accuracy": 0.5595,
+          "brier_score": 0.2556,
+          "weight": 0.271
+        },
+        {
+          "name": "Regime KNN",
+          "probability_up": 0.5022,
+          "backtest_accuracy": 0.5476,
+          "brier_score": 0.2493,
+          "weight": 0.2447
+        }
+      ]
     },
     {
       "horizon_days": 5,
-      "probability_up": 0.4181,
-      "signal": "Bearish bias",
+      "probability_up": 0.48,
+      "probability_down": 0.52,
+      "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4356.77,
+      "forecast_mid": 4356.25,
       "range_20_80": [
-        4267.7,
-        4445.39
+        4273.79,
+        4433.43
       ],
-      "backtest_accuracy": 0.4683,
+      "backtest_accuracy": 0.4623,
       "naive_baseline": 0.5714,
-      "brier_score": 0.2555,
-      "test_observations": 252
+      "backtest_edge": -0.1091,
+      "brier_score": 0.2869,
+      "model_agreement": 0.5,
+      "test_observations": 252,
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.2577,
+          "backtest_accuracy": 0.4365,
+          "brier_score": 0.3183,
+          "weight": 0.25
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.4535,
+          "backtest_accuracy": 0.4246,
+          "brier_score": 0.2599,
+          "weight": 0.25
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.5279,
+          "backtest_accuracy": 0.4603,
+          "brier_score": 0.3024,
+          "weight": 0.25
+        },
+        {
+          "name": "Regime KNN",
+          "probability_up": 0.5526,
+          "backtest_accuracy": 0.5278,
+          "brier_score": 0.2668,
+          "weight": 0.25
+        }
+      ]
     },
     {
       "horizon_days": 20,
-      "probability_up": 0.4137,
-      "signal": "Bearish bias",
+      "probability_up": 0.4916,
+      "probability_down": 0.5084,
+      "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4405.25,
+      "forecast_mid": 4387.09,
       "range_20_80": [
-        4254.97,
-        4588.95
+        4241.86,
+        4577.09
       ],
-      "backtest_accuracy": 0.4643,
+      "backtest_accuracy": 0.3413,
       "naive_baseline": 0.6032,
-      "brier_score": 0.2689,
-      "test_observations": 252
+      "backtest_edge": -0.2619,
+      "brier_score": 0.3421,
+      "model_agreement": 0.75,
+      "test_observations": 252,
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.3311,
+          "backtest_accuracy": 0.2579,
+          "brier_score": 0.4396,
+          "weight": 0.25
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.4667,
+          "backtest_accuracy": 0.2738,
+          "brier_score": 0.3067,
+          "weight": 0.25
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.4252,
+          "backtest_accuracy": 0.4048,
+          "brier_score": 0.3372,
+          "weight": 0.25
+        },
+        {
+          "name": "Regime KNN",
+          "probability_up": 0.6897,
+          "backtest_accuracy": 0.4286,
+          "brier_score": 0.2849,
+          "weight": 0.25
+        }
+      ]
     }
   ],
   "series": [
+    {
+      "date": "2025-05-30",
+      "close": 3288.9
+    },
+    {
+      "date": "2025-06-02",
+      "close": 3370.6
+    },
+    {
+      "date": "2025-06-03",
+      "close": 3350.2
+    },
+    {
+      "date": "2025-06-04",
+      "close": 3373.5
+    },
+    {
+      "date": "2025-06-05",
+      "close": 3350.7
+    },
+    {
+      "date": "2025-06-06",
+      "close": 3322.7
+    },
+    {
+      "date": "2025-06-09",
+      "close": 3332.1
+    },
+    {
+      "date": "2025-06-10",
+      "close": 3320.9
+    },
+    {
+      "date": "2025-06-11",
+      "close": 3321.3
+    },
+    {
+      "date": "2025-06-12",
+      "close": 3380.9
+    },
+    {
+      "date": "2025-06-13",
+      "close": 3431.2
+    },
+    {
+      "date": "2025-06-16",
+      "close": 3396.4
+    },
+    {
+      "date": "2025-06-17",
+      "close": 3386.6
+    },
+    {
+      "date": "2025-06-18",
+      "close": 3389.8
+    },
+    {
+      "date": "2025-06-20",
+      "close": 3368.1
+    },
+    {
+      "date": "2025-06-23",
+      "close": 3377.7
+    },
+    {
+      "date": "2025-06-24",
+      "close": 3317.4
+    },
+    {
+      "date": "2025-06-25",
+      "close": 3327.1
+    },
+    {
+      "date": "2025-06-26",
+      "close": 3333.5
+    },
+    {
+      "date": "2025-06-27",
+      "close": 3273.7
+    },
+    {
+      "date": "2025-06-30",
+      "close": 3294.4
+    },
+    {
+      "date": "2025-07-01",
+      "close": 3336.7
+    },
+    {
+      "date": "2025-07-02",
+      "close": 3348.0
+    },
+    {
+      "date": "2025-07-03",
+      "close": 3331.6
+    },
+    {
+      "date": "2025-07-04",
+      "close": 3332.5
+    },
+    {
+      "date": "2025-07-07",
+      "close": 3332.2
+    },
+    {
+      "date": "2025-07-08",
+      "close": 3307.0
+    },
+    {
+      "date": "2025-07-09",
+      "close": 3311.6
+    },
+    {
+      "date": "2025-07-10",
+      "close": 3317.4
+    },
+    {
+      "date": "2025-07-11",
+      "close": 3356.0
+    },
+    {
+      "date": "2025-07-14",
+      "close": 3351.5
+    },
+    {
+      "date": "2025-07-15",
+      "close": 3329.8
+    },
+    {
+      "date": "2025-07-16",
+      "close": 3352.5
+    },
+    {
+      "date": "2025-07-17",
+      "close": 3340.1
+    },
+    {
+      "date": "2025-07-18",
+      "close": 3353.0
+    },
+    {
+      "date": "2025-07-21",
+      "close": 3401.9
+    },
+    {
+      "date": "2025-07-22",
+      "close": 3439.2
+    },
+    {
+      "date": "2025-07-23",
+      "close": 3394.1
+    },
+    {
+      "date": "2025-07-24",
+      "close": 3371.0
+    },
+    {
+      "date": "2025-07-25",
+      "close": 3334.0
+    },
     {
       "date": "2025-07-28",
       "close": 3309.1
@@ -1102,6 +1455,6 @@
       "close": 4340.7
     }
   ],
-  "methodology": "Logistic-regression ensemble-style feature model using momentum, EMA trend, RSI, volatility, ATR and z-score. Probabilities are shrunk toward 50% when recent holdout performance is weak. Price bands use historical forward-return distributions with a small probability tilt.",
-  "disclaimer": "Research/education only. Market data may be delayed. Forecasts are probabilistic and can be wrong; they are not trading or investment advice."
+  "methodology": "Multi-factor ensemble using gold trend/momentum/volatility plus cross-asset context from the US dollar, Treasury yields, silver, VIX, equities and long-duration bonds. Four classifiers are combined and probabilities are shrunk toward 50% when recent time-ordered holdout performance is weak. Forecast price bands use historical forward-return distributions.",
+  "disclaimer": "Research/education only. Market data may be delayed. Forecasts are probabilistic, can fail during news shocks and are not trading or investment advice."
 }
