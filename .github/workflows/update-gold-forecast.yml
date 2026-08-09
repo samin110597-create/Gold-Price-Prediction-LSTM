@@ -7,6 +7,7 @@ on:
     paths:
       - "multi_asset_forecast.py"
       - "technical_analysis.py"
+      - "projection_model.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -18,7 +19,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,11 +40,14 @@ jobs:
       - name: Build full technical analysis
         run: python technical_analysis.py
 
+      - name: Build 4H 1D 1W 1Y projections
+        run: python projection_model.py
+
       - name: Commit updated intelligence data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json
+          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_projections.json data/silver_projections.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
