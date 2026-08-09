@@ -3,57 +3,56 @@
   "asset": "gold",
   "symbol": "GC=F",
   "instrument": "COMEX Gold Futures",
-  "updated_utc": "2026-08-09T13:18:05.451823+00:00",
+  "updated_utc": "2026-08-09T14:54:40.547330+00:00",
   "latest_price": 4399.7,
   "projections": [
     {
       "horizon": "4 Hours",
       "steps": 4,
-      "model_price": 4401.99,
-      "projected_return_pct": 0.052,
-      "probability_up": 0.5357,
-      "probability_down": 0.4643,
+      "model_price": 4389.3,
+      "projected_return_pct": -0.005,
+      "probability_up": 0.5135,
+      "probability_down": 0.4865,
       "confidence": "Low",
       "tight_model_zone": [
-        4382.83,
-        4421.16
+        4375.42,
+        4403.18
       ],
       "zone_target_coverage": 0.6,
-      "backtest_directional_accuracy": 0.5,
-      "baseline_directional_accuracy": 0.4643,
-      "directional_edge": 0.0357,
-      "backtest_mae_pct": 0.438,
-      "baseline_mae_pct": 0.438,
-      "mae_skill_vs_baseline": 0.0012,
-      "model_agreement": 1.0,
-      "walkforward_origins": 28,
-      "validation": "purged expanding-origin walk-forward",
+      "backtest_directional_accuracy": 0.5405,
+      "baseline_directional_accuracy": 0.5405,
+      "directional_edge": 0.0,
+      "backtest_mae_pct": 0.371,
+      "baseline_mae_pct": 0.44,
+      "mae_skill_vs_baseline": 0.1579,
+      "model_agreement": 0.6667,
+      "walkforward_origins": 37,
+      "validation": "purged hourly walk-forward with intraday/session features",
+      "selected_model": "All-market enriched",
+      "market_regime": "High Volatility",
       "models": [
         {
           "name": "Ridge",
-          "projected_return_pct": 0.077,
-          "backtest_mae_pct": 0.444,
-          "directional_accuracy": 0.5,
-          "mae_skill_vs_baseline": -0.0138,
-          "weight": 0.3069
+          "projected_return_pct": -0.037,
+          "weight": 0.334
         },
         {
           "name": "Random Forest",
-          "projected_return_pct": 0.05,
-          "backtest_mae_pct": 0.435,
-          "directional_accuracy": 0.5357,
-          "mae_skill_vs_baseline": 0.0076,
-          "weight": 0.3464
+          "projected_return_pct": -0.024,
+          "weight": 0.3319
         },
         {
           "name": "Gradient Boost",
-          "projected_return_pct": 0.033,
-          "backtest_mae_pct": 0.435,
-          "directional_accuracy": 0.5357,
-          "mae_skill_vs_baseline": 0.008,
-          "weight": 0.3467
+          "projected_return_pct": 0.047,
+          "weight": 0.3341
         }
-      ]
+      ],
+      "risk_zone": [
+        4371.5,
+        4407.09
+      ],
+      "focus_zone_type": "validation-weighted focus zone",
+      "focus_zone_note": "Narrower decision band. The wider risk_zone is kept separately and remains important."
     },
     {
       "horizon": "1 Day",
@@ -64,8 +63,8 @@
       "probability_down": 0.5,
       "confidence": "Low",
       "tight_model_zone": [
-        4350.99,
-        4444.37
+        4361.26,
+        4434.1
       ],
       "zone_target_coverage": 0.6,
       "backtest_directional_accuracy": 0.5556,
@@ -102,7 +101,13 @@
           "mae_skill_vs_baseline": 0.0047,
           "weight": 0.3563
         }
-      ]
+      ],
+      "risk_zone": [
+        4350.99,
+        4444.37
+      ],
+      "focus_zone_type": "validation-weighted focus zone",
+      "focus_zone_note": "Narrower decision band. The wider risk_zone is kept separately and remains important."
     },
     {
       "horizon": "1 Week",
@@ -113,8 +118,8 @@
       "probability_down": 0.6667,
       "confidence": "Low",
       "tight_model_zone": [
-        4201.61,
-        4493.76
+        4252.73,
+        4442.63
       ],
       "zone_target_coverage": 0.6,
       "backtest_directional_accuracy": 0.6111,
@@ -151,7 +156,13 @@
           "mae_skill_vs_baseline": 0.0081,
           "weight": 0.3497
         }
-      ]
+      ],
+      "risk_zone": [
+        4201.61,
+        4493.76
+      ],
+      "focus_zone_type": "validation-weighted focus zone",
+      "focus_zone_note": "Narrower decision band. The wider risk_zone is kept separately and remains important."
     },
     {
       "horizon": "1 Year",
@@ -162,8 +173,8 @@
       "probability_down": 0.15,
       "confidence": "Low",
       "tight_model_zone": [
-        3465.42,
-        5832.09
+        3725.75,
+        5571.77
       ],
       "zone_target_coverage": 0.5,
       "backtest_directional_accuracy": 1.0,
@@ -200,8 +211,14 @@
           "mae_skill_vs_baseline": 0.0809,
           "weight": 0.2531
         }
-      ]
+      ],
+      "risk_zone": [
+        3465.42,
+        5832.09
+      ],
+      "focus_zone_type": "validation-weighted focus zone",
+      "focus_zone_note": "Narrower decision band. The wider risk_zone is kept separately and remains important."
     }
   ],
-  "note": "Purged walk-forward model. Zones are centered on model price and calibrated from out-of-sample residuals; 1-year confidence is capped because long-horizon samples are limited and regime-dependent."
+  "note": "Model price is the single point estimate. Tight model zone is a validation-weighted focus zone; risk_zone preserves the wider original uncertainty band. A tighter zone is not a guarantee of accuracy."
 }
