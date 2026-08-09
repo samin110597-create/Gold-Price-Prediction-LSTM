@@ -9,6 +9,8 @@ on:
       - "technical_analysis.py"
       - "projection_model_v2.py"
       - "regime_intraday_model.py"
+      - "regime_intraday_runner.py"
+      - "projection_focus.py"
       - "backtest_engine.py"
       - "enhance_guru_summary.py"
       - "requirements-live.txt"
@@ -47,7 +49,10 @@ jobs:
         run: python projection_model_v2.py
 
       - name: Upgrade 4H with regime and intraday data
-        run: python regime_intraday_model.py
+        run: python regime_intraday_runner.py
+
+      - name: Build tighter validation-weighted focus zones
+        run: python projection_focus.py
 
       - name: Audit and backtest complete model
         run: python backtest_engine.py
