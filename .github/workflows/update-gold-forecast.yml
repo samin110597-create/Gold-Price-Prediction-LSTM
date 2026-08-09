@@ -6,6 +6,7 @@ on:
     branches: [master]
     paths:
       - "multi_asset_forecast.py"
+      - "technical_analysis.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -35,11 +36,14 @@ jobs:
       - name: Build gold and silver forecasts
         run: python multi_asset_forecast.py
 
+      - name: Build full technical analysis
+        run: python technical_analysis.py
+
       - name: Commit updated intelligence data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live_forecast.json data/silver_forecast.json
+          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
