@@ -8,6 +8,7 @@ on:
       - "multi_asset_forecast_v2.py"
       - "technical_analysis.py"
       - "projection_model_v2.py"
+      - "regime_intraday_model.py"
       - "backtest_engine.py"
       - "enhance_guru_summary.py"
       - "requirements-live.txt"
@@ -21,7 +22,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,6 +46,9 @@ jobs:
       - name: Build walk-forward 4H 1D 1W 1Y projections
         run: python projection_model_v2.py
 
+      - name: Upgrade 4H with regime and intraday data
+        run: python regime_intraday_model.py
+
       - name: Audit and backtest complete model
         run: python backtest_engine.py
 
@@ -55,10 +59,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_projections.json data/silver_projections.json data/model_backtest.json
+          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_projections.json data/silver_projections.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/model_backtest.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
-            git commit -m "Update audited gold and silver intelligence data"
+            git commit -m "Update regime-aware gold and silver intelligence data"
             git push
           fi
