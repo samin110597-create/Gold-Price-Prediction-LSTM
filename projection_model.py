@@ -100,7 +100,7 @@ def project(df, steps, label, intraday=False):
     last=float(df["Close"].iloc[-1]); model_price=last*(1+projected_return)
 
     residuals=[]
-    for name,tpl in model_templates().items():
+    for _,tpl in model_templates().items():
         try:
             m=clone(tpl); m.fit(Xtr,ytr); residuals.extend((yte.values-m.predict(Xte)).tolist())
         except Exception:
@@ -109,14 +109,15 @@ def project(df, steps, label, intraday=False):
     q25,q75=np.quantile(residuals,[.25,.75]) if len(residuals)>50 else (-mae,mae)
     tight_low=last*(1+projected_return+q25); tight_high=last*(1+projected_return+q75)
 
-    # Confidence is based on directional backtest plus cross-model agreement.
     directions=[r[1]>=0 for r in rows]; majority=sum(directions)>=len(directions)/2
     agreement=sum(d==majority for d in directions)/len(directions)
     if dacc>=.58 and agreement>=.67: conf="High"
     elif dacc>=.54 and agreement>=.67: conf="Moderate"
     else: conf="Low"
-    p_up=float(np.clip(.5+(dacc-.5)*np.sign(projected_return)*2 + np.tanh(projected_return/max(mae,1e-5))*.08,.25,.75))
-    if projected_return<0: p_up=1-p_up
+    direction_sign=1.0 if projected_return>=0 else -1.0
+    skill_strength=max(0.0,dacc-.5)*1.4
+    magnitude_strength=min(.10,abs(float(np.tanh(projected_return/max(mae,1e-5))))*.10)
+    p_up=float(np.clip(.5+direction_sign*(skill_strength+magnitude_strength),.25,.75))
 
     detail=[]
     for (name,ret,em,da),ww in zip(rows,w):
@@ -131,7 +132,7 @@ def project(df, steps, label, intraday=False):
 
 def run_asset(key,cfg):
     daily=download(cfg["ticker"],"10y","1d")
-    hourly=download(cfg["ticker"],"730d","1h")
+    hourly=download(cfg["ticker"],"2y","1h")
     projections=[
         project(hourly,4,"4 Hours",intraday=True),
         project(daily,1,"1 Day"),
