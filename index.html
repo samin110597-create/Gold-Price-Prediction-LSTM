@@ -3,111 +3,312 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gold Market Probability Dashboard</title>
+  <meta name="theme-color" content="#081018" />
+  <title>Gold Intelligence | Multi-Factor Probability Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root{--bg:#081018;--panel:#101a25;--panel2:#142131;--line:#253548;--text:#eef4fa;--muted:#91a3b7;--gold:#d8b45e;--green:#5bd39a;--red:#ff7b84;--blue:#72a7ff}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#122033 0,#081018 42%,#070d13 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}.wrap{max-width:1220px;margin:auto;padding:26px 18px 50px}.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap}.eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.title{font-size:clamp(30px,5vw,52px);line-height:1.02;margin:7px 0}.sub{color:var(--muted);max-width:770px;line-height:1.55}.badge{border:1px solid #34485e;border-radius:999px;padding:8px 12px;color:#cbd6e2;background:#0d1722;font-size:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:24px 0}.card{background:rgba(16,26,37,.95);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 15px 34px rgba(0,0,0,.18)}.label{text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:11px}.value{font-weight:800;font-size:27px;margin-top:8px}.small{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.45}.forecasts{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:13px}.forecast h3{margin:0 0 7px;font-size:17px}.prob{font-size:34px;font-weight:850;margin:6px 0}.signal{font-size:13px;font-weight:750}.range{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px}.metric b{display:block;font-size:15px;margin-top:3px}.metric span{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}.chart-card{margin-bottom:13px}.chart-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.chart-title{font-size:18px;font-weight:800}.section{display:grid;grid-template-columns:1fr 1fr;gap:13px}.indicators{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:13px}.pill{background:#0c1621;border:1px solid #27394b;border-radius:12px;padding:12px}.pill .v{font-size:17px;font-weight:800;margin-top:4px}.note{color:#c6d1dc;line-height:1.62;font-size:14px}.status{font-size:12px;color:var(--muted);margin-top:10px}.error{color:#ff9ca3}.good{color:var(--green)}.bad{color:var(--red)}.neutral{color:#d6dce3}.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.link{text-decoration:none;background:var(--gold);color:#0c1117;font-weight:800;padding:9px 12px;border-radius:9px;font-size:13px}.link.secondary{background:#152231;color:#e6edf4;border:1px solid #304257}@media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}.forecasts{grid-template-columns:1fr}.section{grid-template-columns:1fr}}@media(max-width:520px){.grid4{grid-template-columns:1fr}.indicators{grid-template-columns:1fr}.wrap{padding-top:18px}}
+    :root{
+      --bg:#071018;--panel:#0d1823;--panel2:#111f2d;--line:#23384a;
+      --text:#edf4f8;--muted:#8fa4b6;--gold:#d8b45e;--green:#62d79e;
+      --red:#ff7f86;--blue:#7eb1ff;--amber:#e7bd67;--cyan:#73d4df;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+      radial-gradient(circle at 15% -10%,rgba(44,77,111,.32),transparent 32%),
+      radial-gradient(circle at 90% 0,rgba(216,180,94,.10),transparent 26%),
+      linear-gradient(180deg,#08121d 0%,#071018 55%,#050b11 100%);
+      color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1280px;margin:auto;padding:26px 18px 54px}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap}
+    .eyebrow{font-size:11px;font-weight:850;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+    h1{font-size:clamp(30px,5vw,52px);line-height:1.02;margin:7px 0 8px;letter-spacing:-.035em}
+    .sub{max-width:790px;color:var(--muted);line-height:1.58;font-size:14px}
+    .badge{border:1px solid #30465b;background:rgba(10,22,33,.9);border-radius:999px;padding:8px 11px;color:#cbd7e1;font-size:11px;white-space:nowrap}
+    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0 12px}
+    .card{background:linear-gradient(180deg,rgba(17,31,45,.96),rgba(11,23,34,.96));border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 14px 34px rgba(0,0,0,.16)}
+    .kpi .label,.label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.095em}
+    .kpi .value{font-size:26px;font-weight:850;margin:7px 0 3px;letter-spacing:-.02em}
+    .small{font-size:11px;color:var(--muted);line-height:1.5}
+    .good{color:var(--green)!important}.bad{color:var(--red)!important}.neutral{color:#d9e1e8!important}.warn{color:var(--amber)!important}.blue{color:var(--blue)!important}
+    .regimebar{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+    .regime-main{display:flex;justify-content:space-between;gap:16px;align-items:center}
+    .regime-name{font-size:24px;font-weight:850;margin-top:6px}
+    .signal-dot{width:10px;height:10px;border-radius:50%;background:#98a8b6;box-shadow:0 0 18px rgba(150,170,190,.35)}
+    .section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:22px 0 10px;flex-wrap:wrap}
+    .section-title h2{font-size:18px;margin:0;letter-spacing:-.01em}
+    .section-title p{margin:0;color:var(--muted);font-size:11px}
+    .forecast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .forecast{position:relative;overflow:hidden}
+    .forecast::after{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7}
+    .forecast-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .horizon{font-size:17px;font-weight:800}
+    .confidence{font-size:10px;border:1px solid #334b5f;border-radius:999px;padding:5px 8px;color:#cbd7e2}
+    .probrow{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px;margin:15px 0 8px}
+    .prob{font-size:38px;font-weight:900;letter-spacing:-.035em}
+    .direction{font-size:12px;font-weight:750;margin-bottom:6px}
+    .bar{height:7px;background:#1b2b39;border-radius:999px;overflow:hidden;display:flex}
+    .upbar{height:100%;background:linear-gradient(90deg,#3cae7a,var(--green))}
+    .downbar{height:100%;background:linear-gradient(90deg,#df5e68,var(--red))}
+    .splitlabels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;margin-top:5px}
+    .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+    .metric{background:#0a1621;border:1px solid #1f3343;border-radius:10px;padding:10px}
+    .metric span{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .metric b{display:block;margin-top:4px;font-size:14px}
+    .two{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+    .chart-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+    .chart-title{font-size:16px;font-weight:800}
+    .factor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .factor{background:#0a1621;border:1px solid #1f3445;border-radius:12px;padding:12px}
+    .factor-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .factor-name{font-size:13px;font-weight:750}
+    .tag{font-size:9px;font-weight:800;border-radius:999px;padding:5px 7px;border:1px solid #34495b}
+    .tag.supportive{color:var(--green);border-color:rgba(98,215,158,.35);background:rgba(98,215,158,.06)}
+    .tag.headwind{color:var(--red);border-color:rgba(255,127,134,.35);background:rgba(255,127,134,.06)}
+    .tag.risk-off,.tag.risk-on{color:var(--blue);border-color:rgba(126,177,255,.35);background:rgba(126,177,255,.06)}
+    .factor-value{font-size:21px;font-weight:850;margin:9px 0 4px}
+    .changes{display:flex;gap:12px;color:var(--muted);font-size:10px}
+    .reason{font-size:10px;color:#aab9c5;margin-top:9px;line-height:1.4}
+    .level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+    .level{border:1px solid #22384a;background:#0a1621;border-radius:11px;padding:11px}
+    .level b{display:block;font-size:17px;margin-top:4px}
+    .tabs{display:flex;gap:6px;flex-wrap:wrap}
+    .tab{border:1px solid #30475b;background:#0c1a27;color:#b9c7d2;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:11px}
+    .tab.active{border-color:var(--gold);color:#f2d68f;background:rgba(216,180,94,.08)}
+    .model-list{display:grid;gap:8px;margin-top:12px}
+    .model{display:grid;grid-template-columns:125px 1fr 64px 70px;gap:10px;align-items:center;font-size:11px}
+    .model-name{font-weight:750}
+    .model-track{height:6px;border-radius:999px;background:#1a2a38;overflow:hidden}
+    .model-fill{height:100%;background:linear-gradient(90deg,#6ea3ed,var(--gold))}
+    .health{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px}
+    .health .metric{text-align:center}
+    .note{color:#bdcbd6;font-size:12px;line-height:1.62}
+    .method{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .status{font-size:11px;color:var(--muted);margin-top:9px}
+    .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+    .link{text-decoration:none;padding:8px 11px;border-radius:9px;background:#152536;color:#e8eff4;border:1px solid #30475b;font-size:11px;font-weight:750}
+    .link.primary{background:var(--gold);border-color:var(--gold);color:#10151b}
+    @media(max-width:1000px){.grid4,.regimebar{grid-template-columns:repeat(2,1fr)}.forecast-grid{grid-template-columns:1fr}.two,.method{grid-template-columns:1fr}.factor-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.grid4,.regimebar,.factor-grid,.health{grid-template-columns:1fr}.level-grid{grid-template-columns:1fr}.model{grid-template-columns:100px 1fr 54px}.model .hide-mobile{display:none}.wrap{padding:18px 12px 42px}.card{padding:14px}}
   </style>
 </head>
 <body>
 <main class="wrap">
   <div class="top">
     <div>
-      <div class="eyebrow">Gold market research</div>
-      <h1 class="title">Gold Probability Dashboard</h1>
-      <div class="sub">Uses the latest available COMEX Gold Futures data to estimate short-term direction probabilities and price ranges. The model is intentionally conservative and reduces confidence when its recent backtest is weak.</div>
+      <div class="eyebrow">Institutional-style market research</div>
+      <h1>Gold Intelligence</h1>
+      <div class="sub">A multi-factor probability dashboard for COMEX Gold Futures. It combines gold price action with the US Dollar, Treasury yields, Silver, VIX, equities and bonds, then checks whether multiple models agree before assigning confidence.</div>
     </div>
-    <div class="badge" id="updateBadge">Loading latest model run…</div>
+    <div class="badge" id="updateBadge">Loading latest research run…</div>
   </div>
 
   <section class="grid4">
-    <div class="card"><div class="label">Latest gold futures</div><div class="value" id="latest">—</div><div class="small" id="marketTime">Latest available quote</div></div>
-    <div class="card"><div class="label">Change vs prior close</div><div class="value" id="change">—</div><div class="small">May be delayed</div></div>
-    <div class="card"><div class="label">Trend regime</div><div class="value" id="trend">—</div><div class="small">EMA 20 vs EMA 50</div></div>
-    <div class="card"><div class="label">RSI 14</div><div class="value" id="rsi">—</div><div class="small">Momentum gauge</div></div>
+    <div class="card kpi"><div class="label">Gold futures</div><div class="value" id="latest">—</div><div class="small" id="marketTime">Latest available market quote</div></div>
+    <div class="card kpi"><div class="label">Change vs prior close</div><div class="value" id="change">—</div><div class="small">Intraday quote may be delayed</div></div>
+    <div class="card kpi"><div class="label">RSI 14</div><div class="value" id="rsi">—</div><div class="small">Momentum / extension gauge</div></div>
+    <div class="card kpi"><div class="label">ATR 14</div><div class="value" id="atr">—</div><div class="small">Daily volatility as % of price</div></div>
   </section>
 
-  <section class="forecasts" id="forecasts"></section>
-
-  <section class="card chart-card">
-    <div class="chart-head"><div><div class="chart-title">Recent Gold Price Action</div><div class="small">Daily COMEX Gold Futures close • approximately one trading year</div></div><div class="badge">GC=F</div></div>
-    <canvas id="chart" height="105"></canvas>
-    <div class="status" id="status">Loading forecast data…</div>
+  <section class="regimebar">
+    <div class="card regime-main"><div><div class="label">Overall regime</div><div class="regime-name" id="overallRegime">—</div></div><div class="signal-dot" id="regimeDot"></div></div>
+    <div class="card kpi"><div class="label">Trend structure</div><div class="value" style="font-size:18px" id="trendRegime">—</div><div class="small">Price + EMA 20/50/200</div></div>
+    <div class="card kpi"><div class="label">Macro backdrop</div><div class="value" style="font-size:18px" id="macroRegime">—</div><div class="small" id="macroScore">Cross-asset directional score</div></div>
+    <div class="card kpi"><div class="label">Volatility regime</div><div class="value" style="font-size:18px" id="volRegime">—</div><div class="small" id="volPct">252-day percentile</div></div>
   </section>
 
-  <section class="section">
+  <div class="section-title"><div><h2>Probability Outlook</h2><p>Probabilities are deliberately pulled toward 50% when the holdout test is weak.</p></div><div class="badge">1D • 5D • 20D</div></div>
+  <section class="forecast-grid" id="forecastGrid"></section>
+
+  <div class="section-title"><div><h2>Price Action & Key Levels</h2><p>Recent daily futures closes and volatility-based reference zones.</p></div></div>
+  <section class="two">
     <div class="card">
-      <div class="chart-title">Market indicators</div>
-      <div class="indicators">
-        <div class="pill"><div class="label">EMA 20</div><div class="v" id="ema20">—</div></div>
-        <div class="pill"><div class="label">EMA 50</div><div class="v" id="ema50">—</div></div>
-        <div class="pill"><div class="label">ATR 14</div><div class="v" id="atr">—</div><div class="small">Daily volatility as % of price</div></div>
-        <div class="pill"><div class="label">Model discipline</div><div class="v">Probability first</div><div class="small">No guaranteed target or forced signal</div></div>
-      </div>
+      <div class="chart-head"><div><div class="chart-title">Gold Futures — Recent Price Action</div><div class="small">Approx. 300 trading sessions • GC=F</div></div><div class="badge">Daily</div></div>
+      <canvas id="chart" height="120"></canvas>
+      <div class="status" id="status">Loading market data…</div>
     </div>
     <div class="card">
-      <div class="chart-title">How to read this</div>
-      <p class="note"><strong>Probability Up</strong> estimates whether price will finish above today’s level after the selected horizon. <strong>Forecast range</strong> is a historical 20th–80th percentile band, adjusted only slightly by the model. <strong>Backtest accuracy</strong> is shown beside a naive baseline so a weak model is visible instead of hidden.</p>
-      <p class="note">This is an educational research tool, not a promise of future prices. Gold can move sharply on macro news, rates, currencies and geopolitical events that a price-only model cannot know in advance.</p>
-      <div class="links"><a class="link secondary" href="Gold_Price_Prediction_LSTM.ipynb">Original LSTM Notebook</a><a class="link secondary" href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM">Repository</a></div>
+      <div class="chart-title">Key Levels</div>
+      <div class="small">Reference levels, not guaranteed turning points.</div>
+      <div class="level-grid" id="levels"></div>
+    </div>
+  </section>
+
+  <div class="section-title"><div><h2>Cross-Market Factor Board</h2><p>Directional context used by the model; relationships can break during news shocks.</p></div></div>
+  <section class="factor-grid" id="factors"></section>
+
+  <div class="section-title"><div><h2>Model Agreement & Backtest Health</h2><p>See whether the models actually agree — and whether their recent holdout test beat a simple baseline.</p></div><div class="tabs" id="tabs"></div></div>
+  <section class="card">
+    <div class="model-list" id="modelList"></div>
+    <div class="health" id="health"></div>
+  </section>
+
+  <section class="method">
+    <div class="card">
+      <div class="chart-title">What powers the signal</div>
+      <p class="note" id="methodology">Loading methodology…</p>
+      <p class="note">The ensemble combines Logistic Regression, Random Forest, Gradient Boosting and a nearest-neighbour regime model. A strong-looking probability is not treated as high conviction unless the models agree and recent time-ordered holdout performance supports it.</p>
+    </div>
+    <div class="card">
+      <div class="chart-title">How to use this page</div>
+      <p class="note"><strong>Probability Up</strong> asks whether gold is more likely to finish above today’s reference price after the selected horizon. <strong>20–80% range</strong> is a probabilistic historical band, not a price target. <strong>Backtest edge</strong> compares the ensemble with a naive majority-direction baseline.</p>
+      <p class="note" id="disclaimer">Research/education only.</p>
+      <div class="links"><a class="link primary" href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM">GitHub Repository</a><a class="link" href="Gold_Price_Prediction_LSTM.ipynb">Original LSTM Notebook</a></div>
     </div>
   </section>
 </main>
-<script>
-let priceChart;
-const money=n=>'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-const pct=n=>(Number(n)*100).toFixed(1)+'%';
-const cls=p=>p>=.56?'good':p<=.44?'bad':'neutral';
-const horizonName=h=>h===1?'Next 1 trading day':h===5?'Next 5 trading days':'Next 20 trading days';
 
-function renderForecast(f){
-  const p=f.probability_up;
-  return `<div class="card forecast">
-    <div class="label">${horizonName(f.horizon_days)}</div>
-    <div class="prob ${cls(p)}">${pct(p)} up</div>
-    <div class="signal ${cls(p)}">${f.signal} • ${f.confidence} confidence</div>
-    <div class="range">
+<script>
+let chart;
+let DATA=null;
+let activeHorizon=5;
+const money=n=>'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+const percent=n=>(Number(n)*100).toFixed(1)+'%';
+const signed=n=>(Number(n)>=0?'+':'')+Number(n).toFixed(2)+'%';
+const horizonLabel=h=>h===1?'1 Trading Day':h===5?'5 Trading Days':'20 Trading Days';
+const toneProb=p=>p>=.58?'good':p<=.42?'bad':'neutral';
+const impactClass=s=>String(s).toLowerCase().replaceAll(' ','-').replace('/','-');
+
+function regimeTone(s){
+  const v=String(s).toLowerCase();
+  if(v.includes('bull')||v.includes('support')||v.includes('uptrend')) return 'good';
+  if(v.includes('bear')||v.includes('headwind')||v.includes('downtrend')) return 'bad';
+  return 'neutral';
+}
+
+function forecastCard(f){
+  const up=f.probability_up, down=f.probability_down ?? (1-up);
+  const edge=f.backtest_edge;
+  return `<article class="card forecast">
+    <div class="forecast-head">
+      <div><div class="label">Forecast Horizon</div><div class="horizon">${horizonLabel(f.horizon_days)}</div></div>
+      <div class="confidence">${f.confidence} confidence</div>
+    </div>
+    <div class="probrow">
+      <div><div class="prob ${toneProb(up)}">${percent(up)}</div><div class="direction ${toneProb(up)}">Probability Up • ${f.signal}</div></div>
+      <div class="small">${percent(down)} down</div>
+    </div>
+    <div class="bar"><div class="upbar" style="width:${(up*100).toFixed(1)}%"></div><div class="downbar" style="width:${(down*100).toFixed(1)}%"></div></div>
+    <div class="splitlabels"><span>Up ${percent(up)}</span><span>Down ${percent(down)}</span></div>
+    <div class="metric-grid">
       <div class="metric"><span>Forecast center</span><b>${money(f.forecast_mid)}</b></div>
       <div class="metric"><span>20–80% range</span><b>${money(f.range_20_80[0])} – ${money(f.range_20_80[1])}</b></div>
-      <div class="metric"><span>Backtest accuracy</span><b>${pct(f.backtest_accuracy)}</b></div>
-      <div class="metric"><span>Naive baseline</span><b>${pct(f.naive_baseline)}</b></div>
+      <div class="metric"><span>Model agreement</span><b>${percent(f.model_agreement)}</b></div>
+      <div class="metric"><span>Backtest edge</span><b class="${edge>0?'good':edge<0?'bad':'neutral'}">${edge>=0?'+':''}${percent(edge)}</b></div>
     </div>
+  </article>`;
+}
+
+function factorCard(x){
+  return `<div class="factor">
+    <div class="factor-top"><div><div class="factor-name">${x.name}</div><div class="small">${x.symbol}</div></div><span class="tag ${impactClass(x.impact)}">${x.impact}</span></div>
+    <div class="factor-value">${Number(x.value).toLocaleString(undefined,{maximumFractionDigits:3})}</div>
+    <div class="changes"><span>5D ${signed(x.change_5d_pct)}</span><span>20D ${signed(x.change_20d_pct)}</span></div>
+    <div class="reason">${x.reason}</div>
   </div>`;
 }
 
+function levelCards(l){
+  const items=[
+    ['20D Support',l.support_20d,'bad'],
+    ['20D Resistance',l.resistance_20d,'good'],
+    ['60D Support',l.support_60d,'bad'],
+    ['60D Resistance',l.resistance_60d,'good'],
+    ['1D Expected Move',`${money(l.expected_move_1d[0])} – ${money(l.expected_move_1d[1])}`,'neutral'],
+    ['5D Expected Move',`${money(l.expected_move_5d[0])} – ${money(l.expected_move_5d[1])}`,'neutral'],
+  ];
+  return items.map(([k,v,c])=>`<div class="level"><div class="label">${k}</div><b class="${c}">${typeof v==='number'?money(v):v}</b></div>`).join('');
+}
+
 function drawChart(series){
-  if(priceChart) priceChart.destroy();
-  priceChart=new Chart(document.getElementById('chart'),{type:'line',data:{labels:series.map(x=>x.date),datasets:[{data:series.map(x=>x.close),borderColor:'#d8b45e',backgroundColor:'rgba(216,180,94,.09)',pointRadius:0,borderWidth:2,tension:.16,fill:true}]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{color:'#8294a8',maxTicksLimit:8}},y:{grid:{color:'rgba(130,150,175,.12)'},ticks:{color:'#8294a8',callback:v=>'$'+Number(v).toLocaleString()}}}}});
+  if(chart) chart.destroy();
+  const ctx=document.getElementById('chart');
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{labels:series.map(x=>x.date),datasets:[{
+      data:series.map(x=>x.close),borderColor:'#d8b45e',backgroundColor:'rgba(216,180,94,.09)',
+      pointRadius:0,borderWidth:2,tension:.15,fill:true
+    }]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.parsed.y)}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:'#8296a8',maxTicksLimit:9}},
+        y:{grid:{color:'rgba(130,150,175,.11)'},ticks:{color:'#8296a8',callback:v=>'$'+Number(v).toLocaleString()}}
+      }
+    }
+  });
+}
+
+function renderModelPanel(h){
+  activeHorizon=h;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.h)===h));
+  const f=DATA.forecasts.find(x=>x.horizon_days===h);
+  if(!f) return;
+  document.getElementById('modelList').innerHTML=f.models.map(m=>`
+    <div class="model">
+      <div class="model-name">${m.name}</div>
+      <div class="model-track"><div class="model-fill" style="width:${Math.max(2,Math.min(100,m.probability_up*100)).toFixed(1)}%"></div></div>
+      <div class="${toneProb(m.probability_up)}">${percent(m.probability_up)}</div>
+      <div class="small hide-mobile">Acc ${percent(m.backtest_accuracy)}</div>
+    </div>`).join('');
+  const edge=f.backtest_edge;
+  document.getElementById('health').innerHTML=`
+    <div class="metric"><span>Ensemble accuracy</span><b>${percent(f.backtest_accuracy)}</b></div>
+    <div class="metric"><span>Naive baseline</span><b>${percent(f.naive_baseline)}</b></div>
+    <div class="metric"><span>Backtest edge</span><b class="${edge>0?'good':edge<0?'bad':'neutral'}">${edge>=0?'+':''}${percent(edge)}</b></div>
+    <div class="metric"><span>Brier score</span><b>${Number(f.brier_score).toFixed(3)}</b></div>`;
 }
 
 async function load(){
   try{
     const r=await fetch('data/live_forecast.json?ts='+Date.now(),{cache:'no-store'});
-    if(!r.ok) throw new Error('Forecast file could not be loaded');
+    if(!r.ok) throw new Error('Forecast data file could not be loaded');
     const d=await r.json();
-    if(d.status!=='ok') throw new Error(d.message||'Waiting for first automated forecast run');
+    if(d.status!=='ok') throw new Error(d.message||'Forecast engine is waiting for a successful run');
+    DATA=d;
 
     document.getElementById('latest').textContent=money(d.latest_price);
-    const ch=document.getElementById('change'); ch.textContent=(d.change_pct>=0?'+':'')+Number(d.change_pct).toFixed(2)+'%'; ch.className='value '+(d.change_pct>=0?'good':'bad');
-    document.getElementById('trend').textContent=d.indicators.trend;
-    document.getElementById('trend').className='value '+(d.indicators.trend==='Uptrend'?'good':'bad');
+    const ch=document.getElementById('change');
+    ch.textContent=(d.change_pct>=0?'+':'')+Number(d.change_pct).toFixed(2)+'%';
+    ch.className='value '+(d.change_pct>=0?'good':'bad');
     document.getElementById('rsi').textContent=Number(d.indicators.rsi14).toFixed(1);
-    document.getElementById('ema20').textContent=money(d.indicators.ema20);
-    document.getElementById('ema50').textContent=money(d.indicators.ema50);
     document.getElementById('atr').textContent=Number(d.indicators.atr14_pct).toFixed(2)+'%';
+
+    const reg=d.regime;
+    const overall=document.getElementById('overallRegime');
+    overall.textContent=reg.overall; overall.className='regime-name '+regimeTone(reg.overall);
+    document.getElementById('trendRegime').textContent=reg.trend;
+    document.getElementById('trendRegime').className='value '+regimeTone(reg.trend);
+    document.getElementById('macroRegime').textContent=reg.macro;
+    document.getElementById('macroRegime').className='value '+regimeTone(reg.macro);
+    document.getElementById('macroScore').textContent='Directional score '+(reg.macro_score>=0?'+':'')+reg.macro_score;
+    document.getElementById('volRegime').textContent=reg.volatility;
+    document.getElementById('volPct').textContent=percent(reg.volatility_percentile)+' of the last 252 sessions';
+
+    const dot=document.getElementById('regimeDot');
+    dot.style.background=reg.overall.toLowerCase().includes('bull')?'#62d79e':reg.overall.toLowerCase().includes('bear')?'#ff7f86':'#98a8b6';
+
+    document.getElementById('forecastGrid').innerHTML=d.forecasts.map(forecastCard).join('');
+    document.getElementById('levels').innerHTML=levelCards(d.levels);
+    document.getElementById('factors').innerHTML=d.factors.map(factorCard).join('');
+    document.getElementById('tabs').innerHTML=d.forecasts.map(f=>`<button class="tab ${f.horizon_days===activeHorizon?'active':''}" data-h="${f.horizon_days}">${f.horizon_days}D</button>`).join('');
+    document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>renderModelPanel(Number(b.dataset.h))));
+    renderModelPanel(d.forecasts.some(f=>f.horizon_days===activeHorizon)?activeHorizon:d.forecasts[0].horizon_days);
+
+    drawChart(d.series);
+    document.getElementById('methodology').textContent=d.methodology;
+    document.getElementById('disclaimer').textContent=d.disclaimer;
     document.getElementById('marketTime').textContent='Market timestamp: '+new Date(d.latest_market_time).toLocaleString();
     document.getElementById('updateBadge').textContent='Model updated '+new Date(d.updated_utc).toLocaleString();
-    document.getElementById('forecasts').innerHTML=d.forecasts.map(renderForecast).join('');
-    document.getElementById('status').textContent='Latest automated model run loaded. Data source: latest available GC=F market history; quotes may be delayed.';
-    drawChart(d.series);
+    document.getElementById('status').textContent='Latest automated multi-factor model run loaded. Market quotes can be delayed and scheduled GitHub jobs may not run at an exact minute.';
   }catch(e){
-    document.getElementById('status').textContent=e.message+'. Open GitHub → Actions → Update Gold Forecast → Run workflow once.';
-    document.getElementById('status').className='status error';
-    document.getElementById('updateBadge').textContent='First model run needed';
+    document.getElementById('status').textContent=e.message+'. The page will populate after the GitHub Action completes.';
+    document.getElementById('status').className='status bad';
+    document.getElementById('updateBadge').textContent='Waiting for forecast engine';
   }
 }
-load(); setInterval(load,5*60*1000);
+load();
+setInterval(load,5*60*1000);
 </script>
 </body>
 </html>
