@@ -2,6 +2,12 @@ name: Update Gold Forecast
 
 on:
   workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "live_forecast.py"
+      - "requirements-live.txt"
+      - ".github/workflows/update-gold-forecast.yml"
   schedule:
     - cron: "17 */2 * * *"
 
