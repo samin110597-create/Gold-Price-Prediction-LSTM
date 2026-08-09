@@ -5,9 +5,10 @@ on:
   push:
     branches: [master]
     paths:
-      - "multi_asset_forecast.py"
+      - "multi_asset_forecast_v2.py"
       - "technical_analysis.py"
-      - "projection_model.py"
+      - "projection_model_v2.py"
+      - "backtest_engine.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -19,7 +20,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,23 +35,26 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-live.txt
 
-      - name: Build gold and silver forecasts
-        run: python multi_asset_forecast.py
+      - name: Build walk-forward probability forecasts
+        run: python multi_asset_forecast_v2.py
 
       - name: Build full technical analysis
         run: python technical_analysis.py
 
-      - name: Build 4H 1D 1W 1Y projections
-        run: python projection_model.py
+      - name: Build walk-forward 4H 1D 1W 1Y projections
+        run: python projection_model_v2.py
+
+      - name: Audit and backtest complete model
+        run: python backtest_engine.py
 
       - name: Commit updated intelligence data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_projections.json data/silver_projections.json
+          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_projections.json data/silver_projections.json data/model_backtest.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
-            git commit -m "Update gold and silver intelligence data"
+            git commit -m "Update audited gold and silver intelligence data"
             git push
           fi
