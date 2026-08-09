@@ -1,61 +1,61 @@
 {
   "status": "ok",
-  "asset": "gold",
-  "symbol": "GC=F",
-  "instrument": "COMEX Gold Futures",
-  "updated_utc": "2026-08-09T03:47:09.112477+00:00",
+  "asset": "silver",
+  "symbol": "SI=F",
+  "instrument": "COMEX Silver Futures",
+  "updated_utc": "2026-08-09T03:47:16.279283+00:00",
   "latest_market_time": "2026-08-07T16:00:00-04:00",
-  "latest_price": 4399.7,
-  "change_pct": 3.718,
+  "latest_price": 63.5,
+  "change_pct": 3.353,
   "guru_summary": {
     "bias": "Neutral",
     "conviction": "Low",
-    "model_view": "Supportive: US Dollar Index. Headwinds: Long Treasury ETF.",
-    "trigger": "A sustained move above 4371.50 would strengthen upside confirmation; below 3964.20 would weaken the setup.",
+    "model_view": "Supportive backdrop led by Gold Futures, US Dollar Index, Copper Futures.",
+    "trigger": "A sustained move above 65.05 would strengthen upside confirmation; below 55.01 would weaken the setup.",
     "risk": "Model agreement/backtest edge is weak, so confidence should stay limited.",
     "regime": "Neutral / mixed"
   },
   "regime": {
     "overall": "Neutral / mixed",
     "trend": "Strong downtrend",
-    "macro": "Mixed",
-    "macro_score": 0,
-    "volatility": "High",
-    "volatility_percentile": 0.8161
+    "macro": "Supportive",
+    "macro_score": 3,
+    "volatility": "Normal",
+    "volatility_percentile": 0.6812
   },
   "indicators": {
-    "ema20": 4129.05,
-    "ema50": 4202.1,
-    "ema200": 4277.75,
-    "rsi14": 64.92,
-    "atr14_pct": 1.82
+    "ema20": 59.86,
+    "ema50": 62.99,
+    "ema200": 65.15,
+    "rsi14": 58.7,
+    "atr14_pct": 2.83
   },
   "levels": {
-    "daily_close_reference": 4340.7,
-    "support_20d": 3964.2,
-    "resistance_20d": 4371.5,
-    "support_60d": 3962.5,
-    "resistance_60d": 4722.7,
-    "atr14_dollars": 78.79,
+    "daily_close_reference": 63.33,
+    "support_20d": 55.01,
+    "resistance_20d": 65.05,
+    "support_60d": 55.01,
+    "resistance_60d": 88.89,
+    "atr14_dollars": 1.79,
     "expected_move_1d": [
-      4261.91,
-      4419.49
+      61.54,
+      65.12
     ],
     "expected_move_5d": [
-      4164.52,
-      4516.88
+      59.33,
+      67.34
     ]
   },
   "factors": [
     {
-      "key": "silver",
-      "name": "Silver Futures",
-      "symbol": "SI=F",
-      "value": 63.332,
-      "change_5d_pct": 9.97,
-      "change_20d_pct": 5.89,
-      "impact": "Neutral",
-      "reason": "Silver breadth is mixed"
+      "key": "gold",
+      "name": "Gold Futures",
+      "symbol": "GC=F",
+      "value": 4340.7,
+      "change_5d_pct": 7.2,
+      "change_20d_pct": 5.76,
+      "impact": "Supportive",
+      "reason": "Gold trend supports precious metals"
     },
     {
       "key": "dxy",
@@ -88,6 +88,16 @@
       "reason": "Equity volatility is low"
     },
     {
+      "key": "copper",
+      "name": "Copper Futures",
+      "symbol": "HG=F",
+      "value": 6.57,
+      "change_5d_pct": 2.09,
+      "change_20d_pct": 5.41,
+      "impact": "Supportive",
+      "reason": "Copper strength supports industrial-metals demand"
+    },
+    {
       "key": "spy",
       "name": "S&P 500 ETF",
       "symbol": "SPY",
@@ -96,159 +106,149 @@
       "change_20d_pct": 2.43,
       "impact": "Neutral",
       "reason": "Equity trend is mixed"
-    },
-    {
-      "key": "tlt",
-      "name": "Long Treasury ETF",
-      "symbol": "TLT",
-      "value": 82.76,
-      "change_5d_pct": 0.62,
-      "change_20d_pct": -2.02,
-      "impact": "Headwind",
-      "reason": "Long-duration bonds are weak"
     }
   ],
   "forecasts": [
     {
       "horizon_days": 1,
-      "probability_up": 0.4636,
-      "probability_down": 0.5364,
+      "probability_up": 0.4836,
+      "probability_down": 0.5164,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4342.3,
+      "forecast_mid": 63.37,
       "range_20_80": [
-        4311.24,
-        4376.0
+        62.45,
+        64.3
       ],
-      "backtest_accuracy": 0.5298,
-      "naive_baseline": 0.5635,
-      "backtest_edge": -0.0337,
-      "brier_score": 0.2544,
+      "backtest_accuracy": 0.5379,
+      "naive_baseline": 0.5714,
+      "backtest_edge": -0.0335,
+      "brier_score": 0.2497,
       "model_agreement": 0.75,
       "test_observations": 252,
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.3974,
-          "backtest_accuracy": 0.5119,
-          "brier_score": 0.2653,
-          "weight": 0.2339
+          "probability_up": 0.5331,
+          "backtest_accuracy": 0.4921,
+          "brier_score": 0.2647,
+          "weight": 0.2238
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4441,
-          "backtest_accuracy": 0.5119,
-          "brier_score": 0.2494,
-          "weight": 0.2342
+          "probability_up": 0.4767,
+          "backtest_accuracy": 0.5317,
+          "brier_score": 0.2453,
+          "weight": 0.2259
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.305,
-          "backtest_accuracy": 0.5595,
-          "brier_score": 0.2525,
-          "weight": 0.298
+          "probability_up": 0.3878,
+          "backtest_accuracy": 0.5833,
+          "brier_score": 0.2411,
+          "weight": 0.3265
         },
         {
           "name": "Regime KNN",
-          "probability_up": 0.5014,
-          "backtest_accuracy": 0.5278,
-          "brier_score": 0.2508,
-          "weight": 0.2339
+          "probability_up": 0.4627,
+          "backtest_accuracy": 0.5238,
+          "brier_score": 0.2516,
+          "weight": 0.2238
         }
       ]
     },
     {
       "horizon_days": 5,
-      "probability_up": 0.475,
-      "probability_down": 0.525,
+      "probability_up": 0.4725,
+      "probability_down": 0.5275,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4355.64,
+      "forecast_mid": 63.52,
       "range_20_80": [
-        4273.18,
-        4432.82
+        61.22,
+        65.91
       ],
-      "backtest_accuracy": 0.4851,
-      "naive_baseline": 0.5714,
-      "backtest_edge": -0.0863,
-      "brier_score": 0.2792,
+      "backtest_accuracy": 0.4107,
+      "naive_baseline": 0.5913,
+      "backtest_edge": -0.1806,
+      "brier_score": 0.2995,
       "model_agreement": 0.75,
       "test_observations": 252,
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.2606,
-          "backtest_accuracy": 0.4444,
-          "brier_score": 0.3134,
+          "probability_up": 0.2988,
+          "backtest_accuracy": 0.3651,
+          "brier_score": 0.3426,
           "weight": 0.25
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4453,
-          "backtest_accuracy": 0.4643,
-          "brier_score": 0.2588,
+          "probability_up": 0.4948,
+          "backtest_accuracy": 0.4127,
+          "brier_score": 0.2647,
           "weight": 0.25
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.4827,
-          "backtest_accuracy": 0.4921,
-          "brier_score": 0.2853,
+          "probability_up": 0.3251,
+          "backtest_accuracy": 0.4325,
+          "brier_score": 0.3077,
           "weight": 0.25
         },
         {
           "name": "Regime KNN",
-          "probability_up": 0.5511,
-          "backtest_accuracy": 0.5397,
-          "brier_score": 0.2594,
+          "probability_up": 0.5949,
+          "backtest_accuracy": 0.4325,
+          "brier_score": 0.2831,
           "weight": 0.25
         }
       ]
     },
     {
       "horizon_days": 20,
-      "probability_up": 0.4818,
-      "probability_down": 0.5182,
+      "probability_up": 0.5478,
+      "probability_down": 0.4522,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 4384.66,
+      "forecast_mid": 64.56,
       "range_20_80": [
-        4239.43,
-        4574.66
+        60.08,
+        69.01
       ],
-      "backtest_accuracy": 0.3998,
-      "naive_baseline": 0.6032,
-      "backtest_edge": -0.2034,
-      "brier_score": 0.3174,
-      "model_agreement": 0.75,
+      "backtest_accuracy": 0.3532,
+      "naive_baseline": 0.6111,
+      "backtest_edge": -0.2579,
+      "brier_score": 0.3844,
+      "model_agreement": 1.0,
       "test_observations": 252,
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.323,
-          "backtest_accuracy": 0.246,
-          "brier_score": 0.4371,
+          "probability_up": 0.708,
+          "backtest_accuracy": 0.2937,
+          "brier_score": 0.5107,
           "weight": 0.25
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4503,
+          "probability_up": 0.5423,
           "backtest_accuracy": 0.3413,
-          "brier_score": 0.2882,
+          "brier_score": 0.313,
           "weight": 0.25
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.414,
-          "backtest_accuracy": 0.5278,
-          "brier_score": 0.2798,
+          "probability_up": 0.5568,
+          "backtest_accuracy": 0.369,
+          "brier_score": 0.3723,
           "weight": 0.25
         },
         {
           "name": "Regime KNN",
-          "probability_up": 0.6227,
-          "backtest_accuracy": 0.4841,
-          "brier_score": 0.2646,
+          "probability_up": 0.6904,
+          "backtest_accuracy": 0.4087,
+          "brier_score": 0.3417,
           "weight": 0.25
         }
       ]
@@ -257,1043 +257,1043 @@
   "series": [
     {
       "date": "2025-07-28",
-      "close": 3309.1
+      "close": 38.03
     },
     {
       "date": "2025-07-29",
-      "close": 3323.4
+      "close": 38.08
     },
     {
       "date": "2025-07-30",
-      "close": 3295.8
+      "close": 37.57
     },
     {
       "date": "2025-07-31",
-      "close": 3293.2
+      "close": 36.55
     },
     {
       "date": "2025-08-01",
-      "close": 3347.7
+      "close": 36.79
     },
     {
       "date": "2025-08-04",
-      "close": 3374.4
+      "close": 37.19
     },
     {
       "date": "2025-08-05",
-      "close": 3381.9
+      "close": 37.69
     },
     {
       "date": "2025-08-06",
-      "close": 3380.0
+      "close": 37.77
     },
     {
       "date": "2025-08-07",
-      "close": 3400.3
+      "close": 38.16
     },
     {
       "date": "2025-08-08",
-      "close": 3439.1
+      "close": 38.42
     },
     {
       "date": "2025-08-11",
-      "close": 3353.1
+      "close": 37.66
     },
     {
       "date": "2025-08-12",
-      "close": 3348.9
+      "close": 37.9
     },
     {
       "date": "2025-08-13",
-      "close": 3358.7
+      "close": 38.5
     },
     {
       "date": "2025-08-14",
-      "close": 3335.2
+      "close": 37.98
     },
     {
       "date": "2025-08-15",
-      "close": 3336.0
+      "close": 37.89
     },
     {
       "date": "2025-08-18",
-      "close": 3331.7
+      "close": 37.95
     },
     {
       "date": "2025-08-19",
-      "close": 3313.4
+      "close": 37.26
     },
     {
       "date": "2025-08-20",
-      "close": 3343.4
+      "close": 37.71
     },
     {
       "date": "2025-08-21",
-      "close": 3336.9
+      "close": 38.03
     },
     {
       "date": "2025-08-22",
-      "close": 3374.4
+      "close": 39.0
     },
     {
       "date": "2025-08-25",
-      "close": 3373.8
+      "close": 38.68
     },
     {
       "date": "2025-08-26",
-      "close": 3388.6
+      "close": 38.58
     },
     {
       "date": "2025-08-27",
-      "close": 3404.6
+      "close": 38.69
     },
     {
       "date": "2025-08-28",
-      "close": 3431.8
+      "close": 39.19
     },
     {
       "date": "2025-08-29",
-      "close": 3473.7
+      "close": 40.2
     },
     {
       "date": "2025-09-02",
-      "close": 3549.4
+      "close": 41.07
     },
     {
       "date": "2025-09-03",
-      "close": 3593.2
+      "close": 41.54
     },
     {
       "date": "2025-09-04",
-      "close": 3565.8
+      "close": 40.91
     },
     {
       "date": "2025-09-05",
-      "close": 3613.2
+      "close": 41.07
     },
     {
       "date": "2025-09-08",
-      "close": 3638.1
+      "close": 41.43
     },
     {
       "date": "2025-09-09",
-      "close": 3643.3
+      "close": 40.88
     },
     {
       "date": "2025-09-10",
-      "close": 3643.6
+      "close": 41.13
     },
     {
       "date": "2025-09-11",
-      "close": 3636.9
+      "close": 41.7
     },
     {
       "date": "2025-09-12",
-      "close": 3649.4
+      "close": 42.39
     },
     {
       "date": "2025-09-15",
-      "close": 3682.2
+      "close": 42.52
     },
     {
       "date": "2025-09-16",
-      "close": 3688.9
+      "close": 42.47
     },
     {
       "date": "2025-09-17",
-      "close": 3681.8
+      "close": 41.72
     },
     {
       "date": "2025-09-18",
-      "close": 3643.7
+      "close": 41.71
     },
     {
       "date": "2025-09-19",
-      "close": 3671.5
+      "close": 42.54
     },
     {
       "date": "2025-09-22",
-      "close": 3740.7
+      "close": 43.8
     },
     {
       "date": "2025-09-23",
-      "close": 3780.6
+      "close": 44.19
     },
     {
       "date": "2025-09-24",
-      "close": 3732.1
+      "close": 43.78
     },
     {
       "date": "2025-09-25",
-      "close": 3736.9
+      "close": 44.7
     },
     {
       "date": "2025-09-26",
-      "close": 3775.3
+      "close": 46.22
     },
     {
       "date": "2025-09-29",
-      "close": 3820.9
+      "close": 46.61
     },
     {
       "date": "2025-09-30",
-      "close": 3840.8
+      "close": 46.25
     },
     {
       "date": "2025-10-01",
-      "close": 3867.5
+      "close": 47.29
     },
     {
       "date": "2025-10-02",
-      "close": 3839.7
+      "close": 46.0
     },
     {
       "date": "2025-10-03",
-      "close": 3880.8
+      "close": 47.6
     },
     {
       "date": "2025-10-06",
-      "close": 3948.5
+      "close": 48.08
     },
     {
       "date": "2025-10-07",
-      "close": 3976.6
+      "close": 47.18
     },
     {
       "date": "2025-10-08",
-      "close": 4043.3
+      "close": 48.66
     },
     {
       "date": "2025-10-09",
-      "close": 3946.3
+      "close": 46.85
     },
     {
       "date": "2025-10-10",
-      "close": 3975.9
+      "close": 46.94
     },
     {
       "date": "2025-10-13",
-      "close": 4108.6
+      "close": 50.13
     },
     {
       "date": "2025-10-14",
-      "close": 4138.7
+      "close": 50.31
     },
     {
       "date": "2025-10-15",
-      "close": 4176.9
+      "close": 51.07
     },
     {
       "date": "2025-10-16",
-      "close": 4280.2
+      "close": 53.02
     },
     {
       "date": "2025-10-17",
-      "close": 4189.9
+      "close": 49.86
     },
     {
       "date": "2025-10-20",
-      "close": 4336.4
+      "close": 51.12
     },
     {
       "date": "2025-10-21",
-      "close": 4087.7
+      "close": 47.45
     },
     {
       "date": "2025-10-22",
-      "close": 4044.4
+      "close": 47.46
     },
     {
       "date": "2025-10-23",
-      "close": 4125.5
+      "close": 48.48
     },
     {
       "date": "2025-10-24",
-      "close": 4118.4
+      "close": 48.38
     },
     {
       "date": "2025-10-27",
-      "close": 4001.9
+      "close": 46.56
     },
     {
       "date": "2025-10-28",
-      "close": 3966.2
+      "close": 47.12
     },
     {
       "date": "2025-10-29",
-      "close": 3983.7
+      "close": 47.72
     },
     {
       "date": "2025-10-30",
-      "close": 4001.3
+      "close": 48.43
     },
     {
       "date": "2025-10-31",
-      "close": 3982.2
+      "close": 47.99
     },
     {
       "date": "2025-11-03",
-      "close": 4000.3
+      "close": 47.89
     },
     {
       "date": "2025-11-04",
-      "close": 3947.7
+      "close": 47.13
     },
     {
       "date": "2025-11-05",
-      "close": 3980.3
+      "close": 47.86
     },
     {
       "date": "2025-11-06",
-      "close": 3979.9
+      "close": 47.79
     },
     {
       "date": "2025-11-07",
-      "close": 3999.4
+      "close": 48.02
     },
     {
       "date": "2025-11-10",
-      "close": 4111.8
+      "close": 50.18
     },
     {
       "date": "2025-11-11",
-      "close": 4106.8
+      "close": 50.62
     },
     {
       "date": "2025-11-12",
-      "close": 4204.4
+      "close": 53.33
     },
     {
       "date": "2025-11-13",
-      "close": 4186.9
+      "close": 53.07
     },
     {
       "date": "2025-11-14",
-      "close": 4087.6
+      "close": 50.59
     },
     {
       "date": "2025-11-17",
-      "close": 4068.3
+      "close": 50.62
     },
     {
       "date": "2025-11-18",
-      "close": 4061.3
+      "close": 50.45
     },
     {
       "date": "2025-11-19",
-      "close": 4077.7
+      "close": 50.79
     },
     {
       "date": "2025-11-20",
-      "close": 4056.5
+      "close": 50.25
     },
     {
       "date": "2025-11-21",
-      "close": 4076.7
+      "close": 49.87
     },
     {
       "date": "2025-11-24",
-      "close": 4091.9
+      "close": 50.29
     },
     {
       "date": "2025-11-25",
-      "close": 4139.2
+      "close": 50.93
     },
     {
       "date": "2025-11-26",
-      "close": 4165.2
+      "close": 52.92
     },
     {
       "date": "2025-11-28",
-      "close": 4218.3
+      "close": 56.45
     },
     {
       "date": "2025-12-01",
-      "close": 4239.3
+      "close": 58.42
     },
     {
       "date": "2025-12-02",
-      "close": 4186.6
+      "close": 57.98
     },
     {
       "date": "2025-12-03",
-      "close": 4199.3
+      "close": 57.92
     },
     {
       "date": "2025-12-04",
-      "close": 4211.8
+      "close": 56.85
     },
     {
       "date": "2025-12-05",
-      "close": 4212.9
+      "close": 58.42
     },
     {
       "date": "2025-12-08",
-      "close": 4187.2
+      "close": 57.78
     },
     {
       "date": "2025-12-09",
-      "close": 4206.7
+      "close": 60.17
     },
     {
       "date": "2025-12-10",
-      "close": 4196.4
+      "close": 60.38
     },
     {
       "date": "2025-12-11",
-      "close": 4285.5
+      "close": 63.93
     },
     {
       "date": "2025-12-12",
-      "close": 4300.1
+      "close": 61.36
     },
     {
       "date": "2025-12-15",
-      "close": 4306.7
+      "close": 62.94
     },
     {
       "date": "2025-12-16",
-      "close": 4304.5
+      "close": 62.7
     },
     {
       "date": "2025-12-17",
-      "close": 4347.5
+      "close": 66.24
     },
     {
       "date": "2025-12-18",
-      "close": 4339.5
+      "close": 64.59
     },
     {
       "date": "2025-12-19",
-      "close": 4361.4
+      "close": 66.85
     },
     {
       "date": "2025-12-22",
-      "close": 4444.6
+      "close": 67.91
     },
     {
       "date": "2025-12-23",
-      "close": 4482.8
+      "close": 70.49
     },
     {
       "date": "2025-12-24",
-      "close": 4480.6
+      "close": 71.03
     },
     {
       "date": "2025-12-26",
-      "close": 4529.1
+      "close": 76.49
     },
     {
       "date": "2025-12-29",
-      "close": 4325.1
+      "close": 69.86
     },
     {
       "date": "2025-12-30",
-      "close": 4370.1
+      "close": 77.37
     },
     {
       "date": "2025-12-31",
-      "close": 4325.6
+      "close": 70.13
     },
     {
       "date": "2026-01-02",
-      "close": 4314.4
+      "close": 70.56
     },
     {
       "date": "2026-01-05",
-      "close": 4436.9
+      "close": 76.16
     },
     {
       "date": "2026-01-06",
-      "close": 4482.2
+      "close": 80.53
     },
     {
       "date": "2026-01-07",
-      "close": 4449.3
+      "close": 77.14
     },
     {
       "date": "2026-01-08",
-      "close": 4449.7
+      "close": 74.72
     },
     {
       "date": "2026-01-09",
-      "close": 4490.3
+      "close": 78.88
     },
     {
       "date": "2026-01-12",
-      "close": 4604.3
+      "close": 84.61
     },
     {
       "date": "2026-01-13",
-      "close": 4589.2
+      "close": 85.88
     },
     {
       "date": "2026-01-14",
-      "close": 4626.3
+      "close": 90.87
     },
     {
       "date": "2026-01-15",
-      "close": 4616.3
+      "close": 91.88
     },
     {
       "date": "2026-01-16",
-      "close": 4588.4
+      "close": 88.09
     },
     {
       "date": "2026-01-20",
-      "close": 4759.6
+      "close": 94.21
     },
     {
       "date": "2026-01-21",
-      "close": 4831.8
+      "close": 92.21
     },
     {
       "date": "2026-01-22",
-      "close": 4908.8
+      "close": 95.98
     },
     {
       "date": "2026-01-23",
-      "close": 4976.2
+      "close": 100.93
     },
     {
       "date": "2026-01-26",
-      "close": 5079.7
+      "close": 115.08
     },
     {
       "date": "2026-01-27",
-      "close": 5079.9
+      "close": 105.52
     },
     {
       "date": "2026-01-28",
-      "close": 5301.6
+      "close": 113.11
     },
     {
       "date": "2026-01-29",
-      "close": 5318.4
+      "close": 114.04
     },
     {
       "date": "2026-01-30",
-      "close": 4713.9
+      "close": 78.29
     },
     {
       "date": "2026-02-02",
-      "close": 4622.5
+      "close": 76.78
     },
     {
       "date": "2026-02-03",
-      "close": 4903.7
+      "close": 83.04
     },
     {
       "date": "2026-02-04",
-      "close": 4920.4
+      "close": 84.17
     },
     {
       "date": "2026-02-05",
-      "close": 4861.4
+      "close": 76.53
     },
     {
       "date": "2026-02-06",
-      "close": 4951.2
+      "close": 76.74
     },
     {
       "date": "2026-02-09",
-      "close": 5050.9
+      "close": 82.07
     },
     {
       "date": "2026-02-10",
-      "close": 5003.8
+      "close": 80.22
     },
     {
       "date": "2026-02-11",
-      "close": 5071.6
+      "close": 83.75
     },
     {
       "date": "2026-02-12",
-      "close": 4923.7
+      "close": 75.55
     },
     {
       "date": "2026-02-13",
-      "close": 5022.0
+      "close": 77.85
     },
     {
       "date": "2026-02-17",
-      "close": 4882.9
+      "close": 73.45
     },
     {
       "date": "2026-02-18",
-      "close": 4986.5
+      "close": 77.51
     },
     {
       "date": "2026-02-19",
-      "close": 4975.9
+      "close": 77.57
     },
     {
       "date": "2026-02-20",
-      "close": 5059.3
+      "close": 82.28
     },
     {
       "date": "2026-02-23",
-      "close": 5204.7
+      "close": 86.52
     },
     {
       "date": "2026-02-24",
-      "close": 5155.8
+      "close": 87.46
     },
     {
       "date": "2026-02-25",
-      "close": 5206.4
+      "close": 90.94
     },
     {
       "date": "2026-02-26",
-      "close": 5176.5
+      "close": 87.0
     },
     {
       "date": "2026-02-27",
-      "close": 5230.5
+      "close": 92.68
     },
     {
       "date": "2026-03-02",
-      "close": 5294.4
+      "close": 88.28
     },
     {
       "date": "2026-03-03",
-      "close": 5107.4
+      "close": 82.92
     },
     {
       "date": "2026-03-04",
-      "close": 5120.2
+      "close": 82.63
     },
     {
       "date": "2026-03-05",
-      "close": 5065.3
+      "close": 81.69
     },
     {
       "date": "2026-03-06",
-      "close": 5146.1
+      "close": 83.82
     },
     {
       "date": "2026-03-09",
-      "close": 5091.5
+      "close": 84.03
     },
     {
       "date": "2026-03-10",
-      "close": 5229.7
+      "close": 89.08
     },
     {
       "date": "2026-03-11",
-      "close": 5167.4
+      "close": 85.07
     },
     {
       "date": "2026-03-12",
-      "close": 5115.8
+      "close": 84.67
     },
     {
       "date": "2026-03-13",
-      "close": 5052.5
+      "close": 80.91
     },
     {
       "date": "2026-03-16",
-      "close": 4994.0
+      "close": 80.26
     },
     {
       "date": "2026-03-17",
-      "close": 5001.0
+      "close": 79.53
     },
     {
       "date": "2026-03-18",
-      "close": 4889.9
+      "close": 77.24
     },
     {
       "date": "2026-03-19",
-      "close": 4600.7
+      "close": 70.9
     },
     {
       "date": "2026-03-20",
-      "close": 4570.4
+      "close": 69.36
     },
     {
       "date": "2026-03-23",
-      "close": 4404.1
+      "close": 69.05
     },
     {
       "date": "2026-03-24",
-      "close": 4399.3
+      "close": 69.27
     },
     {
       "date": "2026-03-25",
-      "close": 4549.8
+      "close": 72.36
     },
     {
       "date": "2026-03-26",
-      "close": 4375.5
+      "close": 67.67
     },
     {
       "date": "2026-03-27",
-      "close": 4492.0
+      "close": 69.54
     },
     {
       "date": "2026-03-30",
-      "close": 4526.0
+      "close": 70.32
     },
     {
       "date": "2026-03-31",
-      "close": 4647.6
+      "close": 74.69
     },
     {
       "date": "2026-04-01",
-      "close": 4783.2
+      "close": 75.87
     },
     {
       "date": "2026-04-02",
-      "close": 4651.5
+      "close": 72.74
     },
     {
       "date": "2026-04-06",
-      "close": 4656.8
+      "close": 72.66
     },
     {
       "date": "2026-04-07",
-      "close": 4657.1
+      "close": 71.83
     },
     {
       "date": "2026-04-08",
-      "close": 4749.5
+      "close": 75.22
     },
     {
       "date": "2026-04-09",
-      "close": 4792.2
+      "close": 76.28
     },
     {
       "date": "2026-04-10",
-      "close": 4761.9
+      "close": 76.32
     },
     {
       "date": "2026-04-13",
-      "close": 4742.4
+      "close": 75.52
     },
     {
       "date": "2026-04-14",
-      "close": 4825.0
+      "close": 79.39
     },
     {
       "date": "2026-04-15",
-      "close": 4800.0
+      "close": 79.49
     },
     {
       "date": "2026-04-16",
-      "close": 4785.4
+      "close": 78.61
     },
     {
       "date": "2026-04-17",
-      "close": 4857.6
+      "close": 81.74
     },
     {
       "date": "2026-04-20",
-      "close": 4806.6
+      "close": 79.95
     },
     {
       "date": "2026-04-21",
-      "close": 4698.4
+      "close": 76.41
     },
     {
       "date": "2026-04-22",
-      "close": 4732.5
+      "close": 77.89
     },
     {
       "date": "2026-04-23",
-      "close": 4705.1
+      "close": 75.46
     },
     {
       "date": "2026-04-24",
-      "close": 4722.3
+      "close": 76.38
     },
     {
       "date": "2026-04-27",
-      "close": 4675.4
+      "close": 75.0
     },
     {
       "date": "2026-04-28",
-      "close": 4591.5
+      "close": 73.21
     },
     {
       "date": "2026-04-29",
-      "close": 4545.2
+      "close": 71.57
     },
     {
       "date": "2026-04-30",
-      "close": 4614.7
+      "close": 73.53
     },
     {
       "date": "2026-05-01",
-      "close": 4629.9
+      "close": 75.95
     },
     {
       "date": "2026-05-04",
-      "close": 4519.5
+      "close": 73.07
     },
     {
       "date": "2026-05-05",
-      "close": 4555.8
+      "close": 73.11
     },
     {
       "date": "2026-05-06",
-      "close": 4681.9
+      "close": 76.81
     },
     {
       "date": "2026-05-07",
-      "close": 4699.8
+      "close": 79.7
     },
     {
       "date": "2026-05-08",
-      "close": 4720.4
+      "close": 80.39
     },
     {
       "date": "2026-05-11",
-      "close": 4718.7
+      "close": 85.49
     },
     {
       "date": "2026-05-12",
-      "close": 4677.6
+      "close": 85.13
     },
     {
       "date": "2026-05-13",
-      "close": 4697.7
+      "close": 88.89
     },
     {
       "date": "2026-05-14",
-      "close": 4678.1
+      "close": 84.91
     },
     {
       "date": "2026-05-15",
-      "close": 4555.8
+      "close": 77.16
     },
     {
       "date": "2026-05-18",
-      "close": 4552.5
+      "close": 77.07
     },
     {
       "date": "2026-05-19",
-      "close": 4506.3
+      "close": 74.83
     },
     {
       "date": "2026-05-20",
-      "close": 4531.3
+      "close": 75.85
     },
     {
       "date": "2026-05-21",
-      "close": 4539.8
+      "close": 76.41
     },
     {
       "date": "2026-05-22",
-      "close": 4521.0
+      "close": 75.89
     },
     {
       "date": "2026-05-26",
-      "close": 4500.4
+      "close": 76.31
     },
     {
       "date": "2026-05-27",
-      "close": 4447.5
+      "close": 74.6
     },
     {
       "date": "2026-05-28",
-      "close": 4499.3
+      "close": 75.64
     },
     {
       "date": "2026-05-29",
-      "close": 4560.5
+      "close": 75.62
     },
     {
       "date": "2026-06-01",
-      "close": 4475.2
+      "close": 75.01
     },
     {
       "date": "2026-06-02",
-      "close": 4489.1
+      "close": 75.31
     },
     {
       "date": "2026-06-03",
-      "close": 4436.7
+      "close": 73.48
     },
     {
       "date": "2026-06-04",
-      "close": 4475.8
+      "close": 73.78
     },
     {
       "date": "2026-06-05",
-      "close": 4337.1
+      "close": 68.94
     },
     {
       "date": "2026-06-08",
-      "close": 4335.9
+      "close": 68.43
     },
     {
       "date": "2026-06-09",
-      "close": 4260.0
+      "close": 65.09
     },
     {
       "date": "2026-06-10",
-      "close": 4108.2
+      "close": 64.6
     },
     {
       "date": "2026-06-11",
-      "close": 4090.3
+      "close": 63.88
     },
     {
       "date": "2026-06-12",
-      "close": 4215.0
+      "close": 67.86
     },
     {
       "date": "2026-06-15",
-      "close": 4328.0
+      "close": 70.07
     },
     {
       "date": "2026-06-16",
-      "close": 4330.9
+      "close": 69.9
     },
     {
       "date": "2026-06-17",
-      "close": 4358.9
+      "close": 70.7
     },
     {
       "date": "2026-06-18",
-      "close": 4224.1
+      "close": 66.25
     },
     {
       "date": "2026-06-22",
-      "close": 4181.9
+      "close": 65.53
     },
     {
       "date": "2026-06-23",
-      "close": 4129.9
+      "close": 62.02
     },
     {
       "date": "2026-06-24",
-      "close": 3990.3
+      "close": 58.05
     },
     {
       "date": "2026-06-25",
-      "close": 4030.5
+      "close": 58.35
     },
     {
       "date": "2026-06-26",
-      "close": 4078.7
+      "close": 59.22
     },
     {
       "date": "2026-06-29",
-      "close": 4022.3
+      "close": 58.17
     },
     {
       "date": "2026-06-30",
-      "close": 4022.9
+      "close": 59.48
     },
     {
       "date": "2026-07-01",
-      "close": 4068.3
+      "close": 60.08
     },
     {
       "date": "2026-07-02",
-      "close": 4112.7
+      "close": 60.64
     },
     {
       "date": "2026-07-06",
-      "close": 4155.1
+      "close": 61.92
     },
     {
       "date": "2026-07-07",
-      "close": 4145.3
+      "close": 60.93
     },
     {
       "date": "2026-07-08",
-      "close": 4070.9
+      "close": 58.16
     },
     {
       "date": "2026-07-09",
-      "close": 4130.6
+      "close": 60.38
     },
     {
       "date": "2026-07-10",
-      "close": 4104.1
+      "close": 59.81
     },
     {
       "date": "2026-07-13",
-      "close": 3997.0
+      "close": 57.63
     },
     {
       "date": "2026-07-14",
-      "close": 4061.1
+      "close": 58.77
     },
     {
       "date": "2026-07-15",
-      "close": 4044.0
+      "close": 57.11
     },
     {
       "date": "2026-07-16",
-      "close": 3985.6
+      "close": 55.9
     },
     {
       "date": "2026-07-17",
-      "close": 4012.7
+      "close": 56.04
     },
     {
       "date": "2026-07-20",
-      "close": 4010.3
+      "close": 56.8
     },
     {
       "date": "2026-07-21",
-      "close": 4071.1
+      "close": 58.83
     },
     {
       "date": "2026-07-22",
-      "close": 4146.9
+      "close": 60.02
     },
     {
       "date": "2026-07-23",
-      "close": 4046.6
+      "close": 57.8
     },
     {
       "date": "2026-07-24",
-      "close": 4067.6
+      "close": 58.66
     },
     {
       "date": "2026-07-27",
-      "close": 4074.5
+      "close": 58.47
     },
     {
       "date": "2026-07-28",
-      "close": 4036.3
+      "close": 57.3
     },
     {
       "date": "2026-07-29",
-      "close": 4034.7
+      "close": 57.86
     },
     {
       "date": "2026-07-30",
-      "close": 4100.1
+      "close": 58.81
     },
     {
       "date": "2026-07-31",
-      "close": 4049.1
+      "close": 57.59
     },
     {
       "date": "2026-08-03",
-      "close": 4033.7
+      "close": 57.67
     },
     {
       "date": "2026-08-04",
-      "close": 4095.4
+      "close": 60.06
     },
     {
       "date": "2026-08-05",
-      "close": 4245.8
+      "close": 62.1
     },
     {
       "date": "2026-08-06",
-      "close": 4242.0
+      "close": 61.44
     },
     {
       "date": "2026-08-07",
-      "close": 4340.7
+      "close": 63.33
     }
   ],
   "methodology": "Four-model ensemble using price momentum, trend, volatility and cross-market factors. Probabilities are shrunk toward 50% when recent holdout skill is weak.",
