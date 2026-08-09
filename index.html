@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold Price Prediction | LSTM Project</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#0b0f17;--panel:#131a25;--panel2:#192231;--text:#eef2f7;--muted:#9aa7b7;--gold:#d6b25e;--line:#2a3546;--green:#53c28b;--red:#ef6b73}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b0f17,#101722);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 50px}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}.eyebrow{color:var(--gold);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.title{font-size:clamp(30px,5vw,54px);margin:7px 0 8px;line-height:1.02}.sub{color:var(--muted);max-width:720px;line-height:1.6}.badge{border:1px solid #3a4658;background:#111824;padding:8px 12px;border-radius:999px;color:#c8d1dc;font-size:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0}.card{background:rgba(19,26,37,.92);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.16)}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.value{font-size:27px;font-weight:800;margin-top:8px}.small{font-size:12px;color:var(--muted);margin-top:6px}.chart-card{padding:20px}.chart-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}.chart-title{font-size:18px;font-weight:750}.btns{display:flex;gap:8px;flex-wrap:wrap}.btn{background:#151e2b;border:1px solid #344154;color:#dce4ed;padding:8px 12px;border-radius:10px;cursor:pointer}.btn.active{border-color:var(--gold);color:#f5ddb0}.section{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px}.note{line-height:1.65;color:#cbd4df}.note strong{color:#fff}.links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.link{display:inline-block;text-decoration:none;color:#0c1119;background:var(--gold);font-weight:800;padding:10px 14px;border-radius:10px}.link.secondary{color:#e5eaf0;background:#17202d;border:1px solid #334052}.status{margin-top:12px;color:var(--muted);font-size:13px}.error{color:#ff9aa0}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.section{grid-template-columns:1fr}}@media(max-width:480px){.grid{grid-template-columns:1fr}.wrap{padding-top:20px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <div>
+        <div class="eyebrow">Machine Learning Project</div>
+        <h1 class="title">Gold Price Prediction</h1>
+        <div class="sub">A browser-friendly view of the LSTM gold-price project. The original model was trained on historical data through 2021 and evaluated against 2022 prices.</div>
+      </div>
+      <div class="badge">Historical research demo • Not live trading advice</div>
+    </div>
+
+    <section class="grid">
+      <div class="card"><div class="label">Latest dataset price</div><div class="value" id="latestPrice">—</div><div class="small" id="latestDate">Loading CSV…</div></div>
+      <div class="card"><div class="label">Daily change</div><div class="value" id="dailyChange">—</div><div class="small">From latest row in dataset</div></div>
+      <div class="card"><div class="label">Dataset range</div><div class="value" id="range">—</div><div class="small">Historical gold observations</div></div>
+      <div class="card"><div class="label">Model</div><div class="value">LSTM</div><div class="small">Long Short-Term Memory neural network</div></div>
+    </section>
+
+    <section class="card chart-card">
+      <div class="chart-head">
+        <div><div class="chart-title">Gold Price History</div><div class="small">Closing price from the repository CSV</div></div>
+        <div class="btns"><button class="btn active" data-points="180">Recent</button><button class="btn" data-points="365">1Y</button><button class="btn" data-points="99999">All</button></div>
+      </div>
+      <canvas id="priceChart" height="115"></canvas>
+      <div id="status" class="status">Loading historical data…</div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <div class="chart-title">What this project does</div>
+        <p class="note">The notebook explores historical gold prices, prepares the time-series data, builds an <strong>LSTM neural network</strong>, and compares predicted 2022 prices with actual 2022 prices. This page makes the repository easier to view in a normal browser while preserving the original notebook.</p>
+        <div class="links">
+          <a class="link" href="Gold_Price_Prediction_LSTM.ipynb">Open Notebook</a>
+          <a class="link secondary" href="Gold_Price_2013-2023.csv">View CSV</a>
+          <a class="link secondary" href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM">View GitHub Repo</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chart-title">Important</div>
+        <p class="note">This is a <strong>historical model demonstration</strong>, not a live gold forecast. GitHub Pages can display the data and project results, but it cannot run the Python/TensorFlow notebook backend directly.</p>
+      </div>
+    </section>
+  </main>
+
+<script>
+let rows=[]; let chart;
+function parseCSV(text){
+  const lines=text.trim().split(/\r?\n/); const out=[];
+  for(let i=1;i<lines.length;i++){
+    const vals=[]; let cur=''; let q=false;
+    for(const ch of lines[i]){if(ch==='"'){q=!q}else if(ch===','&&!q){vals.push(cur);cur=''}else{cur+=ch}} vals.push(cur);
+    if(vals.length>=7) out.push({date:vals[0],price:Number(vals[1].replace(/,/g,'')),open:Number(vals[2].replace(/,/g,'')),high:Number(vals[3].replace(/,/g,'')),low:Number(vals[4].replace(/,/g,'')),vol:vals[5],change:vals[6]});
+  }
+  return out.filter(r=>r.date && Number.isFinite(r.price));
+}
+function render(n){
+  const chronological=[...rows].reverse(); const data=n>=chronological.length?chronological:chronological.slice(-n);
+  const labels=data.map(r=>r.date); const prices=data.map(r=>r.price);
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('priceChart'),{type:'line',data:{labels,datasets:[{label:'Gold Price (USD)',data:prices,borderColor:'#d6b25e',backgroundColor:'rgba(214,178,94,.10)',pointRadius:0,borderWidth:2,tension:.18,fill:true}]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+Number(c.parsed.y).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}}},scales:{x:{ticks:{color:'#8290a2',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8290a2',callback:v=>'$'+Number(v).toLocaleString()},grid:{color:'rgba(120,140,160,.12)'}}}}});
+}
+fetch('Gold_Price_2013-2023.csv').then(r=>{if(!r.ok)throw new Error('CSV could not be loaded');return r.text()}).then(text=>{
+  rows=parseCSV(text); if(!rows.length) throw new Error('No valid data found');
+  const latest=rows[0], oldest=rows[rows.length-1];
+  document.getElementById('latestPrice').textContent='$'+latest.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('latestDate').textContent=latest.date;
+  const dc=document.getElementById('dailyChange'); dc.textContent=latest.change; dc.style.color=latest.change.trim().startsWith('-')?'var(--red)':'var(--green)';
+  document.getElementById('range').textContent=new Date(oldest.date).getFullYear()+'–'+new Date(latest.date).getFullYear();
+  document.getElementById('status').textContent=rows.length.toLocaleString()+' historical records loaded from GitHub.';
+  render(180);
+}).catch(e=>{const s=document.getElementById('status');s.textContent=e.message;s.classList.add('error')});
+document.querySelectorAll('.btn[data-points]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(Number(b.dataset.points))}));
+</script>
+</body>
+</html>
