@@ -1,71 +1,66 @@
 {
-  "status": "ok",
+  "status": "fallback",
   "asset": "silver",
-  "updated_utc": "2026-08-09T21:52:47.254463+00:00",
-  "current_regime": "High Volatility",
-  "selected_4h_model": "Regime-specific",
+  "updated_utc": "2026-08-09T22:54:42.049576+00:00",
+  "current_regime": "Regime model unavailable",
+  "selected_4h_model": "Normal 4H model fallback",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.6111,
-      "directional_edge": 0.0,
-      "mae_skill": 0.107,
-      "origins": 36
+      "directional_accuracy": 0.5714,
+      "directional_edge": 0.1786,
+      "mae_skill": 0.0378,
+      "origins": 28
     },
-    "regime_specific": {
-      "directional_accuracy": 0.6389,
-      "directional_edge": 0.0278,
-      "mae_skill": 0.0795,
-      "origins": 36
-    }
+    "regime_specific": null
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 63.88,
-    "projected_return_pct": 0.79,
-    "probability_up": 0.7778,
-    "probability_down": 0.2222,
+    "model_price": 63.87,
+    "projected_return_pct": 0.006,
+    "probability_up": 0.5714,
+    "probability_down": 0.4286,
     "confidence": "Low",
     "tight_model_zone": [
-      63.32,
+      63.29,
       64.44
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.6389,
-    "baseline_directional_accuracy": 0.6111,
-    "directional_edge": 0.0278,
-    "backtest_mae_pct": 0.802,
-    "baseline_mae_pct": 0.872,
-    "mae_skill_vs_baseline": 0.0795,
-    "model_agreement": 1.0,
-    "walkforward_origins": 36,
-    "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "Regime-specific",
-    "market_regime": "High Volatility",
+    "backtest_directional_accuracy": 0.5714,
+    "baseline_directional_accuracy": 0.3929,
+    "directional_edge": 0.1786,
+    "backtest_mae_pct": 0.916,
+    "baseline_mae_pct": 0.952,
+    "mae_skill_vs_baseline": 0.0378,
+    "model_agreement": 0.6667,
+    "walkforward_origins": 28,
+    "validation": "purged expanding-origin walk-forward",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 1.03,
-        "weight": 0.3714
+        "projected_return_pct": -0.138,
+        "backtest_mae_pct": 0.946,
+        "directional_accuracy": 0.3214,
+        "mae_skill_vs_baseline": 0.0063,
+        "weight": 0.2204
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 0.525,
-        "weight": 0.2996
+        "projected_return_pct": 0.044,
+        "backtest_mae_pct": 0.908,
+        "directional_accuracy": 0.6071,
+        "mae_skill_vs_baseline": 0.0461,
+        "weight": 0.3895
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 0.761,
-        "weight": 0.329
+        "projected_return_pct": 0.049,
+        "backtest_mae_pct": 0.907,
+        "directional_accuracy": 0.6071,
+        "mae_skill_vs_baseline": 0.0472,
+        "weight": 0.3901
       }
     ]
   },
-  "feature_explanation": {
-    "session_vwap": "where price sits versus today's volume-weighted average",
-    "previous_day_levels": "distance from previous session high/low/close",
-    "opening_range": "distance from early-session range",
-    "volume_acceleration": "whether recent volume is increasing versus the day",
-    "volatility_expansion": "whether short-term movement is expanding versus normal",
-    "hourly_momentum": "hourly RSI/MACD/EMA structure"
-  }
+  "fallback_reason": "Generic 4H walk-forward unavailable"
 }
