@@ -9,6 +9,7 @@ on:
       - "technical_analysis.py"
       - "projection_model_v2.py"
       - "backtest_engine.py"
+      - "enhance_guru_summary.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -46,6 +47,9 @@ jobs:
 
       - name: Audit and backtest complete model
         run: python backtest_engine.py
+
+      - name: Compose institutional market guru summary
+        run: python enhance_guru_summary.py
 
       - name: Commit updated intelligence data
         run: |
