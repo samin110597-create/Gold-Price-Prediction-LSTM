@@ -1,59 +1,71 @@
 {
-  "status": "fallback",
+  "status": "ok",
   "asset": "gold",
-  "updated_utc": "2026-08-10T23:55:49.792106+00:00",
-  "current_regime": "Regime model unavailable",
-  "selected_4h_model": "Normal 4H model fallback",
+  "updated_utc": "2026-08-11T02:32:52.492837+00:00",
+  "current_regime": "High Volatility",
+  "selected_4h_model": "All-market enriched",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.75,
-      "directional_edge": 0.1944,
-      "mae_skill": 0.2035,
+      "directional_accuracy": 0.8611,
+      "directional_edge": 0.3333,
+      "mae_skill": 0.1622,
       "origins": 36
     },
-    "regime_specific": null
+    "regime_specific": {
+      "directional_accuracy": 0.8333,
+      "directional_edge": 0.3056,
+      "mae_skill": 0.1398,
+      "origins": 36
+    }
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 4441.58,
-    "projected_return_pct": 0.087,
-    "probability_up": 0.5833,
-    "probability_down": 0.4167,
-    "confidence": "Low",
+    "model_price": 4466.99,
+    "projected_return_pct": 0.179,
+    "probability_up": 0.6389,
+    "probability_down": 0.3611,
+    "confidence": "High",
     "tight_model_zone": [
-      4425.53,
-      4457.64
+      4449.59,
+      4484.39
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.75,
-    "baseline_directional_accuracy": 0.5556,
-    "directional_edge": 0.1944,
-    "backtest_mae_pct": 0.381,
-    "baseline_mae_pct": 0.478,
-    "mae_skill_vs_baseline": 0.2035,
-    "model_agreement": 0.6667,
+    "backtest_directional_accuracy": 0.8611,
+    "baseline_directional_accuracy": 0.5278,
+    "directional_edge": 0.3333,
+    "backtest_mae_pct": 0.365,
+    "baseline_mae_pct": 0.435,
+    "mae_skill_vs_baseline": 0.1622,
+    "model_agreement": 1.0,
     "walkforward_origins": 36,
     "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "Regime-specific",
+    "selected_model": "All-market enriched",
     "market_regime": "High Volatility",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.133,
-        "weight": 0.3522
+        "projected_return_pct": 0.323,
+        "weight": 0.3758
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": -0.031,
-        "weight": 0.3107
+        "projected_return_pct": 0.035,
+        "weight": 0.3157
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 0.149,
-        "weight": 0.337
+        "projected_return_pct": 0.151,
+        "weight": 0.3085
       }
     ]
   },
-  "fallback_reason": "Generic 4H walk-forward unavailable"
+  "feature_explanation": {
+    "session_vwap": "where price sits versus today's volume-weighted average",
+    "previous_day_levels": "distance from previous session high/low/close",
+    "opening_range": "distance from early-session range",
+    "volume_acceleration": "whether recent volume is increasing versus the day",
+    "volatility_expansion": "whether short-term movement is expanding versus normal",
+    "hourly_momentum": "hourly RSI/MACD/EMA structure"
+  }
 }
