@@ -1,7 +1,7 @@
 {
   "status": "ok",
-  "updated_utc": "2026-08-12T00:32:37.854037+00:00",
-  "validation_method": "Purged expanding-window/origin walk-forward for trained models; last ~3 years deterministic historical test for technical confluence. Future labels are excluded from each training window.",
+  "updated_utc": "2026-08-12T00:49:16.585187+00:00",
+  "validation_method": "Purged walk-forward validation. Technical selective thresholds are chosen on earlier calibration windows; 1Y macro forecasts use monthly data with a 12-month label purge and one-month-lagged FRED inputs. Champion-challenger selection prevents a newer model from replacing a stronger incumbent without OOS evidence.",
   "assets": {
     "gold": {
       "audit_grade": "FAIL",
@@ -38,6 +38,7 @@
       "price_projections": [
         {
           "horizon": "4 Hours",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.4643,
           "baseline_directional_accuracy": 0.5714,
           "directional_edge": -0.1071,
@@ -50,6 +51,7 @@
         },
         {
           "horizon": "1 Day",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.4444,
           "baseline_directional_accuracy": 0.4722,
           "directional_edge": -0.0278,
@@ -62,6 +64,7 @@
         },
         {
           "horizon": "1 Week",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.5833,
           "baseline_directional_accuracy": 0.5556,
           "directional_edge": 0.0278,
@@ -74,6 +77,7 @@
         },
         {
           "horizon": "1 Year",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 1.0,
           "baseline_directional_accuracy": 1.0,
           "directional_edge": 0.0,
@@ -85,7 +89,7 @@
           "pass": false
         }
       ],
-      "technical_signals": [
+      "technical_signals_legacy": [
         {
           "horizon_days": 1,
           "signals": 639,
@@ -111,10 +115,334 @@
           "hit_rate": 0.6051,
           "baseline_direction_rate": 0.6838,
           "edge": -0.0787,
-          "avg_signed_return_pct": 1.566
+          "avg_signed_return_pct": 1.565
         }
       ],
-      "interpretation": "PASS means most components beat simple out-of-sample baselines; MIXED means use only components with positive edge; FAIL means do not treat the system as predictive."
+      "technical_selective": [
+        {
+          "horizon_days": 1,
+          "probability_up": 0.544,
+          "probability_down": 0.456,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.54,
+          "selective_accuracy": 0.5765,
+          "baseline_direction_rate": 0.5765,
+          "selective_edge": 0.0,
+          "coverage": 0.5622,
+          "oos_signals": 425,
+          "oos_observations": 756,
+          "brier_all": 0.2469,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.6111,
+              "signals": 77,
+              "accuracy": 0.5974,
+              "baseline": 0.5974,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.8492,
+              "signals": 107,
+              "accuracy": 0.5794,
+              "baseline": 0.5794,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.9365,
+              "signals": 118,
+              "accuracy": 0.6525,
+              "baseline": 0.6525,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.9762,
+              "signals": 123,
+              "accuracy": 0.4878,
+              "baseline": 0.5122,
+              "edge": -0.0244
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.4443
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.4773
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.4773
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.5089
+            }
+          ]
+        },
+        {
+          "horizon_days": 5,
+          "probability_up": 0.6132,
+          "probability_down": 0.3868,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.54,
+          "selective_accuracy": 0.6481,
+          "baseline_direction_rate": 0.6502,
+          "selective_edge": -0.0021,
+          "coverage": 0.6164,
+          "oos_signals": 466,
+          "oos_observations": 756,
+          "brier_all": 0.253,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.7063,
+              "baseline": 0.7063,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.6508,
+              "baseline": 0.6508,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.8095,
+              "signals": 102,
+              "accuracy": 0.7941,
+              "baseline": 0.7843,
+              "edge": 0.0098
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.8889,
+              "signals": 112,
+              "accuracy": 0.4464,
+              "baseline": 0.5357,
+              "edge": -0.0893
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.4562
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.4676
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.4797
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.5747
+            }
+          ]
+        },
+        {
+          "horizon_days": 20,
+          "probability_up": 0.7525,
+          "probability_down": 0.2475,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.54,
+          "selective_accuracy": 0.6988,
+          "baseline_direction_rate": 0.6863,
+          "selective_edge": 0.0124,
+          "coverage": 0.8519,
+          "oos_signals": 644,
+          "oos_observations": 756,
+          "brier_all": 0.2472,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.54,
+              "coverage": 0.3095,
+              "signals": 39,
+              "accuracy": 0.5641,
+              "baseline": 0.5641,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.7381,
+              "baseline": 0.7381,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.746,
+              "baseline": 0.746,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.56,
+              "coverage": 0.881,
+              "signals": 111,
+              "accuracy": 0.8288,
+              "baseline": 0.7928,
+              "edge": 0.036
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.9206,
+              "signals": 116,
+              "accuracy": 0.931,
+              "baseline": 0.8966,
+              "edge": 0.0345
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.3254,
+              "baseline": 0.6746,
+              "edge": -0.3492
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.447
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.4486
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.4668
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.474
+            }
+          ]
+        }
+      ],
+      "technical_champions": [
+        {
+          "horizon_days": 1,
+          "source": "Deterministic confluence",
+          "accuracy": 0.5321,
+          "baseline": 0.5743,
+          "edge": -0.0423,
+          "coverage": 0.8464,
+          "signals": 639,
+          "brier": null,
+          "current_signal": null,
+          "current_probability_up": null,
+          "pass": false
+        },
+        {
+          "horizon_days": 5,
+          "source": "Selective nested technical model",
+          "accuracy": 0.6481,
+          "baseline": 0.6502,
+          "edge": -0.0021,
+          "coverage": 0.6164,
+          "signals": 466,
+          "brier": 0.253,
+          "current_signal": "NO EDGE / ABSTAIN",
+          "current_probability_up": 0.6132,
+          "pass": false
+        },
+        {
+          "horizon_days": 20,
+          "source": "Selective nested technical model",
+          "accuracy": 0.6988,
+          "baseline": 0.6863,
+          "edge": 0.0124,
+          "coverage": 0.8519,
+          "signals": 644,
+          "brier": 0.2472,
+          "current_signal": "NO EDGE / ABSTAIN",
+          "current_probability_up": 0.7525,
+          "pass": false
+        }
+      ],
+      "macro_1y_challenger": {
+        "status": "unavailable",
+        "asset": "gold",
+        "updated_utc": "2026-08-12T00:47:45.061222+00:00",
+        "selected_as_champion": false,
+        "error": "Insufficient monthly history for macro 1Y model",
+        "method_note": "Macro challenger failed safely; incumbent 1Y model remains active."
+      },
+      "interpretation": "PASS means most champion components beat simple out-of-sample baselines. Technical and 1Y challengers can replace incumbents only when pre-defined OOS safeguards are met. FAIL means do not treat the whole system as predictive.",
+      "process_readiness": "INSTITUTIONAL-STYLE CONTROLS ACTIVE",
+      "predictive_readiness": "NOT READY",
+      "readiness_reasons": [
+        "overall champion pass rate is 10%, below 60%",
+        "only 1/4 price horizons pass",
+        "only 0/3 technical champion horizons pass",
+        "no probability horizon passes",
+        "1-year champion does not pass"
+      ],
+      "governance_controls": [
+        "purged chronological walk-forward validation",
+        "champion-challenger promotion rules",
+        "selective technical abstention / no-edge state",
+        "dedicated macro 1Y challenger",
+        "one-month lag on FRED macro inputs",
+        "weak probability gating",
+        "challenger fail-safe: incumbent remains active on failure"
+      ]
     },
     "silver": {
       "audit_grade": "MIXED",
@@ -122,10 +450,10 @@
       "probability_forecasts": [
         {
           "horizon_days": 1,
-          "accuracy": 0.5121,
-          "baseline": 0.5615,
-          "edge": -0.0495,
-          "brier_score": 0.2527,
+          "accuracy": 0.5114,
+          "baseline": 0.5635,
+          "edge": -0.0521,
+          "brier_score": 0.2529,
           "oos_observations": 504,
           "pass": false
         },
@@ -151,6 +479,7 @@
       "price_projections": [
         {
           "horizon": "4 Hours",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.6071,
           "baseline_directional_accuracy": 0.4643,
           "directional_edge": 0.1429,
@@ -163,6 +492,7 @@
         },
         {
           "horizon": "1 Day",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.6111,
           "baseline_directional_accuracy": 0.5278,
           "directional_edge": 0.0833,
@@ -175,6 +505,7 @@
         },
         {
           "horizon": "1 Week",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 0.5833,
           "baseline_directional_accuracy": 0.5556,
           "directional_edge": 0.0278,
@@ -187,6 +518,7 @@
         },
         {
           "horizon": "1 Year",
+          "selected_model": "Incumbent projection model",
           "directional_accuracy": 1.0,
           "baseline_directional_accuracy": 0.7333,
           "directional_edge": 0.2667,
@@ -198,13 +530,13 @@
           "pass": true
         }
       ],
-      "technical_signals": [
+      "technical_signals_legacy": [
         {
           "horizon_days": 1,
           "signals": 641,
           "coverage": 0.849,
-          "hit_rate": 0.4899,
-          "baseline_direction_rate": 0.5476,
+          "hit_rate": 0.4914,
+          "baseline_direction_rate": 0.5491,
           "edge": -0.0577,
           "avg_signed_return_pct": -0.005
         },
@@ -227,7 +559,333 @@
           "avg_signed_return_pct": 2.063
         }
       ],
-      "interpretation": "PASS means most components beat simple out-of-sample baselines; MIXED means use only components with positive edge; FAIL means do not treat the system as predictive."
+      "technical_selective": [
+        {
+          "horizon_days": 1,
+          "probability_up": 0.5246,
+          "probability_down": 0.4754,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.61,
+          "selective_accuracy": 0.5909,
+          "baseline_direction_rate": 0.5874,
+          "selective_edge": 0.0035,
+          "coverage": 0.3783,
+          "oos_signals": 286,
+          "oos_observations": 756,
+          "brier_all": 0.2499,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.56,
+              "coverage": 0.4841,
+              "signals": 61,
+              "accuracy": 0.623,
+              "baseline": 0.623,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.8254,
+              "signals": 104,
+              "accuracy": 0.6635,
+              "baseline": 0.6635,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.9603,
+              "signals": 121,
+              "accuracy": 0.5124,
+              "baseline": 0.5041,
+              "edge": 0.0083
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.4895
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.4542
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.5
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.4274
+            }
+          ]
+        },
+        {
+          "horizon_days": 5,
+          "probability_up": 0.5984,
+          "probability_down": 0.4016,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.54,
+          "selective_accuracy": 0.5686,
+          "baseline_direction_rate": 0.596,
+          "selective_edge": -0.0274,
+          "coverage": 0.5304,
+          "oos_signals": 401,
+          "oos_observations": 756,
+          "brier_all": 0.2531,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.66,
+              "coverage": 0.0,
+              "signals": 0,
+              "accuracy": null,
+              "baseline": null,
+              "edge": null
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.381,
+              "signals": 48,
+              "accuracy": 0.4792,
+              "baseline": 0.7083,
+              "edge": -0.2292
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.4365,
+              "signals": 55,
+              "accuracy": 0.5818,
+              "baseline": 0.5818,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.3651,
+              "signals": 46,
+              "accuracy": 0.5217,
+              "baseline": 0.5217,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.746,
+              "baseline": 0.746,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.4365,
+              "baseline": 0.5635,
+              "edge": -0.127
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.49
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.507
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.5087
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.4839
+            }
+          ]
+        },
+        {
+          "horizon_days": 20,
+          "probability_up": 0.6159,
+          "probability_down": 0.3841,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "decision_threshold": 0.55,
+          "selective_accuracy": 0.5522,
+          "baseline_direction_rate": 0.6376,
+          "selective_edge": -0.0854,
+          "coverage": 0.6971,
+          "oos_signals": 527,
+          "oos_observations": 756,
+          "brier_all": 0.2748,
+          "audit_pass": false,
+          "validation": "nested chronological walk-forward; threshold chosen only on earlier calibration data",
+          "folds": [
+            {
+              "threshold": 0.62,
+              "coverage": 0.2063,
+              "signals": 26,
+              "accuracy": 0.8077,
+              "baseline": 0.6538,
+              "edge": 0.1538
+            },
+            {
+              "threshold": 0.58,
+              "coverage": 0.5079,
+              "signals": 64,
+              "accuracy": 0.4375,
+              "baseline": 0.625,
+              "edge": -0.1875
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.6429,
+              "baseline": 0.6429,
+              "edge": 0.0
+            },
+            {
+              "threshold": 0.56,
+              "coverage": 0.5952,
+              "signals": 75,
+              "accuracy": 0.6533,
+              "baseline": 0.76,
+              "edge": -0.1067
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 0.873,
+              "signals": 110,
+              "accuracy": 0.6364,
+              "baseline": 0.9,
+              "edge": -0.2636
+            },
+            {
+              "threshold": 0.54,
+              "coverage": 1.0,
+              "signals": 126,
+              "accuracy": 0.3333,
+              "baseline": 0.6667,
+              "edge": -0.3333
+            }
+          ],
+          "models": [
+            {
+              "name": "Logistic",
+              "probability_up": 0.5218
+            },
+            {
+              "name": "Random Forest",
+              "probability_up": 0.6072
+            },
+            {
+              "name": "Extra Trees",
+              "probability_up": 0.5388
+            },
+            {
+              "name": "Gradient Boost",
+              "probability_up": 0.7303
+            }
+          ]
+        }
+      ],
+      "technical_champions": [
+        {
+          "horizon_days": 1,
+          "source": "Selective nested technical model",
+          "accuracy": 0.5909,
+          "baseline": 0.5874,
+          "edge": 0.0035,
+          "coverage": 0.3783,
+          "signals": 286,
+          "brier": 0.2499,
+          "current_signal": "NO EDGE / ABSTAIN",
+          "current_probability_up": 0.5246,
+          "pass": false
+        },
+        {
+          "horizon_days": 5,
+          "source": "Selective nested technical model",
+          "accuracy": 0.5686,
+          "baseline": 0.596,
+          "edge": -0.0274,
+          "coverage": 0.5304,
+          "signals": 401,
+          "brier": 0.2531,
+          "current_signal": "NO EDGE / ABSTAIN",
+          "current_probability_up": 0.5984,
+          "pass": false
+        },
+        {
+          "horizon_days": 20,
+          "source": "Selective nested technical model",
+          "accuracy": 0.5522,
+          "baseline": 0.6376,
+          "edge": -0.0854,
+          "coverage": 0.6971,
+          "signals": 527,
+          "brier": 0.2748,
+          "current_signal": "NO EDGE / ABSTAIN",
+          "current_probability_up": 0.6159,
+          "pass": false
+        }
+      ],
+      "macro_1y_challenger": {
+        "status": "unavailable",
+        "asset": "silver",
+        "updated_utc": "2026-08-12T00:47:45.826421+00:00",
+        "selected_as_champion": false,
+        "error": "Insufficient monthly history for macro 1Y model",
+        "method_note": "Macro challenger failed safely; incumbent 1Y model remains active."
+      },
+      "interpretation": "PASS means most champion components beat simple out-of-sample baselines. Technical and 1Y challengers can replace incumbents only when pre-defined OOS safeguards are met. FAIL means do not treat the whole system as predictive.",
+      "process_readiness": "INSTITUTIONAL-STYLE CONTROLS ACTIVE",
+      "predictive_readiness": "NOT READY",
+      "readiness_reasons": [
+        "overall champion pass rate is 40%, below 60%",
+        "only 0/3 technical champion horizons pass",
+        "no probability horizon passes"
+      ],
+      "governance_controls": [
+        "purged chronological walk-forward validation",
+        "champion-challenger promotion rules",
+        "selective technical abstention / no-edge state",
+        "dedicated macro 1Y challenger",
+        "one-month lag on FRED macro inputs",
+        "weak probability gating",
+        "challenger fail-safe: incumbent remains active on failure"
+      ]
     }
-  }
+  },
+  "system_process_readiness": "INSTITUTIONAL-STYLE CONTROLS ACTIVE",
+  "system_predictive_readiness": "NOT READY",
+  "institutional_grade_claim_allowed": false,
+  "institutional_grade_note": "Process controls can be institutional-style even when predictive evidence is not yet strong enough. Do not describe the system as institutional-grade predictive quality unless institutional_grade_claim_allowed is true."
 }
