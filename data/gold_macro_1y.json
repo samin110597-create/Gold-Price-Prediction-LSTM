@@ -1,8 +1,8 @@
 {
   "status": "ok",
   "asset": "gold",
-  "updated_utc": "2026-08-12T01:09:31.913841+00:00",
-  "fred_inputs_available": {
+  "updated_utc": "2026-08-12T01:21:38.654147+00:00",
+  "inputs_available": {
     "fred": {
       "real_yield_10y": true,
       "breakeven_10y": true,
@@ -13,79 +13,82 @@
   },
   "macro_forecast": {
     "horizon": "1 Year",
-    "model_price": 5843.06,
-    "predicted_price": 5843.06,
-    "projected_return_pct": 31.6,
-    "raw_macro_return_pct": 40.31,
+    "model_price": 5222.18,
+    "predicted_price": 5222.18,
+    "projected_return_pct": 17.42,
+    "raw_macro_return_pct": 23.56,
     "historical_anchor_return_pct": 11.28,
-    "macro_model_trust": 0.7,
-    "probability_up": 1.0,
-    "confidence": "Moderate",
-    "forecast_status": "Validated",
+    "macro_model_trust": 0.5,
+    "probability_up": 0.6992,
+    "probability_method": "empirical OOS residual probability, blended with non-overlapping annual sample and shrunk toward 50%",
+    "confidence": "Low",
+    "forecast_status": "Estimate only",
     "tight_model_zone": [
-      5365.18,
-      6320.94
+      4597.57,
+      5846.79
     ],
     "focus_zone": [
-      5365.18,
-      6320.94
+      4597.57,
+      5846.79
     ],
     "risk_zone": [
-      5058.68,
-      6627.44
+      3966.04,
+      6478.32
     ],
-    "backtest_directional_accuracy": 0.6774,
-    "baseline_directional_accuracy": 0.5806,
-    "directional_edge": 0.0968,
-    "backtest_mae_pct": 12.92,
-    "baseline_mae_pct": 19.42,
-    "mae_skill_vs_baseline": 0.3348,
-    "walkforward_origins": 31,
-    "nonoverlap_origins": 8,
-    "nonoverlap_mae_skill": 0.2445,
-    "nonoverlap_directional_edge": 0.125,
-    "validation": "monthly purged expanding-origin walk-forward; 12-month label purge; FRED and CFTC inputs conservatively lagged; non-overlapping 12-month sanity subset",
+    "backtest_directional_accuracy": 0.625,
+    "baseline_directional_accuracy": 0.5,
+    "directional_edge": 0.125,
+    "backtest_mae_pct": 17.96,
+    "baseline_mae_pct": 18.27,
+    "mae_skill_vs_baseline": 0.0173,
+    "walkforward_origins": 64,
+    "nonoverlap_origins": 16,
+    "nonoverlap_mae_skill": 0.0639,
+    "nonoverlap_directional_edge": 0.1875,
+    "audited_live_formula": true,
+    "validation": "monthly purged expanding-origin walk-forward; 12-month label purge; fixed 50/50 macro-model/historical-anchor formula audited OOS; FRED and CFTC inputs lagged; non-overlapping 12-month sanity subset",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 44.15,
-        "weight": 0.2448,
-        "oos_mae_skill": 0.3704,
-        "oos_direction_accuracy": 0.6452
+        "weight": 0.25,
+        "oos_mae_skill": -0.1379,
+        "oos_direction_accuracy": 0.5469,
+        "projected_return_pct": 26.89
       },
       {
         "name": "Elastic Net",
-        "projected_return_pct": 41.32,
-        "weight": 0.2606,
-        "oos_mae_skill": 0.3755,
-        "oos_direction_accuracy": 0.7097
+        "weight": 0.25,
+        "oos_mae_skill": -0.1786,
+        "oos_direction_accuracy": 0.5938,
+        "projected_return_pct": 25.99
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 40.54,
-        "weight": 0.2432,
-        "oos_mae_skill": 0.2192,
-        "oos_direction_accuracy": 0.7419
+        "weight": 0.25,
+        "oos_mae_skill": 0.0037,
+        "oos_direction_accuracy": 0.5625,
+        "projected_return_pct": 24.36
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 35.3,
-        "weight": 0.2514,
-        "oos_mae_skill": 0.2704,
-        "oos_direction_accuracy": 0.7097
+        "weight": 0.25,
+        "oos_mae_skill": 0.0517,
+        "oos_direction_accuracy": 0.5781,
+        "projected_return_pct": 17.0
       }
     ]
   },
-  "selected_as_champion": true,
+  "selected_as_champion": false,
   "comparison": {
     "incumbent_score": 0.293,
-    "challenger_score": 1.0538,
+    "challenger_score": 0.5471,
     "incumbent_skill": 0.084,
-    "challenger_skill": 0.3348,
+    "challenger_skill": 0.0173,
     "incumbent_edge": 0.0,
-    "challenger_edge": 0.0968,
-    "challenger_nonoverlap_skill": 0.2445,
-    "challenger_nonoverlap_edge": 0.125
+    "challenger_edge": 0.125,
+    "challenger_nonoverlap_skill": 0.0639,
+    "challenger_nonoverlap_edge": 0.1875,
+    "audited_live_formula": true
   },
-  "method_note": "Dedicated 1Y challenger cannot replace the incumbent unless pre-defined OOS safeguards are met."
+  "method_note": "Dedicated 1Y challenger uses the exact live formula in its OOS audit; it cannot replace the incumbent unless fixed promotion safeguards are met."
 }
