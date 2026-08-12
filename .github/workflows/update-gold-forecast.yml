@@ -11,6 +11,8 @@ on:
       - "technical_frameworks_enrich.py"
       - "technical_selective_model.py"
       - "technical_selective_runner.py"
+      - "technical_context_meta_model.py"
+      - "technical_context_runner.py"
       - "projection_model_v2.py"
       - "macro_1y_model.py"
       - "macro_1y_runner.py"
@@ -31,7 +33,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -58,13 +60,16 @@ jobs:
       - name: Add support resistance Elliott Wyckoff and deep Fibonacci
         run: python technical_frameworks_enrich.py
 
-      - name: Build nested selective technical prediction challengers
+      - name: Build nested selective technical challenger
         run: python technical_selective_runner.py
+
+      - name: Build cross-market technical meta challenger
+        run: python technical_context_runner.py
 
       - name: Build champion walk-forward 4H 1D 1W 1Y projections
         run: python projection_model_v2.py
 
-      - name: Build dedicated macro 1Y challenger and promote only if stronger
+      - name: Build dedicated macro positioning 1Y challenger and promote only if stronger
         run: python macro_1y_runner.py
 
       - name: Compare 4H regime model independently
@@ -79,17 +84,17 @@ jobs:
       - name: Apply institutional readiness governance gate
         run: python model_governance.py
 
-      - name: Compose institutional market guru summary
+      - name: Compose evidence-gated market guru summary
         run: python enhance_guru_summary.py
 
       - name: Commit updated intelligence data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_technical_model.json data/silver_technical_model.json data/gold_projections.json data/silver_projections.json data/gold_macro_1y.json data/silver_macro_1y.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/model_backtest.json
+          git add data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_technical_model.json data/silver_technical_model.json data/gold_technical_context.json data/silver_technical_context.json data/gold_projections.json data/silver_projections.json data/gold_macro_1y.json data/silver_macro_1y.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/model_backtest.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
-            git commit -m "Update champion challenger metals intelligence data"
+            git commit -m "Update institutional champion challenger metals data"
             git push
           fi
