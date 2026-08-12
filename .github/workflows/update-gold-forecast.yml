@@ -7,6 +7,7 @@ on:
     paths:
       - "multi_asset_forecast_v2.py"
       - "technical_analysis.py"
+      - "technical_frameworks_enrich.py"
       - "projection_model_v2.py"
       - "regime_intraday_model.py"
       - "regime_intraday_runner.py"
@@ -45,10 +46,13 @@ jobs:
       - name: Build full technical analysis
         run: python technical_analysis.py
 
-      - name: Build walk-forward 4H 1D 1W 1Y projections
+      - name: Add support resistance Elliott Wyckoff and deep Fibonacci
+        run: python technical_frameworks_enrich.py
+
+      - name: Build champion walk-forward 4H 1D 1W 1Y projections
         run: python projection_model_v2.py
 
-      - name: Upgrade 4H with regime and intraday data
+      - name: Compare 4H regime model independently
         run: python regime_intraday_runner.py
 
       - name: Build tighter validation-weighted focus zones
@@ -68,6 +72,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
-            git commit -m "Update regime-aware gold and silver intelligence data"
+            git commit -m "Update champion metals intelligence data"
             git push
           fi
