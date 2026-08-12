@@ -9,8 +9,10 @@ on:
       - "technical_analysis.py"
       - "technical_frameworks_enrich.py"
       - "technical_selective_model.py"
+      - "technical_selective_runner.py"
       - "projection_model_v2.py"
       - "macro_1y_model.py"
+      - "macro_1y_runner.py"
       - "regime_intraday_model.py"
       - "regime_intraday_runner.py"
       - "projection_focus.py"
@@ -52,13 +54,13 @@ jobs:
         run: python technical_frameworks_enrich.py
 
       - name: Build nested selective technical prediction challengers
-        run: python technical_selective_model.py
+        run: python technical_selective_runner.py
 
       - name: Build champion walk-forward 4H 1D 1W 1Y projections
         run: python projection_model_v2.py
 
       - name: Build dedicated macro 1Y challenger and promote only if stronger
-        run: python macro_1y_model.py
+        run: python macro_1y_runner.py
 
       - name: Compare 4H regime model independently
         run: python regime_intraday_runner.py
