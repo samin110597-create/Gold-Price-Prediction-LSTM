@@ -3,21 +3,23 @@
   "asset": "silver",
   "symbol": "SI=F",
   "instrument": "COMEX Silver Futures",
-  "updated_utc": "2026-08-12T00:12:41.752814+00:00",
+  "updated_utc": "2026-08-12T00:28:53.459458+00:00",
   "latest_market_time": "2026-08-11T20:00:00-04:00",
-  "latest_price": 64.93,
-  "change_pct": -0.27,
+  "latest_price": 65.02,
+  "change_pct": -0.132,
   "guru_summary": {
     "bias": "Neutral",
     "conviction": "Use only passed forecasts",
-    "model_view": "Silver is currently Neutral / mixed. The main trend is Strong downtrend. The outside market picture is supportive. Technical score is 70/100, which is Bullish. The chart structure is Inside recent 10-day structure. RSI is 61.95, ADX is 26.32, and the latest candle signal is Inside bar. Model chance of price going up: 1 day 48.1%, 1 week 48.2%, 20 days 52.8%. Other market signals are helping: Gold Futures, US Dollar Index, Copper Futures. The backtest says 2 price forecast(s) currently pass. The nearest passed forecast is 4 Hours with a model price of $65.05. Its model zone is $64.73 to $65.37. Its past direction accuracy was 57.1%.",
+    "model_view": "Silver is currently Neutral / mixed. The main trend is Strong downtrend. The outside market picture is supportive. Technical score is 70/100, which is Bullish. The chart structure is Inside recent 10-day structure. RSI is 62.27, ADX is 26.32, and the latest candle signal is No major candle pattern. Model chance of price going up: 1 day 47.9%, 1 week 48.1%, 20 days 52.8%. Other market signals are helping: Gold Futures, US Dollar Index, Copper Futures. The backtest says 4 price forecast(s) currently pass. The nearest passed forecast is 4 Hours with a model price of $65.08. Its model zone is $64.43 to $65.74. Its past direction accuracy was 60.7%.",
     "trigger": "Bullish confirmation: price needs to stay above $65.51. Bearish confirmation: price needs to stay below $57.22. A move is stronger when the chart indicators and a passed model agree with it.",
-    "risk": "Overall audit result is FAIL. About 20.0% of the tested parts passed. Only these price forecasts currently pass: 4 Hours, 1 Year. Ignore failed forecasts until they improve. Big news, interest rates, the US dollar, or sudden volatility can quickly change the setup.",
+    "risk": "Overall audit result is MIXED. About 40.0% of the tested parts passed. Only these price forecasts currently pass: 4 Hours, 1 Day, 1 Week, 1 Year. Ignore failed forecasts until they improve. Big news, interest rates, the US dollar, or sudden volatility can quickly change the setup.",
     "regime": "Neutral / mixed",
-    "audit_grade": "FAIL",
-    "component_pass_rate": 0.2,
+    "audit_grade": "MIXED",
+    "component_pass_rate": 0.4,
     "passed_projection_horizons": [
       "4 Hours",
+      "1 Day",
+      "1 Week",
       "1 Year"
     ]
   },
@@ -30,26 +32,26 @@
     "volatility_percentile": 0.6693
   },
   "indicators": {
-    "ema20": 60.8,
+    "ema20": 60.81,
     "ema50": 63.15,
     "ema200": 65.15,
-    "rsi14": 61.95,
+    "rsi14": 62.23,
     "atr14_pct": 2.59
   },
   "levels": {
-    "daily_close_reference": 64.93,
+    "daily_close_reference": 65.01,
     "support_20d": 55.01,
     "resistance_20d": 65.11,
     "support_60d": 55.01,
     "resistance_60d": 80.61,
     "atr14_dollars": 1.68,
     "expected_move_1d": [
-      63.25,
-      66.61
+      63.33,
+      66.69
     ],
     "expected_move_5d": [
-      61.17,
-      68.69
+      61.25,
+      68.77
     ]
   },
   "factors": [
@@ -57,9 +59,9 @@
       "key": "gold",
       "name": "Gold Futures",
       "symbol": "GC=F",
-      "value": 4427.6,
-      "change_5d_pct": 8.11,
-      "change_20d_pct": 9.02,
+      "value": 4436.2,
+      "change_5d_pct": 8.32,
+      "change_20d_pct": 9.24,
       "impact": "Supportive",
       "reason": "Gold trend supportive"
     },
@@ -67,7 +69,7 @@
       "key": "dxy",
       "name": "US Dollar Index",
       "symbol": "DX-Y.NYB",
-      "value": 99.799,
+      "value": 99.798,
       "change_5d_pct": -0.09,
       "change_20d_pct": -1.13,
       "impact": "Supportive",
@@ -97,9 +99,9 @@
       "key": "copper",
       "name": "Copper Futures",
       "symbol": "HG=F",
-      "value": 6.639,
-      "change_5d_pct": 0.31,
-      "change_20d_pct": 4.88,
+      "value": 6.638,
+      "change_5d_pct": 0.29,
+      "change_20d_pct": 4.87,
       "impact": "Supportive",
       "reason": "Copper strong"
     },
@@ -117,14 +119,14 @@
   "forecasts": [
     {
       "horizon_days": 1,
-      "probability_up": 0.4806,
-      "probability_down": 0.5194,
+      "probability_up": 0.4795,
+      "probability_down": 0.5205,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 64.97,
+      "forecast_mid": 65.05,
       "range_20_80": [
-        64.03,
-        65.93
+        64.11,
+        66.01
       ],
       "backtest_accuracy": 0.5121,
       "naive_baseline": 0.5615,
@@ -136,7 +138,7 @@
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.4158,
+          "probability_up": 0.4122,
           "walkforward_accuracy": 0.5,
           "walkforward_baseline": 0.5615,
           "brier_score": 0.2589,
@@ -145,7 +147,7 @@
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4649,
+          "probability_up": 0.4548,
           "walkforward_accuracy": 0.5179,
           "walkforward_baseline": 0.5615,
           "brier_score": 0.249,
@@ -165,26 +167,26 @@
     },
     {
       "horizon_days": 5,
-      "probability_up": 0.4818,
-      "probability_down": 0.5182,
+      "probability_up": 0.4811,
+      "probability_down": 0.5189,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 65.18,
+      "forecast_mid": 65.25,
       "range_20_80": [
-        62.81,
-        67.64
+        62.88,
+        67.72
       ],
       "backtest_accuracy": 0.4577,
       "naive_baseline": 0.5893,
       "backtest_edge": -0.1316,
       "brier_score": 0.2798,
-      "model_agreement": 0.6667,
+      "model_agreement": 1.0,
       "test_observations": 504,
       "validation": "purged expanding-window walk-forward",
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.2744,
+          "probability_up": 0.2691,
           "walkforward_accuracy": 0.4425,
           "walkforward_baseline": 0.5893,
           "brier_score": 0.3145,
@@ -193,7 +195,7 @@
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.5019,
+          "probability_up": 0.4986,
           "walkforward_accuracy": 0.4583,
           "walkforward_baseline": 0.5893,
           "brier_score": 0.2594,
@@ -213,14 +215,14 @@
     },
     {
       "horizon_days": 20,
-      "probability_up": 0.528,
-      "probability_down": 0.472,
+      "probability_up": 0.5275,
+      "probability_down": 0.4725,
       "signal": "Neutral / no strong edge",
       "confidence": "Low",
-      "forecast_mid": 66.04,
+      "forecast_mid": 66.12,
       "range_20_80": [
-        61.43,
-        70.6
+        61.5,
+        70.68
       ],
       "backtest_accuracy": 0.4228,
       "naive_baseline": 0.6468,
@@ -232,7 +234,7 @@
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.5606,
+          "probability_up": 0.5556,
           "walkforward_accuracy": 0.3869,
           "walkforward_baseline": 0.6468,
           "brier_score": 0.4036,
@@ -241,7 +243,7 @@
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.5391,
+          "probability_up": 0.5378,
           "walkforward_accuracy": 0.4067,
           "walkforward_baseline": 0.6468,
           "brier_score": 0.2822,
@@ -1299,7 +1301,7 @@
     },
     {
       "date": "2026-08-11",
-      "close": 64.93
+      "close": 65.01
     }
   ],
   "methodology": "Purged expanding-window walk-forward ensemble using momentum, trend, volatility and cross-market factors.",

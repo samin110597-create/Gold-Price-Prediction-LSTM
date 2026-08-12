@@ -1,11 +1,11 @@
 {
   "status": "ok",
-  "updated_utc": "2026-08-12T00:17:47.603064+00:00",
+  "updated_utc": "2026-08-12T00:32:37.854037+00:00",
   "validation_method": "Purged expanding-window/origin walk-forward for trained models; last ~3 years deterministic historical test for technical confluence. Future labels are excluded from each training window.",
   "assets": {
     "gold": {
       "audit_grade": "FAIL",
-      "component_pass_rate": 0.2,
+      "component_pass_rate": 0.1,
       "probability_forecasts": [
         {
           "horizon_days": 1,
@@ -38,36 +38,36 @@
       "price_projections": [
         {
           "horizon": "4 Hours",
-          "directional_accuracy": 0.5714,
+          "directional_accuracy": 0.4643,
           "baseline_directional_accuracy": 0.5714,
-          "directional_edge": 0.0,
-          "mae_pct": 0.5,
+          "directional_edge": -0.1071,
+          "mae_pct": 0.513,
           "baseline_mae_pct": 0.502,
-          "mae_skill_vs_baseline": 0.0048,
+          "mae_skill_vs_baseline": -0.0225,
           "walkforward_origins": 28,
           "zone_contains_model_price": true,
           "pass": false
         },
         {
           "horizon": "1 Day",
-          "directional_accuracy": 0.5833,
-          "baseline_directional_accuracy": 0.5278,
-          "directional_edge": 0.0556,
-          "mae_pct": 1.492,
-          "baseline_mae_pct": 1.509,
-          "mae_skill_vs_baseline": 0.0119,
+          "directional_accuracy": 0.4444,
+          "baseline_directional_accuracy": 0.4722,
+          "directional_edge": -0.0278,
+          "mae_pct": 1.511,
+          "baseline_mae_pct": 1.45,
+          "mae_skill_vs_baseline": -0.0415,
           "walkforward_origins": 36,
           "zone_contains_model_price": true,
-          "pass": true
+          "pass": false
         },
         {
           "horizon": "1 Week",
-          "directional_accuracy": 0.5,
-          "baseline_directional_accuracy": 0.4722,
+          "directional_accuracy": 0.5833,
+          "baseline_directional_accuracy": 0.5556,
           "directional_edge": 0.0278,
-          "mae_pct": 3.07,
-          "baseline_mae_pct": 3.156,
-          "mae_skill_vs_baseline": 0.0273,
+          "mae_pct": 3.181,
+          "baseline_mae_pct": 3.642,
+          "mae_skill_vs_baseline": 0.1267,
           "walkforward_origins": 36,
           "zone_contains_model_price": true,
           "pass": true
@@ -77,10 +77,10 @@
           "directional_accuracy": 1.0,
           "baseline_directional_accuracy": 1.0,
           "directional_edge": 0.0,
-          "mae_pct": 20.514,
-          "baseline_mae_pct": 37.168,
-          "mae_skill_vs_baseline": 0.4481,
-          "walkforward_origins": 12,
+          "mae_pct": 29.982,
+          "baseline_mae_pct": 32.733,
+          "mae_skill_vs_baseline": 0.084,
+          "walkforward_origins": 15,
           "zone_contains_model_price": true,
           "pass": false
         }
@@ -117,8 +117,8 @@
       "interpretation": "PASS means most components beat simple out-of-sample baselines; MIXED means use only components with positive edge; FAIL means do not treat the system as predictive."
     },
     "silver": {
-      "audit_grade": "FAIL",
-      "component_pass_rate": 0.2,
+      "audit_grade": "MIXED",
+      "component_pass_rate": 0.4,
       "probability_forecasts": [
         {
           "horizon_days": 1,
@@ -151,49 +151,49 @@
       "price_projections": [
         {
           "horizon": "4 Hours",
-          "directional_accuracy": 0.5714,
-          "baseline_directional_accuracy": 0.4286,
+          "directional_accuracy": 0.6071,
+          "baseline_directional_accuracy": 0.4643,
           "directional_edge": 0.1429,
-          "mae_pct": 1.079,
-          "baseline_mae_pct": 1.118,
-          "mae_skill_vs_baseline": 0.0351,
+          "mae_pct": 1.031,
+          "baseline_mae_pct": 1.063,
+          "mae_skill_vs_baseline": 0.0299,
           "walkforward_origins": 28,
           "zone_contains_model_price": true,
           "pass": true
         },
         {
           "horizon": "1 Day",
-          "directional_accuracy": 0.4722,
-          "baseline_directional_accuracy": 0.5,
-          "directional_edge": -0.0278,
-          "mae_pct": 2.985,
-          "baseline_mae_pct": 3.012,
-          "mae_skill_vs_baseline": 0.0091,
+          "directional_accuracy": 0.6111,
+          "baseline_directional_accuracy": 0.5278,
+          "directional_edge": 0.0833,
+          "mae_pct": 3.113,
+          "baseline_mae_pct": 3.318,
+          "mae_skill_vs_baseline": 0.0618,
           "walkforward_origins": 36,
           "zone_contains_model_price": true,
-          "pass": false
+          "pass": true
         },
         {
           "horizon": "1 Week",
-          "directional_accuracy": 0.5278,
-          "baseline_directional_accuracy": 0.5,
+          "directional_accuracy": 0.5833,
+          "baseline_directional_accuracy": 0.5556,
           "directional_edge": 0.0278,
-          "mae_pct": 7.131,
-          "baseline_mae_pct": 7.073,
-          "mae_skill_vs_baseline": -0.0082,
+          "mae_pct": 8.457,
+          "baseline_mae_pct": 8.81,
+          "mae_skill_vs_baseline": 0.04,
           "walkforward_origins": 36,
           "zone_contains_model_price": true,
-          "pass": false
+          "pass": true
         },
         {
           "horizon": "1 Year",
           "directional_accuracy": 1.0,
-          "baseline_directional_accuracy": 0.75,
-          "directional_edge": 0.25,
-          "mae_pct": 39.0,
-          "baseline_mae_pct": 57.957,
-          "mae_skill_vs_baseline": 0.3271,
-          "walkforward_origins": 12,
+          "baseline_directional_accuracy": 0.7333,
+          "directional_edge": 0.2667,
+          "mae_pct": 47.202,
+          "baseline_mae_pct": 50.132,
+          "mae_skill_vs_baseline": 0.0584,
+          "walkforward_origins": 15,
           "zone_contains_model_price": true,
           "pass": true
         }
@@ -206,7 +206,7 @@
           "hit_rate": 0.4899,
           "baseline_direction_rate": 0.5476,
           "edge": -0.0577,
-          "avg_signed_return_pct": -0.006
+          "avg_signed_return_pct": -0.005
         },
         {
           "horizon_days": 5,
