@@ -18,6 +18,7 @@ on:
       - "regime_intraday_runner.py"
       - "projection_focus.py"
       - "backtest_engine.py"
+      - "model_governance.py"
       - "enhance_guru_summary.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
@@ -74,6 +75,9 @@ jobs:
 
       - name: Audit champion and challenger models
         run: python backtest_engine.py
+
+      - name: Apply institutional readiness governance gate
+        run: python model_governance.py
 
       - name: Compose institutional market guru summary
         run: python enhance_guru_summary.py
