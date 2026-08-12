@@ -6,6 +6,7 @@ on:
     branches: [master]
     paths:
       - "multi_asset_forecast_v2.py"
+      - "probability_gate.py"
       - "technical_analysis.py"
       - "technical_frameworks_enrich.py"
       - "technical_selective_model.py"
@@ -46,6 +47,9 @@ jobs:
 
       - name: Build walk-forward probability forecasts
         run: python multi_asset_forecast_v2.py
+
+      - name: Gate weak probability forecasts
+        run: python probability_gate.py
 
       - name: Build full technical analysis
         run: python technical_analysis.py
