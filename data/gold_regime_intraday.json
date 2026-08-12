@@ -1,59 +1,91 @@
 {
   "status": "fallback",
   "asset": "gold",
-  "updated_utc": "2026-08-12T00:03:06.202905+00:00",
-  "current_regime": "Regime model unavailable",
-  "selected_4h_model": "Normal 4H model fallback",
+  "updated_utc": "2026-08-12T00:17:46.900129+00:00",
+  "current_regime": "Regime comparison unavailable",
+  "selected_4h_model": "Calibrated main 4H model",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.5946,
-      "directional_edge": 0.0811,
-      "mae_skill": 0.1525,
-      "origins": 37
+      "directional_accuracy": 0.5714,
+      "directional_edge": 0.0,
+      "mae_skill": 0.0048,
+      "origins": 28
     },
     "regime_specific": null
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 4438.19,
-    "projected_return_pct": 0.176,
-    "probability_up": 0.5946,
-    "probability_down": 0.4054,
-    "confidence": "High",
-    "tight_model_zone": [
-      4420.28,
-      4456.1
+    "predicted_price": 4425.06,
+    "model_price": 4425.06,
+    "raw_ml_price": 4426.98,
+    "projected_return_pct": -0.06,
+    "raw_ml_return_pct": -0.016,
+    "baseline_return_pct": -0.016,
+    "ml_trust": 0.235,
+    "bias_correction_pct": -0.044,
+    "probability_up": 0.4643,
+    "probability_down": 0.5357,
+    "confidence": "Moderate",
+    "confidence_score": 58,
+    "forecast_status": "Estimate only",
+    "focus_zone": [
+      4414.21,
+      4435.91
     ],
-    "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.5946,
-    "baseline_directional_accuracy": 0.5135,
-    "directional_edge": 0.0811,
-    "backtest_mae_pct": 0.36,
-    "baseline_mae_pct": 0.425,
-    "mae_skill_vs_baseline": 0.1525,
-    "model_agreement": 1.0,
-    "walkforward_origins": 37,
-    "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "Regime-specific",
-    "market_regime": "High Volatility",
+    "risk_zone": [
+      4386.03,
+      4464.09
+    ],
+    "tight_model_zone": [
+      4414.21,
+      4435.91
+    ],
+    "zone_target_coverage": 0.4,
+    "backtest_directional_accuracy": 0.5714,
+    "baseline_directional_accuracy": 0.5714,
+    "directional_edge": 0.0,
+    "backtest_mae_pct": 0.5,
+    "baseline_mae_pct": 0.502,
+    "mae_skill_vs_baseline": 0.0048,
+    "raw_ml_mae_skill_vs_baseline": -0.0103,
+    "model_agreement": 0.75,
+    "walkforward_origins": 28,
+    "validation": "purged expanding-origin walk-forward with OOS shrinkage calibration",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.117,
-        "weight": 0.3213
+        "projected_return_pct": -0.046,
+        "backtest_mae_pct": 0.492,
+        "directional_accuracy": 0.7143,
+        "mae_skill_vs_baseline": 0.0192,
+        "weight": 0.4655
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 0.138,
-        "weight": 0.3365
+        "projected_return_pct": 0.001,
+        "backtest_mae_pct": 0.525,
+        "directional_accuracy": 0.3929,
+        "mae_skill_vs_baseline": -0.0459,
+        "weight": 0.1479
+      },
+      {
+        "name": "Extra Trees",
+        "projected_return_pct": 0.007,
+        "backtest_mae_pct": 0.523,
+        "directional_accuracy": 0.2143,
+        "mae_skill_vs_baseline": -0.042,
+        "weight": 0.1511
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 0.268,
-        "weight": 0.3422
+        "projected_return_pct": 0.017,
+        "backtest_mae_pct": 0.515,
+        "directional_accuracy": 0.5,
+        "mae_skill_vs_baseline": -0.0256,
+        "weight": 0.2355
       }
     ]
   },
-  "fallback_reason": "Generic 4H walk-forward unavailable"
+  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
 }
