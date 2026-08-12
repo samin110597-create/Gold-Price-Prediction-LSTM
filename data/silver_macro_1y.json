@@ -1,8 +1,91 @@
 {
-  "status": "unavailable",
+  "status": "ok",
   "asset": "silver",
-  "updated_utc": "2026-08-12T00:47:45.826421+00:00",
-  "selected_as_champion": false,
-  "error": "Insufficient monthly history for macro 1Y model",
-  "method_note": "Macro challenger failed safely; incumbent 1Y model remains active."
+  "updated_utc": "2026-08-12T01:09:44.996662+00:00",
+  "fred_inputs_available": {
+    "fred": {
+      "real_yield_10y": true,
+      "breakeven_10y": true,
+      "broad_usd": true,
+      "vix": true
+    },
+    "cftc": true
+  },
+  "macro_forecast": {
+    "horizon": "1 Year",
+    "model_price": 89.08,
+    "predicted_price": 89.08,
+    "projected_return_pct": 36.89,
+    "raw_macro_return_pct": 48.22,
+    "historical_anchor_return_pct": 10.46,
+    "macro_model_trust": 0.7,
+    "probability_up": 1.0,
+    "confidence": "Moderate",
+    "forecast_status": "Validated",
+    "tight_model_zone": [
+      77.88,
+      100.28
+    ],
+    "focus_zone": [
+      77.88,
+      100.28
+    ],
+    "risk_zone": [
+      68.64,
+      109.53
+    ],
+    "backtest_directional_accuracy": 0.7419,
+    "baseline_directional_accuracy": 0.3548,
+    "directional_edge": 0.3871,
+    "backtest_mae_pct": 21.93,
+    "baseline_mae_pct": 32.21,
+    "mae_skill_vs_baseline": 0.319,
+    "walkforward_origins": 31,
+    "nonoverlap_origins": 8,
+    "nonoverlap_mae_skill": 0.1924,
+    "nonoverlap_directional_edge": 0.125,
+    "validation": "monthly purged expanding-origin walk-forward; 12-month label purge; FRED and CFTC inputs conservatively lagged; non-overlapping 12-month sanity subset",
+    "models": [
+      {
+        "name": "Ridge",
+        "projected_return_pct": 30.09,
+        "weight": 0.2535,
+        "oos_mae_skill": 0.2506,
+        "oos_direction_accuracy": 0.7097
+      },
+      {
+        "name": "Elastic Net",
+        "projected_return_pct": 25.58,
+        "weight": 0.2365,
+        "oos_mae_skill": 0.194,
+        "oos_direction_accuracy": 0.6774
+      },
+      {
+        "name": "Random Forest",
+        "projected_return_pct": 76.02,
+        "weight": 0.2416,
+        "oos_mae_skill": 0.2112,
+        "oos_direction_accuracy": 0.6774
+      },
+      {
+        "name": "Gradient Boost",
+        "projected_return_pct": 60.27,
+        "weight": 0.2684,
+        "oos_mae_skill": 0.3413,
+        "oos_direction_accuracy": 0.7742
+      }
+    ]
+  },
+  "selected_as_champion": true,
+  "comparison": {
+    "incumbent_score": 0.5885,
+    "challenger_score": 1.3996,
+    "incumbent_skill": 0.0584,
+    "challenger_skill": 0.319,
+    "incumbent_edge": 0.2667,
+    "challenger_edge": 0.3871,
+    "challenger_nonoverlap_skill": 0.1924,
+    "challenger_nonoverlap_edge": 0.125
+  },
+  "method_note": "Dedicated 1Y challenger cannot replace the incumbent unless pre-defined OOS safeguards are met."
 }
