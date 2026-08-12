@@ -15,6 +15,7 @@ on:
       - "technical_context_runner.py"
       - "projection_model_v2.py"
       - "macro_1y_model.py"
+      - "macro_1y_model_v3.py"
       - "macro_1y_runner.py"
       - "regime_intraday_model.py"
       - "regime_intraday_runner.py"
@@ -69,7 +70,7 @@ jobs:
       - name: Build champion walk-forward 4H 1D 1W 1Y projections
         run: python projection_model_v2.py
 
-      - name: Build dedicated macro positioning 1Y challenger and promote only if stronger
+      - name: Build exact-formula macro positioning 1Y challenger and promote only if stronger
         run: python macro_1y_runner.py
 
       - name: Compare 4H regime model independently
