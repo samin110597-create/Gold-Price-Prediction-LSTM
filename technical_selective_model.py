@@ -27,8 +27,8 @@ def flatten(df):
         df.columns = [c[0] for c in df.columns]
     return df
 
-def download(ticker, period="15y"):
-    df = flatten(yf.download(ticker, period=period, interval="1d", auto_adjust=False,
+def download(ticker):
+    df = flatten(yf.download(ticker, start="2008-01-01", interval="1d", auto_adjust=False,
                              progress=False, threads=False))
     if df.empty:
         raise RuntimeError(f"No daily data for {ticker}")
