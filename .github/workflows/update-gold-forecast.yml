@@ -34,6 +34,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: metals-intelligence-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -109,5 +113,7 @@ jobs:
             echo "No market-data changes to commit"
           else
             git commit -m "Update V4 champion challenger metals data"
-            git push
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
           fi
