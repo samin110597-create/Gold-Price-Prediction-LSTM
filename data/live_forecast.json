@@ -3,14 +3,14 @@
   "asset": "gold",
   "symbol": "GC=F",
   "instrument": "COMEX Gold Futures",
-  "updated_utc": "2026-08-13T21:04:14.987193+00:00",
+  "updated_utc": "2026-08-13T22:03:48.308340+00:00",
   "latest_market_time": "2026-08-13T16:00:00-04:00",
-  "latest_price": 4404.7,
-  "change_pct": -0.095,
+  "latest_price": 4407.1,
+  "change_pct": -0.041,
   "guru_summary": {
     "bias": "Neutral / mixed",
     "conviction": "Use PASS components only",
-    "model_view": "Gold trend: Strong downtrend. Technical score is 56/100 (Neutral / mixed) and chart structure is Inside recent 10-day structure. RSI is 68.01, ADX is 29.86. Cross-market picture: helping: Silver Futures, US Dollar Index; hurting: Long Treasury ETF. Probability backtest: FAIL on all current horizons, so those percentages are shown only as model probabilities. PASS technical prediction: 5D Technical + cross-market meta model with 60.8% accuracy and 6.9% edge. PASS price horizons: 1 Week. Nearest PASS price is 1 Week at $4,394.36 with 50.0% model probability up. 1-year model: Incumbent projection model. Current model price is $4,973.68. Backtest: FAIL. Model probability up: 73.7%.",
+    "model_view": "Gold trend: Strong downtrend. Technical score is 56/100 (Neutral / mixed) and chart structure is Inside recent 10-day structure. RSI is 68.11, ADX is 29.86. Cross-market picture: helping: Silver Futures, US Dollar Index; hurting: Long Treasury ETF. Probability backtest: FAIL on all current horizons, so those percentages are shown only as model probabilities. PASS technical prediction: 5D Technical + cross-market meta model with 64.9% accuracy and 8.4% edge. PASS price horizons: 1 Week. Nearest PASS price is 1 Week at $4,394.65 with 50.0% model probability up. 1-year model: Incumbent projection model. Current model price is $4,973.99. Backtest: FAIL. Model probability up: 73.7%.",
     "trigger": "Above $4,434.00 strengthens the higher-price case. Below $4,022.40 strengthens the lower-price case. Between those levels, conviction should stay lower.",
     "risk": "Audit grade: FAIL. Component pass rate: 20.0%. Predictive readiness: NOT READY. Only PASS components receive predictive trust. FAIL components may still show a probability, but they have not proved enough historical edge. PASS is evidence, not a guarantee.",
     "audit_grade": "FAIL",
@@ -33,26 +33,26 @@
     "volatility_percentile": 0.7341
   },
   "indicators": {
-    "ema20": 4215.67,
-    "ema50": 4229.96,
-    "ema200": 4282.15,
-    "rsi14": 67.89,
+    "ema20": 4215.86,
+    "ema50": 4230.03,
+    "ema200": 4282.17,
+    "rsi14": 68.11,
     "atr14_pct": 1.72
   },
   "levels": {
-    "daily_close_reference": 4405.1,
+    "daily_close_reference": 4407.1,
     "support_20d": 3964.2,
     "resistance_20d": 4509.1,
     "support_60d": 3962.5,
     "resistance_60d": 4591.8,
-    "atr14_dollars": 75.68,
+    "atr14_dollars": 75.72,
     "expected_move_1d": [
-      4329.42,
-      4480.78
+      4331.38,
+      4482.82
     ],
     "expected_move_5d": [
-      4235.87,
-      4574.33
+      4237.78,
+      4576.42
     ]
   },
   "factors": [
@@ -60,9 +60,9 @@
       "key": "silver",
       "name": "Silver Futures",
       "symbol": "SI=F",
-      "value": 64.575,
-      "change_5d_pct": 5.1,
-      "change_20d_pct": 15.52,
+      "value": 64.585,
+      "change_5d_pct": 5.12,
+      "change_20d_pct": 15.54,
       "impact": "Supportive",
       "reason": "Silver outperforming gold"
     },
@@ -70,11 +70,21 @@
       "key": "dxy",
       "name": "US Dollar Index",
       "symbol": "DX-Y.NYB",
-      "value": 99.954,
-      "change_5d_pct": -0.02,
-      "change_20d_pct": -0.77,
+      "value": 99.965,
+      "change_5d_pct": -0.01,
+      "change_20d_pct": -0.76,
       "impact": "Supportive",
       "reason": "Dollar weakened"
+    },
+    {
+      "key": "us10y",
+      "name": "US 10Y Yield",
+      "symbol": "^TNX",
+      "value": 4.641,
+      "change_5d_pct": -0.62,
+      "change_20d_pct": 1.58,
+      "impact": "Neutral",
+      "reason": "10Y yield range-bound"
     },
     {
       "key": "vix",
@@ -110,156 +120,156 @@
   "forecasts": [
     {
       "horizon_days": 1,
-      "probability_up": 0.4961,
-      "probability_down": 0.5039,
+      "probability_up": 0.4903,
+      "probability_down": 0.5097,
       "signal": "NO EDGE / ABSTAIN",
       "confidence": "Low",
-      "forecast_mid": 4409.02,
+      "forecast_mid": 4410.74,
       "range_20_80": [
-        4377.43,
-        4442.77
+        4379.14,
+        4444.51
       ],
-      "backtest_accuracy": 0.5432,
+      "backtest_accuracy": 0.5322,
       "naive_baseline": 0.5714,
-      "backtest_edge": -0.0283,
-      "brier_score": 0.2496,
+      "backtest_edge": -0.0392,
+      "brier_score": 0.2503,
       "model_agreement": 0.6667,
       "test_observations": 504,
       "validation": "purged expanding-window walk-forward",
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.3578,
-          "walkforward_accuracy": 0.5377,
+          "probability_up": 0.3523,
+          "walkforward_accuracy": 0.5298,
           "walkforward_baseline": 0.5714,
-          "brier_score": 0.2549,
-          "weight": 0.3155,
+          "brier_score": 0.256,
+          "weight": 0.3177,
           "oos_observations": 504
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.5129,
-          "walkforward_accuracy": 0.5437,
+          "probability_up": 0.511,
+          "walkforward_accuracy": 0.5179,
           "walkforward_baseline": 0.5714,
-          "brier_score": 0.2483,
-          "weight": 0.333,
+          "brier_score": 0.2488,
+          "weight": 0.3273,
           "oos_observations": 504
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.5714,
+          "probability_up": 0.5129,
           "walkforward_accuracy": 0.5476,
           "walkforward_baseline": 0.5714,
-          "brier_score": 0.2461,
-          "weight": 0.3516,
+          "brier_score": 0.2467,
+          "weight": 0.355,
           "oos_observations": 504
         }
       ],
-      "raw_probability_up": 0.4961,
+      "raw_probability_up": 0.4903,
       "forecast_status": "NO EDGE",
       "use_in_summary": false,
       "actionable_probability_up": 0.5
     },
     {
       "horizon_days": 5,
-      "probability_up": 0.488,
-      "probability_down": 0.512,
+      "probability_up": 0.4867,
+      "probability_down": 0.5133,
       "signal": "NO EDGE / ABSTAIN",
       "confidence": "Low",
-      "forecast_mid": 4422.64,
+      "forecast_mid": 4424.51,
       "range_20_80": [
-        4338.79,
-        4501.37
+        4340.62,
+        4503.28
       ],
-      "backtest_accuracy": 0.4956,
+      "backtest_accuracy": 0.4913,
       "naive_baseline": 0.625,
-      "backtest_edge": -0.1294,
-      "brier_score": 0.27,
+      "backtest_edge": -0.1337,
+      "brier_score": 0.2701,
       "model_agreement": 0.6667,
       "test_observations": 504,
       "validation": "purged expanding-window walk-forward",
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.2457,
-          "walkforward_accuracy": 0.4742,
+          "probability_up": 0.2635,
+          "walkforward_accuracy": 0.4841,
           "walkforward_baseline": 0.625,
-          "brier_score": 0.2852,
-          "weight": 0.3115,
+          "brier_score": 0.2851,
+          "weight": 0.3118,
           "oos_observations": 504
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4476,
-          "walkforward_accuracy": 0.4702,
+          "probability_up": 0.472,
+          "walkforward_accuracy": 0.4782,
           "walkforward_baseline": 0.625,
-          "brier_score": 0.2588,
-          "weight": 0.3509,
+          "brier_score": 0.2578,
+          "weight": 0.3527,
           "oos_observations": 504
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.6468,
-          "walkforward_accuracy": 0.5417,
+          "probability_up": 0.5908,
+          "walkforward_accuracy": 0.5119,
           "walkforward_baseline": 0.625,
-          "brier_score": 0.2677,
-          "weight": 0.3376,
+          "brier_score": 0.2692,
+          "weight": 0.3355,
           "oos_observations": 504
         }
       ],
-      "raw_probability_up": 0.488,
+      "raw_probability_up": 0.4867,
       "forecast_status": "NO EDGE",
       "use_in_summary": false,
       "actionable_probability_up": 0.5
     },
     {
       "horizon_days": 20,
-      "probability_up": 0.504,
-      "probability_down": 0.496,
+      "probability_up": 0.5109,
+      "probability_down": 0.4891,
       "signal": "NO EDGE / ABSTAIN",
       "confidence": "Low",
-      "forecast_mid": 4457.52,
+      "forecast_mid": 4461.03,
       "range_20_80": [
-        4308.24,
-        4651.65
+        4311.67,
+        4655.24
       ],
-      "backtest_accuracy": 0.4434,
+      "backtest_accuracy": 0.441,
       "naive_baseline": 0.6766,
-      "backtest_edge": -0.2332,
-      "brier_score": 0.2988,
+      "backtest_edge": -0.2356,
+      "brier_score": 0.3014,
       "model_agreement": 0.6667,
       "test_observations": 504,
       "validation": "purged expanding-window walk-forward",
       "models": [
         {
           "name": "Logistic",
-          "probability_up": 0.4557,
-          "walkforward_accuracy": 0.3849,
+          "probability_up": 0.5001,
+          "walkforward_accuracy": 0.375,
           "walkforward_baseline": 0.6766,
-          "brier_score": 0.3534,
-          "weight": 0.3066,
+          "brier_score": 0.3623,
+          "weight": 0.3064,
           "oos_observations": 504
         },
         {
           "name": "Random Forest",
-          "probability_up": 0.4718,
-          "walkforward_accuracy": 0.4008,
+          "probability_up": 0.4432,
+          "walkforward_accuracy": 0.4107,
           "walkforward_baseline": 0.6766,
-          "brier_score": 0.2746,
-          "weight": 0.3468,
+          "brier_score": 0.2708,
+          "weight": 0.3527,
           "oos_observations": 504
         },
         {
           "name": "Gradient Boost",
-          "probability_up": 0.6133,
-          "walkforward_accuracy": 0.5377,
+          "probability_up": 0.686,
+          "walkforward_accuracy": 0.5317,
           "walkforward_baseline": 0.6766,
-          "brier_score": 0.2747,
-          "weight": 0.3466,
+          "brier_score": 0.2782,
+          "weight": 0.3409,
           "oos_observations": 504
         }
       ],
-      "raw_probability_up": 0.504,
+      "raw_probability_up": 0.5109,
       "forecast_status": "NO EDGE",
       "use_in_summary": false,
       "actionable_probability_up": 0.5
@@ -1304,7 +1314,7 @@
     },
     {
       "date": "2026-08-13",
-      "close": 4405.1
+      "close": 4407.1
     }
   ],
   "methodology": "Purged expanding-window walk-forward ensemble using momentum, trend, volatility and cross-market factors.",
@@ -1312,115 +1322,115 @@
   "meaningful_probability_v4": [
     {
       "horizon_days": 1,
-      "probability_down": 0.3639,
-      "probability_no_edge": 0.4055,
-      "probability_up": 0.2306,
+      "probability_down": 0.3529,
+      "probability_no_edge": 0.4037,
+      "probability_up": 0.2434,
       "signal": "NO EDGE",
       "pass": false,
-      "oos_accuracy": 0.3571,
+      "oos_accuracy": 0.4048,
       "majority_baseline": 0.4048,
-      "balanced_accuracy": 0.3406,
+      "balanced_accuracy": 0.3798,
       "active_direction_accuracy": 0.0,
       "active_baseline": 0.0,
       "active_edge": 0.0,
       "active_signals": 0,
       "walkforward_origins": 42,
-      "multiclass_brier": 0.6613,
+      "multiclass_brier": 0.6674,
       "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
       "models": [
         {
           "name": "Logistic",
-          "down": 0.4767,
-          "no_edge": 0.3327,
-          "up": 0.1906
+          "down": 0.4781,
+          "no_edge": 0.3372,
+          "up": 0.1847
         },
         {
           "name": "Extra Trees",
-          "down": 0.3356,
-          "no_edge": 0.4098,
-          "up": 0.2546
+          "down": 0.3202,
+          "no_edge": 0.4156,
+          "up": 0.2642
         },
         {
           "name": "Gradient Boost",
-          "down": 0.2794,
-          "no_edge": 0.474,
-          "up": 0.2466
+          "down": 0.2605,
+          "no_edge": 0.4583,
+          "up": 0.2813
         }
       ]
     },
     {
       "horizon_days": 5,
-      "probability_down": 0.4086,
-      "probability_no_edge": 0.3822,
-      "probability_up": 0.2092,
+      "probability_down": 0.424,
+      "probability_no_edge": 0.3558,
+      "probability_up": 0.2202,
       "signal": "NO EDGE",
       "pass": false,
-      "oos_accuracy": 0.4286,
+      "oos_accuracy": 0.4048,
       "majority_baseline": 0.4762,
-      "balanced_accuracy": 0.3088,
+      "balanced_accuracy": 0.2922,
       "active_direction_accuracy": 0.0,
       "active_baseline": 1.0,
       "active_edge": -1.0,
       "active_signals": 2,
       "walkforward_origins": 42,
-      "multiclass_brier": 0.6405,
+      "multiclass_brier": 0.6445,
       "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
       "models": [
         {
           "name": "Logistic",
-          "down": 0.6739,
-          "no_edge": 0.1968,
-          "up": 0.1292
+          "down": 0.6705,
+          "no_edge": 0.2026,
+          "up": 0.1269
         },
         {
           "name": "Extra Trees",
-          "down": 0.3781,
-          "no_edge": 0.3356,
-          "up": 0.2863
+          "down": 0.3628,
+          "no_edge": 0.3486,
+          "up": 0.2885
         },
         {
           "name": "Gradient Boost",
-          "down": 0.1737,
-          "no_edge": 0.6142,
-          "up": 0.2121
+          "down": 0.2387,
+          "no_edge": 0.5161,
+          "up": 0.2452
         }
       ]
     },
     {
       "horizon_days": 20,
-      "probability_down": 0.2477,
-      "probability_no_edge": 0.5364,
-      "probability_up": 0.2159,
+      "probability_down": 0.2354,
+      "probability_no_edge": 0.5503,
+      "probability_up": 0.2143,
       "signal": "NO EDGE",
       "pass": false,
-      "oos_accuracy": 0.4524,
+      "oos_accuracy": 0.4286,
       "majority_baseline": 0.4048,
-      "balanced_accuracy": 0.3578,
+      "balanced_accuracy": 0.3412,
       "active_direction_accuracy": 0.0,
       "active_baseline": 1.0,
       "active_edge": -1.0,
       "active_signals": 1,
       "walkforward_origins": 42,
-      "multiclass_brier": 0.6797,
+      "multiclass_brier": 0.6837,
       "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
       "models": [
         {
           "name": "Logistic",
-          "down": 0.3104,
-          "no_edge": 0.4705,
-          "up": 0.2191
+          "down": 0.257,
+          "no_edge": 0.5069,
+          "up": 0.2361
         },
         {
           "name": "Extra Trees",
-          "down": 0.2773,
-          "no_edge": 0.454,
-          "up": 0.2687
+          "down": 0.3128,
+          "no_edge": 0.4245,
+          "up": 0.2627
         },
         {
           "name": "Gradient Boost",
-          "down": 0.1553,
-          "no_edge": 0.6847,
-          "up": 0.16
+          "down": 0.1364,
+          "no_edge": 0.7194,
+          "up": 0.1442
         }
       ]
     }
