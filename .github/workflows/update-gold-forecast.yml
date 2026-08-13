@@ -23,6 +23,7 @@ on:
       - "regime_intraday_runner.py"
       - "projection_focus.py"
       - "backtest_engine.py"
+      - "audit_v4_patch.py"
       - "model_governance.py"
       - "enhance_guru_summary.py"
       - "requirements-live.txt"
@@ -89,6 +90,9 @@ jobs:
 
       - name: Audit champion and challenger models
         run: python backtest_engine.py
+
+      - name: Apply V4 probability champion audit gate
+        run: python audit_v4_patch.py
 
       - name: Apply institutional readiness governance gate
         run: python model_governance.py
