@@ -10,6 +10,19 @@ import yfinance as yf
 DATA = Path("data")
 ASSETS = {"gold": "GC=F", "silver": "SI=F"}
 
+# PASS is deliberately strict. A component must beat its baseline by a useful
+# margin and must have enough genuinely out-of-sample observations.
+PRICE_MIN_TESTS = {
+    "4 Hours": 24,
+    "1 Day": 30,
+    "1 Week": 30,
+    "1 Year": 20,
+}
+MIN_DIRECTION_EDGE = 0.02
+MIN_MAE_SKILL = 0.02
+MIN_PROB_EDGE = 0.02
+MIN_PROB_OBS = 300
+
 
 def flatten(df):
     if isinstance(df.columns, pd.MultiIndex):
@@ -194,6 +207,7 @@ def technical_champions(old_rows, selective_payload, context_payload):
         h = int(old["horizon_days"])
         candidates = []
         old_edge = as_float(old.get("edge"), -9.0)
+        old_signals = as_int(old.get("signals"))
         candidates.append(
             {
                 "horizon_days": h,
@@ -202,9 +216,9 @@ def technical_champions(old_rows, selective_payload, context_payload):
                 "baseline": old.get("baseline_direction_rate"),
                 "edge": old_edge,
                 "coverage": old.get("coverage"),
-                "signals": old.get("signals"),
+                "signals": old_signals,
                 "current_signal": None,
-                "pass": bool(old_edge > 0),
+                "pass": bool(old_edge >= MIN_DIRECTION_EDGE and old_signals >= 100),
             }
         )
 
@@ -221,7 +235,7 @@ def technical_champions(old_rows, selective_payload, context_payload):
                     "coverage": s.get("coverage"),
                     "signals": s.get("oos_signals"),
                     "current_signal": s.get("signal"),
-                    "pass": bool(s.get("audit_pass") and edge > 0.02),
+                    "pass": bool(s.get("audit_pass") and edge >= MIN_DIRECTION_EDGE),
                 }
             )
 
@@ -252,8 +266,6 @@ def technical_champions(old_rows, selective_payload, context_payload):
             reverse=True,
         )
 
-        # Copy the winner and its candidates. Never embed the winner's list inside
-        # the winner object itself; that creates a circular JSON reference.
         winner = dict(candidates[0])
         winner["candidates"] = [dict(candidate) for candidate in candidates]
         out.append(winner)
@@ -273,22 +285,29 @@ def audit(asset, ticker):
     for row in forecast.get("forecasts", []):
         edge = as_float(row.get("backtest_edge"))
         brier = as_float(row.get("brier_score"), 1.0)
+        obs = as_int(row.get("test_observations"))
+        passed = bool(edge >= MIN_PROB_EDGE and brier < 0.25 and obs >= MIN_PROB_OBS)
         probability_rows.append(
             {
                 "horizon_days": row.get("horizon_days"),
+                "probability_up": row.get("actionable_probability_up", row.get("probability_up")),
                 "accuracy": row.get("backtest_accuracy"),
                 "baseline": row.get("naive_baseline"),
                 "edge": edge,
                 "brier_score": brier,
-                "oos_observations": row.get("test_observations"),
-                "pass": bool(edge > 0 and brier < 0.25),
+                "oos_observations": obs,
+                "pass": passed,
+                "pass_rule": f"edge >= {MIN_PROB_EDGE:.0%}, Brier < 0.25, tests >= {MIN_PROB_OBS}",
             }
         )
 
     price_rows = []
     for row in projections.get("projections", []):
+        horizon = row.get("horizon")
         edge = as_float(row.get("directional_edge"))
         skill = as_float(row.get("mae_skill_vs_baseline"), -9.0)
+        origins = as_int(row.get("walkforward_origins"))
+        min_tests = PRICE_MIN_TESTS.get(horizon, 30)
         zone = row.get("tight_model_zone") or [None, None]
         model_price = row.get("model_price")
         inside = bool(
@@ -298,19 +317,31 @@ def audit(asset, ticker):
             and model_price is not None
             and zone[0] <= model_price <= zone[1]
         )
+        passed = bool(
+            edge >= MIN_DIRECTION_EDGE
+            and skill >= MIN_MAE_SKILL
+            and inside
+            and origins >= min_tests
+        )
         price_rows.append(
             {
-                "horizon": row.get("horizon"),
+                "horizon": horizon,
                 "selected_model": row.get("selected_model", "Incumbent projection model"),
+                "probability_up": row.get("probability_up"),
                 "directional_accuracy": row.get("backtest_directional_accuracy"),
                 "baseline_directional_accuracy": row.get("baseline_directional_accuracy"),
                 "directional_edge": edge,
                 "mae_pct": row.get("backtest_mae_pct"),
                 "baseline_mae_pct": row.get("baseline_mae_pct"),
                 "mae_skill_vs_baseline": skill,
-                "walkforward_origins": row.get("walkforward_origins"),
+                "walkforward_origins": origins,
+                "minimum_tests_required": min_tests,
                 "zone_contains_model_price": inside,
-                "pass": bool(edge > 0 and skill > 0 and inside),
+                "pass": passed,
+                "pass_rule": (
+                    f"direction edge >= {MIN_DIRECTION_EDGE:.0%}, MAE skill >= {MIN_MAE_SKILL:.0%}, "
+                    f"tests >= {min_tests}, model price inside tested zone"
+                ),
             }
         )
 
@@ -334,9 +365,9 @@ def audit(asset, ticker):
         "technical_champions": champions,
         "macro_1y_challenger": macro,
         "interpretation": (
-            "PASS means most champion components beat simple OOS baselines. "
-            "New technical and 1Y challengers can replace incumbents only when fixed "
-            "walk-forward safeguards are met. FAIL means do not treat the whole system as predictive."
+            "Every displayed forecast is backtested. PASS requires a useful margin over baseline plus enough "
+            "out-of-sample tests. FAIL means the forecast can still be shown with its probability, but it has "
+            "not earned predictive trust. A PASS is evidence, not a guarantee."
         ),
     }
 
@@ -346,10 +377,11 @@ def main():
         "status": "ok",
         "updated_utc": datetime.now(timezone.utc).isoformat(),
         "validation_method": (
-            "Purged walk-forward validation. Technical meta thresholds are chosen only on earlier "
-            "calibration windows. 1Y macro model uses a 12-month label purge and lagged public "
-            "macro/positioning inputs. Champion-challenger selection prevents a newer model from "
-            "replacing a stronger incumbent without OOS evidence."
+            "Purged walk-forward validation with strict PASS/FAIL rules. Price forecasts must beat the "
+            "directional baseline by at least 2 percentage points, improve MAE by at least 2%, remain inside "
+            "their tested zone, and meet horizon-specific minimum test counts. Probability forecasts need at "
+            "least 2 percentage points of edge, Brier below 0.25, and at least 300 OOS observations. Technical "
+            "challengers remain nested and chronologically purged."
         ),
         "assets": {key: audit(key, ticker) for key, ticker in ASSETS.items()},
     }
