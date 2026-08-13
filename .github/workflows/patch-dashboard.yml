@@ -1,0 +1,36 @@
+name: Patch V4 Dashboard
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "dashboard_v4_patch.py"
+      - ".github/workflows/patch-dashboard.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Patch dashboard
+        run: python dashboard_v4_patch.py
+      - name: Commit dashboard
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Dashboard already patched"
+          else
+            git commit -m "Show V4 specialists and restored 4H comparison"
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
+          fi
