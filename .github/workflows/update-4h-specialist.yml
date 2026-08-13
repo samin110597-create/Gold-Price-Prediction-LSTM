@@ -1,0 +1,40 @@
+name: Update Restored 4H Specialist
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "four_hour_specialist.py"
+      - ".github/workflows/update-4h-specialist.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update4h:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-live.txt
+      - run: pip install -r requirements-live.txt
+      - name: Build restored recent 4H and 96-origin stability comparison
+        run: python four_hour_specialist.py
+      - name: Commit 4H specialist data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/gold_4h_specialist.json data/silver_4h_specialist.json
+          if git diff --cached --quiet; then
+            echo "No 4H changes"
+          else
+            git commit -m "Update restored 4H specialist data"
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
+          fi
