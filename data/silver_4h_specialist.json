@@ -1,32 +1,52 @@
 {
   "status": "ok",
   "asset": "silver",
-  "updated_utc": "2026-08-13T01:20:10Z",
-  "label": "Restored pre-stabilization 4H snapshot with current long-window comparison",
-  "predicted_price": 66.15,
-  "probability_up": 0.5357,
-  "probability_down": 0.4643,
-  "focus_zone": [65.48, 66.82],
+  "updated_utc": "2026-08-13T03:04:33.976082+00:00",
+  "label": "Recent 4H specialist restored from pre-stabilization model",
+  "predicted_price": 65.6,
+  "probability_up": 0.5,
+  "probability_down": 0.5,
+  "focus_zone": [
+    65.15,
+    66.06
+  ],
+  "models": [
+    {
+      "name": "Ridge",
+      "projected_return_pct": 0.021,
+      "weight": 0.3113
+    },
+    {
+      "name": "Random Forest",
+      "projected_return_pct": 0.041,
+      "weight": 0.3442
+    },
+    {
+      "name": "Gradient Boost",
+      "projected_return_pct": 0.022,
+      "weight": 0.3445
+    }
+  ],
   "recent_28": {
     "origins": 28,
-    "directional_accuracy": 0.6429,
-    "baseline_directional_accuracy": 0.4643,
-    "directional_edge": 0.1786,
-    "mae_pct": 1.011,
-    "baseline_mae_pct": 1.041,
-    "mae_skill_vs_baseline": 0.0286,
+    "directional_accuracy": 0.4643,
+    "baseline_directional_accuracy": 0.4286,
+    "directional_edge": 0.0357,
+    "mae_pct": 0.6857,
+    "baseline_mae_pct": 0.7069,
+    "mae_skill_vs_baseline": 0.0301,
     "pass": true
   },
   "stable_96": {
     "origins": 96,
-    "directional_accuracy": 0.4896,
-    "baseline_directional_accuracy": 0.5104,
-    "directional_edge": -0.0208,
-    "mae_pct": 1.005,
-    "baseline_mae_pct": 0.998,
-    "mae_skill_vs_baseline": -0.0068,
+    "directional_accuracy": 0.5625,
+    "baseline_directional_accuracy": 0.4688,
+    "directional_edge": 0.0938,
+    "mae_pct": 0.7804,
+    "baseline_mae_pct": 0.7939,
+    "mae_skill_vs_baseline": 0.017,
     "pass": false
   },
   "overall_status": "RECENT PASS / STABILITY FAIL",
-  "note": "Immediate comparison seed: recent_28 is the last verified pre-stabilization 4H snapshot; stable_96 is the latest longer-window result. The dedicated 4H workflow will overwrite this file with a same-run recomputation."
+  "note": "The 28-origin test reproduces the earlier 4H timeframe. The 96-origin test is kept as a separate stability check so recent strength is not mistaken for long-run robustness."
 }
