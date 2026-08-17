@@ -1,0 +1,45 @@
+from pathlib import Path
+
+P = Path('index.html')
+s = P.read_text(encoding='utf-8')
+
+css = r'''
+/* HARD_NUMBERS_PANEL */
+.hn-wrap{margin-bottom:12px}.hn-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:rgba(16,26,37,.96)}.hn-table{width:100%;min-width:1080px;border-collapse:collapse;font-size:11px}.hn-table th,.hn-table td{padding:9px 8px;border-bottom:1px solid rgba(38,56,75,.7);text-align:right;white-space:nowrap}.hn-table th{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#0c1621;position:sticky;top:0}.hn-table th:first-child,.hn-table td:first-child{text-align:left}.hn-dir{font-weight:900}.hn-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.hn-card{background:rgba(16,26,37,.96);border:1px solid var(--line);border-radius:14px;padding:13px}.hn-card .big{font-size:22px;font-weight:900;margin:4px 0}.hn-kpis{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.hn-kpi{background:#0c1621;border:1px solid #27394b;border-radius:9px;padding:7px}.hn-kpi span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase}.hn-kpi b{display:block;margin-top:3px;font-size:12px}.hn-mini{width:100%;border-collapse:collapse;font-size:10px;margin-top:7px}.hn-mini td{padding:5px 2px;border-bottom:1px solid rgba(38,56,75,.55)}.hn-mini td:last-child{text-align:right;font-weight:800}.hn-chip{display:inline-block;border:1px solid #33495f;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:850;margin:2px 3px 2px 0}.hn-read{font-size:13px;line-height:1.55;color:#c7d4df;margin-top:8px}@media(max-width:980px){.hn-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.hn-cards{grid-template-columns:1fr}}
+'''
+if '/* HARD_NUMBERS_PANEL */' not in s:
+    s = s.replace('</style>', css + '</style>', 1)
+
+js = r'''
+/* HARD_NUMBERS_PANEL_JS */
+function hnDir(ret){ret=Number(ret);if(ret>.15)return {t:'UP',c:'good'};if(ret<-.15)return {t:'DOWN',c:'bad'};return {t:'FLAT',c:'neutral'}}
+function hnStatus(x){return x?.pass?'<span class="pass-pill pass">PASS</span>':'<span class="pass-pill fail">FAIL</span>'}
+function hardNumbersPanel(d,t,p,a,h4,hs,mp,macro){
+  const amap=Object.fromEntries((a?.price_projections||[]).map(x=>[x.horizon,x])), current=Number(d?.latest_price??p?.latest_price??0);
+  const rows=(p?.projections||[]).map(x=>{const aa=amap[x.horizon]||{},price=Number(x.predicted_price??x.model_price),ret=Number(x.projected_return_pct??((price/current-1)*100)),dr=hnDir(ret);return {h:x.horizon,price,ret,up:Number(x.probability_up),down:Number(x.probability_down),acc:Number(aa.directional_accuracy??x.backtest_directional_accuracy),base:Number(aa.baseline_directional_accuracy??x.baseline_directional_accuracy),edge:Number(aa.directional_edge??x.directional_edge),skill:Number(aa.mae_skill_vs_baseline??x.mae_skill_vs_baseline),tests:Number(aa.walkforward_origins??x.walkforward_origins),pass:!!aa.pass,dr}});
+  const table=rows.map(x=>`<tr><td><b>${x.h}</b></td><td class="hn-dir ${x.dr.c}">${x.dr.t}</td><td>${money(x.price)}</td><td class="${x.ret>0?'good':x.ret<0?'bad':'neutral'}">${signed(x.ret)}</td><td>${pct(x.up)}</td><td>${pct(x.down)}</td><td>${pct(x.acc)}</td><td>${pct(x.base)}</td><td class="${x.edge>=.02?'good':x.edge<0?'bad':'neutral'}">${pct(x.edge)}</td><td class="${x.skill>=.02?'good':x.skill<0?'bad':'neutral'}">${pct(x.skill)}</td><td>${Number.isFinite(x.tests)?x.tests:'—'}</td><td>${hnStatus(x)}</td></tr>`).join('');
+  const trusted=rows.filter(x=>x.pass).map(x=>`${x.h}: ${x.dr.t}`); const h4r=h4?.recent_28||{},h4s=h4?.stable_96||{};
+  const tech=Number(t?.technical_score),ind=t?.indicators||{},vf=t?.volume_flow||{},lvl=d?.levels||{},conf=t?.confirmation||{};
+  const support=(d?.factors||[]).filter(x=>/Supportive/i.test(x.impact||'')).map(x=>x.name), head=(d?.factors||[]).filter(x=>/Headwind/i.test(x.impact||'')).map(x=>x.name);
+  const mc=macro?.macro_forecast||{}, mrows=(mp?.horizons||[]).map(x=>`<tr><td>${x.horizon_days}D</td><td>${pct(x.probability_down)}</td><td>${pct(x.probability_no_edge)}</td><td>${pct(x.probability_up)}</td><td>${x.signal||'—'} / ${x.pass?'PASS':'FAIL'}</td></tr>`).join('');
+  const read=trusted.length?`Strict price-model direction: <b>${trusted.join(' • ')}</b>.`:'No official price horizon currently passes the strict audit.';
+  return `<div class="section-title">Hard Numbers & Direction <span class="section-kicker">target • probability • OOS edge • error skill • sample size</span></div><div class="hn-wrap"><div class="hn-table-wrap"><table class="hn-table"><thead><tr><th>Horizon</th><th>Model dir.</th><th>Target</th><th>Move</th><th>UP</th><th>DOWN</th><th>OOS acc.</th><th>Baseline</th><th>Edge</th><th>MAE skill</th><th>Tests</th><th>Audit</th></tr></thead><tbody>${table}</tbody></table></div><div class="hn-read">${read} A FAIL row still shows the model's raw direction/probability, but it is not counted as trusted evidence.</div><div class="hn-cards">
+  <div class="hn-card"><div class="label">Restored 4H recent vs stable</div><div class="big">${money(h4?.predicted_price)}</div><div class="small">UP ${pct(h4?.probability_up)} • DOWN ${pct(h4?.probability_down)}</div><table class="hn-mini"><tr><td>Recent 28 accuracy</td><td>${pct(h4r.directional_accuracy)}</td></tr><tr><td>Recent edge</td><td>${pct(h4r.directional_edge)}</td></tr><tr><td>Recent MAE skill</td><td>${pct(h4r.mae_skill_vs_baseline)}</td></tr><tr><td>96-test accuracy</td><td>${pct(h4s.directional_accuracy)}</td></tr><tr><td>96-test edge</td><td>${pct(h4s.directional_edge)}</td></tr><tr><td>96-test MAE skill</td><td>${pct(h4s.mae_skill_vs_baseline)}</td></tr></table><div class="small">${h4?.overall_status||'Unavailable'}</div></div>
+  <div class="hn-card"><div class="label">Technical state</div><div class="big ${toneText(t?.technical_bias)}">${Number.isFinite(tech)?tech.toFixed(1)+'/100':'—'}</div><div class="small">${t?.technical_bias||'—'} • ${t?.market_structure||'—'}</div><div class="hn-kpis"><div class="hn-kpi"><span>RSI 14</span><b>${ind.rsi14??'—'}</b></div><div class="hn-kpi"><span>ADX 14</span><b>${ind.adx14??'—'}</b></div><div class="hn-kpi"><span>MACD hist.</span><b>${ind.macd_hist??'—'}</b></div><div class="hn-kpi"><span>Vol vs 20D</span><b>${vf.volume_vs_20d??'—'}x</b></div></div><div class="small">OBV ${vf.obv_trend||'—'} • VWAP20 ${money(ind.rolling_vwap20)}</div></div>
+  <div class="hn-card"><div class="label">Levels & volatility</div><div class="big">${money(current)}</div><table class="hn-mini"><tr><td>Bullish above</td><td class="good">${money(conf.bullish_above)}</td></tr><tr><td>Bearish below</td><td class="bad">${money(conf.bearish_below)}</td></tr><tr><td>20D support</td><td>${money(lvl.support_20d)}</td></tr><tr><td>20D resistance</td><td>${money(lvl.resistance_20d)}</td></tr><tr><td>1D expected</td><td>${money(lvl.expected_move_1d?.[0])}–${money(lvl.expected_move_1d?.[1])}</td></tr><tr><td>5D expected</td><td>${money(lvl.expected_move_5d?.[0])}–${money(lvl.expected_move_5d?.[1])}</td></tr></table></div>
+  <div class="hn-card"><div class="label">Macro / positioning model</div><div class="big">${money(mc.predicted_price??mc.model_price)}</div><div class="small">1Y macro UP ${pct(mc.probability_up)} • ${mc.confidence||'—'} confidence • ${macro?.selected_as_champion?'PROMOTED':'challenger'}</div><table class="hn-mini"><tr><td>OOS accuracy</td><td>${pct(mc.backtest_directional_accuracy)}</td></tr><tr><td>Direction edge</td><td>${pct(mc.directional_edge)}</td></tr><tr><td>MAE skill</td><td>${pct(mc.mae_skill_vs_baseline)}</td></tr><tr><td>OOS / non-overlap</td><td>${mc.walkforward_origins??'—'} / ${mc.nonoverlap_origins??'—'}</td></tr><tr><td>Non-overlap edge</td><td>${pct(mc.nonoverlap_directional_edge)}</td></tr></table><div class="small">CFTC input: ${macro?.inputs_available?.cftc?'available':'unavailable'} • FRED real yield/USD/VIX: ${macro?.inputs_available?.fred?'loaded':'see model inputs'}</div></div>
+  </div><div class="card" style="margin-top:10px"><div class="chart-title">Cross-Market & Meaningful-Move Check</div><div class="small"><b>Supportive:</b> ${support.join(', ')||'none'} &nbsp; • &nbsp; <b>Headwinds:</b> ${head.join(', ')||'none'}</div><table class="hn-mini"><thead><tr><td><b>Horizon</b></td><td><b>DOWN</b></td><td><b>NO EDGE</b></td><td><b>UP</b></td><td><b>State</b></td></tr></thead><tbody>${mrows||'<tr><td colspan="5">Meaningful-move model unavailable</td></tr>'}</tbody></table></div></div>`;
+}
+'''
+if '/* HARD_NUMBERS_PANEL_JS */' not in s:
+    s = s.replace('function tradingViewSection(asset)', js + '\nfunction tradingViewSection(asset)', 1)
+
+needle = "+predictionSnapshot(p||{projections:[]},aa)+v4Panel(h4,hs,mp,macro)"
+replacement = "+predictionSnapshot(p||{projections:[]},aa)+hardNumbersPanel(d||{},t||{},p||{projections:[]},aa,h4,hs,mp,macro)+v4Panel(h4,hs,mp,macro)"
+if replacement not in s:
+    if needle not in s:
+        raise RuntimeError('Could not find dashboard insertion point')
+    s = s.replace(needle, replacement, 1)
+
+P.write_text(s, encoding='utf-8')
+print('Hard Numbers & Direction panel patched')
