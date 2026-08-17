@@ -10,6 +10,7 @@ on:
       - "probability_gate.py"
       - "technical_analysis.py"
       - "technical_frameworks_enrich.py"
+      - "technical_overlay_enrich.py"
       - "technical_selective_model.py"
       - "technical_selective_runner.py"
       - "technical_context_meta_model.py"
@@ -29,6 +30,7 @@ on:
       - "enhance_guru_summary.py"
       - "dashboard_v4_patch.py"
       - "dashboard_numbers_patch.py"
+      - "dashboard_chart_patch.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -74,6 +76,9 @@ jobs:
       - name: Add support resistance Elliott Wyckoff and deep Fibonacci
         run: python technical_frameworks_enrich.py
 
+      - name: Add advanced chart patterns divergences and signal markers
+        run: python technical_overlay_enrich.py
+
       - name: Build nested selective technical challenger
         run: python technical_selective_runner.py
 
@@ -115,6 +120,9 @@ jobs:
 
       - name: Add hard numbers and direction panel
         run: python dashboard_numbers_patch.py
+
+      - name: Add advanced technical overlays to charts
+        run: python dashboard_chart_patch.py
 
       - name: Commit updated intelligence data
         run: |
