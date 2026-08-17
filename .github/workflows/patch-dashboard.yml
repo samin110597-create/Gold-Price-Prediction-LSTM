@@ -8,6 +8,7 @@ on:
       - "dashboard_v4_patch.py"
       - "dashboard_numbers_patch.py"
       - "dashboard_chart_patch.py"
+      - "dashboard_chart_fallback_patch.py"
       - "repair_dashboard_header.py"
       - ".github/workflows/patch-dashboard.yml"
 
@@ -28,13 +29,15 @@ jobs:
         run: python dashboard_numbers_patch.py
       - name: Add advanced technical chart overlays
         run: python dashboard_chart_patch.py
+      - name: Add client-side overlay fallback
+        run: python dashboard_chart_fallback_patch.py
       - name: Clean header and keep patch idempotent
         run: python repair_dashboard_header.py
       - name: Commit dashboard
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py
+          git add index.html dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py
           if git diff --cached --quiet; then
             echo "Dashboard already clean"
           else
