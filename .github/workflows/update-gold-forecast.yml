@@ -32,6 +32,7 @@ on:
       - "dashboard_v4_patch.py"
       - "dashboard_numbers_patch.py"
       - "dashboard_chart_patch.py"
+      - "dashboard_chart_fallback_patch.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -127,6 +128,9 @@ jobs:
 
       - name: Add advanced technical overlays to charts
         run: python dashboard_chart_patch.py
+
+      - name: Add immediate client-side overlay fallback
+        run: python dashboard_chart_fallback_patch.py
 
       - name: Commit updated intelligence data
         run: |
