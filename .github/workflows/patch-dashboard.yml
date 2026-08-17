@@ -9,7 +9,10 @@ on:
       - "dashboard_numbers_patch.py"
       - "dashboard_chart_patch.py"
       - "dashboard_chart_fallback_patch.py"
+      - "technical_overlay_enrich.py"
+      - "technical_signal_audit.py"
       - "repair_dashboard_header.py"
+      - "requirements-live.txt"
       - ".github/workflows/patch-dashboard.yml"
 
 permissions:
@@ -23,6 +26,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-live.txt
+      - name: Install dependencies
+        run: pip install -r requirements-live.txt
+      - name: Refresh advanced chart patterns divergences and signal markers
+        run: python technical_overlay_enrich.py
+      - name: Refresh fixed-rule signal event audit
+        run: python technical_signal_audit.py
       - name: Patch dashboard
         run: python dashboard_v4_patch.py
       - name: Add hard numbers and direction panel
@@ -33,15 +44,15 @@ jobs:
         run: python dashboard_chart_fallback_patch.py
       - name: Clean header and keep patch idempotent
         run: python repair_dashboard_header.py
-      - name: Commit dashboard
+      - name: Commit dashboard and technical overlay data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py
+          git add index.html data/gold_technicals.json data/silver_technicals.json dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py
           if git diff --cached --quiet; then
-            echo "Dashboard already clean"
+            echo "Dashboard and technical overlays already current"
           else
-            git commit -m "Add advanced technical chart overlays"
+            git commit -m "Refresh advanced technical chart data"
             git fetch origin master
             git rebase origin/master
             git push origin master
