@@ -11,6 +11,7 @@ on:
       - "technical_analysis.py"
       - "technical_frameworks_enrich.py"
       - "technical_overlay_enrich.py"
+      - "technical_signal_audit.py"
       - "technical_selective_model.py"
       - "technical_selective_runner.py"
       - "technical_context_meta_model.py"
@@ -78,6 +79,9 @@ jobs:
 
       - name: Add advanced chart patterns divergences and signal markers
         run: python technical_overlay_enrich.py
+
+      - name: Backtest fixed-rule technical signal events
+        run: python technical_signal_audit.py
 
       - name: Build nested selective technical challenger
         run: python technical_selective_runner.py
