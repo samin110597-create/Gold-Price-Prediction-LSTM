@@ -27,6 +27,6 @@ new_load=r'''async function loadAsset(asset){const map=asset==='gold'?{f:'data/l
 '''
 s,n=re.subn(r'async function loadAsset\(asset\)\{.*?\}\nfunction auditCheat',new_load+'function auditCheat',s,count=1,flags=re.S)
 if n!=1: raise RuntimeError('Could not replace loadAsset')
-s=s.replace('calibrated price forecasts, spot Gold/Silver charts','visible V4 specialists, restored 4H comparison, calibrated price forecasts, spot Gold/Silver charts')
+s=re.sub(r'<div class="eyebrow">.*?</div><h1>Metals Intelligence</h1><div class="sub">.*?</div>', '<div class="eyebrow">Gold • Silver</div><h1>Metals Intelligence</h1><div class="sub">Forecasts, technicals and model audit.</div>', s, count=1, flags=re.S)
 P.write_text(s,encoding='utf-8')
 print('V4 dashboard panel patched')
