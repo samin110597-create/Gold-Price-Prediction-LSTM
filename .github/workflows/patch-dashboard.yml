@@ -6,6 +6,7 @@ on:
     branches: [master]
     paths:
       - "dashboard_v4_patch.py"
+      - "dashboard_numbers_patch.py"
       - "repair_dashboard_header.py"
       - ".github/workflows/patch-dashboard.yml"
 
@@ -22,17 +23,19 @@ jobs:
           python-version: "3.12"
       - name: Patch dashboard
         run: python dashboard_v4_patch.py
-      - name: Clean header and make patch idempotent
+      - name: Add hard numbers and direction panel
+        run: python dashboard_numbers_patch.py
+      - name: Clean header and keep patch idempotent
         run: python repair_dashboard_header.py
       - name: Commit dashboard
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dashboard_v4_patch.py
+          git add index.html dashboard_v4_patch.py dashboard_numbers_patch.py
           if git diff --cached --quiet; then
             echo "Dashboard already clean"
           else
-            git commit -m "Fix duplicated dashboard header"
+            git commit -m "Add hard numbers and direction dashboard"
             git fetch origin master
             git rebase origin/master
             git push origin master
