@@ -28,6 +28,7 @@ on:
       - "model_governance.py"
       - "enhance_guru_summary.py"
       - "dashboard_v4_patch.py"
+      - "dashboard_numbers_patch.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -111,6 +112,9 @@ jobs:
 
       - name: Make V4 and restored 4H visible on dashboard
         run: python dashboard_v4_patch.py
+
+      - name: Add hard numbers and direction panel
+        run: python dashboard_numbers_patch.py
 
       - name: Commit updated intelligence data
         run: |
