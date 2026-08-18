@@ -31,16 +31,23 @@ def fred_series(series_id):
 
 def enhanced_features(target, fac):
     x = features(target, fac).copy()
-    c = target.Close.astype(float)
+    c = target.Close.astype(float); o=target.Open.astype(float); h=target.High.astype(float); l=target.Low.astype(float)
     e20 = c.ewm(span=20,adjust=False).mean(); e50=c.ewm(span=50,adjust=False).mean(); e200=c.ewm(span=200,adjust=False).mean()
     vol20 = c.pct_change().rolling(20).std(); vol60 = c.pct_change().rolling(60).std()
     x['trend_stack'] = ((c>e20).astype(int) + (e20>e50).astype(int) + (e50>e200).astype(int))/3
     x['trend_accel'] = (e20/e20.shift(10)-1) - (e50/e50.shift(10)-1)
     x['vol_ratio'] = vol20/vol60.replace(0,np.nan)
-    x['gap_from_20d_high'] = c/target.High.rolling(20).max()-1
-    x['gap_from_20d_low'] = c/target.Low.rolling(20).min()-1
+    prior_hi=h.shift(1).rolling(20).max();prior_lo=l.shift(1).rolling(20).min()
+    x['gap_from_20d_high'] = c/prior_hi-1; x['gap_from_20d_low'] = c/prior_lo-1
+    x['breakout20']=(c>prior_hi).astype(float);x['breakdown20']=(c<prior_lo).astype(float)
+    rng=(h-l).replace(0,np.nan);body=(c-o)/rng
+    x['candle_body_pct']=body;x['upper_wick_pct']=(h-pd.concat([o,c],axis=1).max(axis=1))/rng;x['lower_wick_pct']=(pd.concat([o,c],axis=1).min(axis=1)-l)/rng
+    x['inside_bar']=((h<h.shift(1))&(l>l.shift(1))).astype(float);x['outside_bar']=((h>h.shift(1))&(l<l.shift(1))).astype(float)
+    width20=(h.rolling(20).max()-l.rolling(20).min())/c.replace(0,np.nan);x['range_width20']=width20;x['compression_ratio']=width20/width20.rolling(60).mean().replace(0,np.nan)
+    rsi_norm=x.get('rsi14',pd.Series(index=x.index,dtype=float));rsi10=rsi_norm.diff(10);ret10=c.pct_change(10)
+    x['bull_div_proxy']=((ret10<-.01)&(rsi10>.12)).astype(float);x['bear_div_proxy']=((ret10>.01)&(rsi10<-.12)).astype(float)
     if 'Volume' in target.columns:
-        v=target.Volume.astype(float); x['volume_ratio20']=v/v.rolling(20).mean().replace(0,np.nan); x['volume_z60']=(v-v.rolling(60).mean())/v.rolling(60).std().replace(0,np.nan)
+        v=target.Volume.astype(float); x['volume_ratio20']=v/v.rolling(20).mean().replace(0,np.nan); x['volume_z60']=(v-v.rolling(60).mean())/v.rolling(60).std().replace(0,np.nan);x['breakout_volume_confirm']=x['breakout20']*(x['volume_ratio20']>1.25).astype(float);x['breakdown_volume_confirm']=x['breakdown20']*(x['volume_ratio20']>1.25).astype(float)
     for name,sid in FRED.items():
         s=fred_series(sid)
         if s.empty: continue
@@ -66,12 +73,12 @@ def regime_series(target):
 def models():
     return {
         'Ridge':Pipeline([('scale',StandardScaler()),('model',Ridge(alpha=12.0))]),
-        'Extra Trees':ExtraTreesRegressor(n_estimators=180,max_depth=7,min_samples_leaf=10,max_features=.72,random_state=42,n_jobs=-1),
-        'Gradient Boost':HistGradientBoostingRegressor(max_iter=140,max_depth=3,learning_rate=.04,l2_regularization=.55,random_state=42),
+        'Extra Trees':ExtraTreesRegressor(n_estimators=160,max_depth=7,min_samples_leaf=10,max_features=.72,random_state=42,n_jobs=-1),
+        'Gradient Boost':HistGradientBoostingRegressor(max_iter=130,max_depth=3,learning_rate=.04,l2_regularization=.55,random_state=42),
     }
 
 
-def origin_positions(n,h,max_origins=80):
+def origin_positions(n,h,max_origins=72):
     min_train=1000; spacing=8 if h==1 else (10 if h==5 else 15); end=n-h-1
     if end<=min_train+h:return []
     pool=np.arange(min_train+h,end+1,spacing)
@@ -132,25 +139,13 @@ def fit_eval(target,x,h,label):
     downside=last*(1+lr+q20); basecase=last*(1+lr+q50); upside=last*(1+lr+q80); risklo=last*(1+lr+q10); riskhi=last*(1+lr+q90)
     rawp=float(np.mean(lr+pool>0)); strength=float(np.clip((max(edge,0)+max(skill,0))/.12,0,1)*np.clip(len(pool)/30,0,1)); pup=float(np.clip(.5+(rawp-.5)*(.30+.70*strength),.20,.80))
     path='UP' if pup>=.57 and lr>0 else ('DOWN' if pup<=.43 and lr<0 else 'RANGE / MIXED')
-    minreq=56 if h==1 else 48
-    stable=recent_edge>=0 and recent_skill>=0
-    calibrated=(coverage is None or .45<=coverage<=.75)
+    minreq=56 if h==1 else 48;stable=recent_edge>=0 and recent_skill>=0;calibrated=(coverage is None or .45<=coverage<=.75)
     passed=bool(edge>=.03 and skill>=.03 and len(records)>=minreq and stable and calibrated)
     for d,ww in zip(details,w):d['live_weight']=round(float(ww),4)
-    return {
-        'horizon':label,'steps':h,'current_regime':current_regime,'dominant_path':path,'predicted_price':round(price,2),'base_case_price':round(basecase,2),
-        'projected_return_pct':round(lr*100,3),'probability_up':round(pup,4),'probability_down':round(1-pup,4),
-        'scenario_20_50_80':[round(downside,2),round(basecase,2),round(upside,2)],'risk_10_90':[round(risklo,2),round(riskhi,2)],
-        'directional_accuracy':round(dacc,4),'baseline_directional_accuracy':round(bdacc,4),'directional_edge':round(edge,4),
-        'mae_pct':round(mae*100,3),'baseline_mae_pct':round(bmae*100,3),'mae_skill_vs_baseline':round(skill,4),
-        'recent_directional_edge':round(recent_edge,4),'recent_mae_skill':round(recent_skill,4),'interval_60_coverage':round(coverage,4) if coverage is not None else None,
-        'walkforward_origins':len(records),'regime_residual_samples':int(len(pool)),'pass':passed,'status':'PASS' if passed else 'FAIL',
-        'models':details,'validation':'Purged chronological walk-forward. Ensemble weights at each origin use only prior OOS errors, preferring the same market regime. Probability and scenario bands use prior OOS residuals; no future-origin information is used.'
-    }
+    return {'horizon':label,'steps':h,'current_regime':current_regime,'dominant_path':path,'predicted_price':round(price,2),'base_case_price':round(basecase,2),'projected_return_pct':round(lr*100,3),'probability_up':round(pup,4),'probability_down':round(1-pup,4),'scenario_20_50_80':[round(downside,2),round(basecase,2),round(upside,2)],'risk_10_90':[round(risklo,2),round(riskhi,2)],'directional_accuracy':round(dacc,4),'baseline_directional_accuracy':round(bdacc,4),'directional_edge':round(edge,4),'mae_pct':round(mae*100,3),'baseline_mae_pct':round(bmae*100,3),'mae_skill_vs_baseline':round(skill,4),'recent_directional_edge':round(recent_edge,4),'recent_mae_skill':round(recent_skill,4),'interval_60_coverage':round(coverage,4) if coverage is not None else None,'walkforward_origins':len(records),'regime_residual_samples':int(len(pool)),'pass':passed,'status':'PASS' if passed else 'FAIL','models':details,'validation':'Purged chronological walk-forward. Ensemble weights at each origin use only prior OOS errors, preferring the same market regime. Pattern/price-structure features are computed using information available at that timestamp. Probability and scenario bands use prior OOS residuals; no future-origin information is used.'}
 
 
 def score(r):return .55*float(r.get('mae_skill_vs_baseline') or 0)+.45*float(r.get('directional_edge') or 0)
-
 
 def load_json(path):
     try:return json.loads(Path(path).read_text())
@@ -159,7 +154,7 @@ def load_json(path):
 
 def run(asset,cfg):
     target=daily(cfg['ticker']); fac,meta=load_factors(target.index,cfg['factors']); fac=fac[[c for c in fac.columns if meta.get(c,{}).get('available')]]; x=enhanced_features(target,fac)
-    out={'status':'ok','asset':asset,'symbol':cfg['ticker'],'updated_utc':datetime.now(timezone.utc).isoformat(),'model_version':'Future Price Action V6','horizons':[],'promotions':[]}
+    out={'status':'ok','asset':asset,'symbol':cfg['ticker'],'updated_utc':datetime.now(timezone.utc).isoformat(),'model_version':'Future Price Action V6','horizons':[],'promotions':[],'feature_groups':['trend/momentum','volatility','cross-market','FRED macro','breakout/breakdown','candlestick structure','compression','volume confirmation','divergence proxies']}
     pp=DATA/f'{asset}_projections.json'; proj=load_json(pp); by={r.get('horizon'):r for r in proj.get('projections',[])}
     for label,h in HORIZONS.items():
         ch=fit_eval(target,x,h,label); out['horizons'].append(ch)
