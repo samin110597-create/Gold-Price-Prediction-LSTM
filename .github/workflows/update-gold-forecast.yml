@@ -22,6 +22,8 @@ on:
       - "macro_1y_model.py"
       - "macro_1y_model_v3.py"
       - "macro_1y_runner.py"
+      - "future_price_action_v6.py"
+      - "forward_validation_ledger.py"
       - "regime_intraday_model.py"
       - "regime_intraday_runner.py"
       - "projection_focus.py"
@@ -33,6 +35,7 @@ on:
       - "dashboard_numbers_patch.py"
       - "dashboard_chart_patch.py"
       - "dashboard_chart_fallback_patch.py"
+      - "dashboard_future_price_action_patch.py"
       - "requirements-live.txt"
       - ".github/workflows/update-gold-forecast.yml"
   schedule:
@@ -102,6 +105,12 @@ jobs:
       - name: Build exact-formula macro positioning 1Y challenger and promote only if stronger
         run: python macro_1y_runner.py
 
+      - name: Build regime-conditioned V6 future price action challenger
+        run: python future_price_action_v6.py
+
+      - name: Record and score live forward forecasts
+        run: python forward_validation_ledger.py
+
       - name: Compare 4H regime model independently
         run: python regime_intraday_runner.py
 
@@ -132,15 +141,18 @@ jobs:
       - name: Add immediate client-side overlay fallback
         run: python dashboard_chart_fallback_patch.py
 
+      - name: Add V6 future price action panel
+        run: python dashboard_future_price_action_patch.py
+
       - name: Commit updated intelligence data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_technical_model.json data/silver_technical_model.json data/gold_technical_context.json data/silver_technical_context.json data/gold_projections.json data/silver_projections.json data/gold_macro_1y.json data/silver_macro_1y.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/gold_4h_specialist.json data/silver_4h_specialist.json data/gold_horizon_specialist_v4.json data/silver_horizon_specialist_v4.json data/gold_meaningful_probability_v4.json data/silver_meaningful_probability_v4.json data/model_backtest.json
+          git add index.html data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_technical_model.json data/silver_technical_model.json data/gold_technical_context.json data/silver_technical_context.json data/gold_projections.json data/silver_projections.json data/gold_macro_1y.json data/silver_macro_1y.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/gold_4h_specialist.json data/silver_4h_specialist.json data/gold_horizon_specialist_v4.json data/silver_horizon_specialist_v4.json data/gold_meaningful_probability_v4.json data/silver_meaningful_probability_v4.json data/gold_future_price_action_v6.json data/silver_future_price_action_v6.json data/forward_validation_ledger.json data/model_backtest.json
           if git diff --cached --quiet; then
             echo "No market-data changes to commit"
           else
-            git commit -m "Update V4 champion challenger metals data"
+            git commit -m "Update V6 future price action metals data"
             git fetch origin master
             git rebase origin/master
             git push origin master
