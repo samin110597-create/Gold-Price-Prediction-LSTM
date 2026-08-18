@@ -6,6 +6,7 @@ on:
     branches: [master]
     paths:
       - "future_price_action_v6.py"
+      - "future_price_action_v6_runner.py"
       - "forward_validation_ledger.py"
       - "dashboard_future_price_action_patch.py"
       - ".github/workflows/update-v6-price-action.yml"
@@ -30,8 +31,8 @@ jobs:
           cache-dependency-path: requirements-live.txt
       - name: Install dependencies
         run: pip install -r requirements-live.txt
-      - name: Build regime-conditioned future price action V6
-        run: python future_price_action_v6.py
+      - name: Build maturity-safe regime-conditioned future price action V6
+        run: python future_price_action_v6_runner.py
       - name: Record forward-validation ledger
         run: python forward_validation_ledger.py
       - name: Add V6 future-price-action dashboard
@@ -49,4 +50,4 @@ jobs:
             git rebase origin/master
             git push origin master
           fi
-      # Isolated trigger marker: 2026-08-17
+      # Isolated maturity-safe trigger marker: 2026-08-17
