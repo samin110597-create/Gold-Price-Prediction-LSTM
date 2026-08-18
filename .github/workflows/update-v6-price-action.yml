@@ -1,0 +1,51 @@
+name: Update V6 Future Price Action
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "future_price_action_v6.py"
+      - "forward_validation_ledger.py"
+      - "dashboard_future_price_action_patch.py"
+      - ".github/workflows/update-v6-price-action.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: metals-intelligence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-v6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-live.txt
+      - name: Install dependencies
+        run: pip install -r requirements-live.txt
+      - name: Build regime-conditioned future price action V6
+        run: python future_price_action_v6.py
+      - name: Record forward-validation ledger
+        run: python forward_validation_ledger.py
+      - name: Add V6 future-price-action dashboard
+        run: python dashboard_future_price_action_patch.py
+      - name: Commit V6 results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data/gold_projections.json data/silver_projections.json data/gold_future_price_action_v6.json data/silver_future_price_action_v6.json data/forward_validation_ledger.json
+          if git diff --cached --quiet; then
+            echo "No V6 changes to commit"
+          else
+            git commit -m "Update V6 future price action data"
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
+          fi
