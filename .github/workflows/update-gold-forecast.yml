@@ -23,6 +23,7 @@ on:
       - "macro_1y_model_v3.py"
       - "macro_1y_runner.py"
       - "future_price_action_v6.py"
+      - "future_price_action_v6_runner.py"
       - "forward_validation_ledger.py"
       - "regime_intraday_model.py"
       - "regime_intraday_runner.py"
@@ -105,8 +106,8 @@ jobs:
       - name: Build exact-formula macro positioning 1Y challenger and promote only if stronger
         run: python macro_1y_runner.py
 
-      - name: Build regime-conditioned V6 future price action challenger
-        run: python future_price_action_v6.py
+      - name: Build maturity-safe regime-conditioned V6 future price action challenger
+        run: python future_price_action_v6_runner.py
 
       - name: Record and score live forward forecasts
         run: python forward_validation_ledger.py
