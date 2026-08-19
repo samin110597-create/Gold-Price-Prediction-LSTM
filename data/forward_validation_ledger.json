@@ -1,13 +1,13 @@
 {
-  "updated_utc": "2026-08-19T03:33:33.972196+00:00",
+  "updated_utc": "2026-08-19T04:11:50.094093+00:00",
   "method": "Predictions are logged before outcomes exist. A forecast is resolved only when the required future market observations become available. This is forward validation, not backtest tuning.",
   "summary": [
     {
       "asset": "gold",
       "horizon": "1 Day",
-      "resolved_forecasts": 1,
+      "resolved_forecasts": 2,
       "forward_direction_accuracy": 1.0,
-      "forward_mae_pct": 0.2423
+      "forward_mae_pct": 0.5334
     },
     {
       "asset": "gold",
@@ -19,9 +19,9 @@
     {
       "asset": "silver",
       "horizon": "1 Day",
-      "resolved_forecasts": 1,
+      "resolved_forecasts": 2,
       "forward_direction_accuracy": 1.0,
-      "forward_mae_pct": 0.8885
+      "forward_mae_pct": 2.0832
     },
     {
       "asset": "silver",
@@ -297,7 +297,11 @@
       "probability_up": 0.5278,
       "model_status": "FAIL",
       "regime": "BULL_MIDVOL",
-      "resolved": false
+      "resolved": true,
+      "resolved_market_time": "2026-08-19T00:00:00",
+      "actual_price": 4409.3999,
+      "direction_correct": true,
+      "abs_error_pct": 0.8246
     },
     {
       "asset": "gold",
@@ -374,7 +378,11 @@
       "probability_up": 0.4757,
       "model_status": "FAIL",
       "regime": "RANGE_LOWVOL",
-      "resolved": false
+      "resolved": true,
+      "resolved_market_time": "2026-08-19T00:00:00",
+      "actual_price": 63.15,
+      "direction_correct": true,
+      "abs_error_pct": 3.2779
     },
     {
       "asset": "silver",
@@ -941,6 +949,152 @@
       "start_price": 63.035,
       "predicted_price": 63.16,
       "probability_up": 0.5,
+      "model_status": "FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "4H",
+      "source": "Recent 4H specialist",
+      "interval": "1h",
+      "steps": 4,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T04:00:00",
+      "start_price": 4409.3999,
+      "predicted_price": 4410.08,
+      "probability_up": 0.5714,
+      "model_status": "RECENT PASS / STABILITY FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "1 Day",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 1,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 4409.3999,
+      "predicted_price": 4368.48,
+      "probability_up": 0.494,
+      "model_status": "FAIL",
+      "regime": "BULL_MIDVOL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "1 Week",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 5,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 4409.3999,
+      "predicted_price": 4379.62,
+      "probability_up": 0.5196,
+      "model_status": "FAIL",
+      "regime": "BULL_MIDVOL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "1 Month",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 20,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 4409.3999,
+      "predicted_price": 4399.78,
+      "probability_up": 0.5563,
+      "model_status": "FAIL",
+      "regime": "BULL_MIDVOL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "1 Year",
+      "source": "Macro 1Y challenger",
+      "interval": "1d",
+      "steps": 252,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 4409.3999,
+      "predicted_price": 5152.05,
+      "probability_up": 0.7285,
+      "model_status": "FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "4H",
+      "source": "Recent 4H specialist",
+      "interval": "1h",
+      "steps": 4,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T04:00:00",
+      "start_price": 63.15,
+      "predicted_price": 63.14,
+      "probability_up": 0.5714,
+      "model_status": "RECENT PASS / STABILITY FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "1 Day",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 1,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 63.15,
+      "predicted_price": 62.78,
+      "probability_up": 0.3916,
+      "model_status": "FAIL",
+      "regime": "RANGE_LOWVOL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "1 Week",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 5,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 63.15,
+      "predicted_price": 62.95,
+      "probability_up": 0.5062,
+      "model_status": "FAIL",
+      "regime": "RANGE_LOWVOL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "1 Month",
+      "source": "Future Price Action V6",
+      "interval": "1d",
+      "steps": 20,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 63.15,
+      "predicted_price": 63.42,
+      "probability_up": 0.5065,
+      "model_status": "FAIL",
+      "regime": "RANGE_LOWVOL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "1 Year",
+      "source": "Macro 1Y challenger",
+      "interval": "1d",
+      "steps": 252,
+      "issued_utc": "2026-08-19T04:11:50.094093+00:00",
+      "issued_market_time": "2026-08-19T00:00:00",
+      "start_price": 63.15,
+      "predicted_price": 74.35,
+      "probability_up": 0.6699,
       "model_status": "FAIL",
       "resolved": false
     }
