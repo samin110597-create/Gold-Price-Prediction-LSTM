@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "updated_utc": "2026-08-19T17:10:47.287457+00:00",
+  "updated_utc": "2026-08-19T18:05:08.468172+00:00",
   "validation_method": "Purged walk-forward validation with strict PASS/FAIL rules. Price forecasts must beat the directional baseline by at least 2 percentage points, improve MAE by at least 2%, remain inside their tested zone, and meet horizon-specific minimum test counts. Probability forecasts need at least 2 percentage points of edge, Brier below 0.25, and at least 300 OOS observations. Technical challengers remain nested and chronologically purged. V4 probability champion uses a separate volatility-adjusted 3-state task and can replace the legacy probability component only after its own frozen walk-forward pass rule is met.",
   "assets": {
     "gold": {
@@ -10,10 +10,10 @@
         {
           "horizon_days": 1,
           "probability_up": 0.5,
-          "accuracy": 0.5482,
+          "accuracy": 0.5456,
           "baseline": 0.5714,
-          "edge": -0.0232,
-          "brier_score": 0.2504,
+          "edge": -0.0259,
+          "brier_score": 0.2498,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300",
@@ -22,10 +22,10 @@
         {
           "horizon_days": 5,
           "probability_up": 0.5,
-          "accuracy": 0.487,
+          "accuracy": 0.4823,
           "baseline": 0.623,
-          "edge": -0.136,
-          "brier_score": 0.2731,
+          "edge": -0.1407,
+          "brier_score": 0.2725,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300",
@@ -34,9 +34,9 @@
         {
           "horizon_days": 20,
           "probability_up": 0.5,
-          "accuracy": 0.443,
+          "accuracy": 0.4436,
           "baseline": 0.6786,
-          "edge": -0.2356,
+          "edge": -0.235,
           "brier_score": 0.3025,
           "oos_observations": 504,
           "pass": false,
@@ -48,13 +48,13 @@
         {
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.4271,
-          "directional_accuracy": 0.4271,
-          "baseline_directional_accuracy": 0.5625,
-          "directional_edge": -0.1354,
-          "mae_pct": 0.543,
-          "baseline_mae_pct": 0.531,
-          "mae_skill_vs_baseline": -0.0215,
+          "probability_up": 0.5417,
+          "directional_accuracy": 0.5208,
+          "baseline_directional_accuracy": 0.5104,
+          "directional_edge": 0.0104,
+          "mae_pct": 0.451,
+          "baseline_mae_pct": 0.454,
+          "mae_skill_vs_baseline": 0.0072,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
@@ -118,7 +118,7 @@
           "hit_rate": 0.529,
           "baseline_direction_rate": 0.5806,
           "edge": -0.0516,
-          "avg_signed_return_pct": 0.031
+          "avg_signed_return_pct": 0.03
         },
         {
           "horizon_days": 5,
@@ -127,7 +127,7 @@
           "hit_rate": 0.5339,
           "baseline_direction_rate": 0.6236,
           "edge": -0.0898,
-          "avg_signed_return_pct": 0.242
+          "avg_signed_return_pct": 0.241
         },
         {
           "horizon_days": 20,
@@ -142,8 +142,8 @@
       "technical_selective": [
         {
           "horizon_days": 1,
-          "probability_up": 0.5546,
-          "probability_down": 0.4454,
+          "probability_up": 0.5558,
+          "probability_down": 0.4442,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -209,26 +209,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.3446
+              "probability_up": 0.3635
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4411
+              "probability_up": 0.4444
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4724
+              "probability_up": 0.4705
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.4356
+              "probability_up": 0.4627
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_up": 0.621,
-          "probability_down": 0.379,
+          "probability_up": 0.6209,
+          "probability_down": 0.3791,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -294,15 +294,15 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.4821
+              "probability_up": 0.4976
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4149
+              "probability_up": 0.4208
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4539
+              "probability_up": 0.4558
             },
             {
               "name": "Gradient Boost",
@@ -312,8 +312,8 @@
         },
         {
           "horizon_days": 20,
-          "probability_up": 0.7396,
-          "probability_down": 0.2604,
+          "probability_up": 0.7422,
+          "probability_down": 0.2578,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -379,19 +379,19 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.5946
+              "probability_up": 0.6082
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4855
+              "probability_up": 0.4761
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4701
+              "probability_up": 0.4695
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.5927
+              "probability_up": 0.554
             }
           ]
         }
@@ -402,7 +402,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.5225,
+          "meta_probability_base_correct": 0.5184,
           "decision_threshold": 0.56,
           "oos_accuracy": 0.5245,
           "base_signal_accuracy": 0.5594,
@@ -474,7 +474,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.5092,
+          "meta_probability_base_correct": 0.5074,
           "decision_threshold": 0.58,
           "oos_accuracy": 0.6277,
           "base_signal_accuracy": 0.5585,
@@ -546,7 +546,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.5346,
+          "meta_probability_base_correct": 0.5241,
           "decision_threshold": 0.61,
           "oos_accuracy": 0.5195,
           "base_signal_accuracy": 0.5273,
@@ -761,7 +761,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "gold",
-        "updated_utc": "2026-08-19T17:05:30.423163+00:00",
+        "updated_utc": "2026-08-19T17:59:38.459587+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -773,10 +773,10 @@
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 5331.69,
-          "predicted_price": 5331.69,
+          "model_price": 5326.18,
+          "predicted_price": 5326.18,
           "projected_return_pct": 17.14,
-          "raw_macro_return_pct": 22.99,
+          "raw_macro_return_pct": 23.01,
           "historical_anchor_return_pct": 11.28,
           "macro_model_trust": 0.5,
           "probability_up": 0.6992,
@@ -784,16 +784,16 @@
           "confidence": "Low",
           "forecast_status": "Estimate only",
           "tight_model_zone": [
-            4692.43,
-            5970.95
+            4687.62,
+            5964.74
           ],
           "focus_zone": [
-            4692.43,
-            5970.95
+            4687.62,
+            5964.74
           ],
           "risk_zone": [
-            4046.1,
-            6617.29
+            4042.0,
+            6610.36
           ],
           "backtest_directional_accuracy": 0.625,
           "baseline_directional_accuracy": 0.5,
@@ -813,28 +813,28 @@
               "weight": 0.25,
               "oos_mae_skill": -0.1379,
               "oos_direction_accuracy": 0.5469,
-              "projected_return_pct": 24.91
+              "projected_return_pct": 25.01
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
               "oos_mae_skill": -0.1786,
               "oos_direction_accuracy": 0.5938,
-              "projected_return_pct": 23.68
+              "projected_return_pct": 23.8
             },
             {
               "name": "Random Forest",
               "weight": 0.25,
               "oos_mae_skill": 0.0037,
               "oos_direction_accuracy": 0.5625,
-              "projected_return_pct": 24.11
+              "projected_return_pct": 24.01
             },
             {
               "name": "Gradient Boost",
               "weight": 0.25,
               "oos_mae_skill": 0.0517,
               "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 19.28
+              "projected_return_pct": 19.22
             }
           ]
         },
@@ -857,10 +857,10 @@
         {
           "horizon_days": 1,
           "probability_up": 0.5,
-          "accuracy": 0.5482,
+          "accuracy": 0.5456,
           "baseline": 0.5714,
-          "edge": -0.0232,
-          "brier_score": 0.2504,
+          "edge": -0.0259,
+          "brier_score": 0.2498,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300"
@@ -868,10 +868,10 @@
         {
           "horizon_days": 5,
           "probability_up": 0.5,
-          "accuracy": 0.487,
+          "accuracy": 0.4823,
           "baseline": 0.623,
-          "edge": -0.136,
-          "brier_score": 0.2731,
+          "edge": -0.1407,
+          "brier_score": 0.2725,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300"
@@ -879,9 +879,9 @@
         {
           "horizon_days": 20,
           "probability_up": 0.5,
-          "accuracy": 0.443,
+          "accuracy": 0.4436,
           "baseline": 0.6786,
-          "edge": -0.2356,
+          "edge": -0.235,
           "brier_score": 0.3025,
           "oos_observations": 504,
           "pass": false,
@@ -891,9 +891,9 @@
       "meaningful_probability_v4": [
         {
           "horizon_days": 1,
-          "probability_down": 0.2782,
-          "probability_no_edge": 0.5769,
-          "probability_up": 0.1449,
+          "probability_down": 0.2802,
+          "probability_no_edge": 0.5608,
+          "probability_up": 0.159,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4524,
@@ -904,34 +904,34 @@
           "active_edge": 0.0,
           "active_signals": 0,
           "walkforward_origins": 42,
-          "multiclass_brier": 0.6491,
+          "multiclass_brier": 0.6492,
           "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
           "models": [
             {
               "name": "Logistic",
-              "down": 0.3617,
-              "no_edge": 0.5158,
-              "up": 0.1225
+              "down": 0.3713,
+              "no_edge": 0.4978,
+              "up": 0.1309
             },
             {
               "name": "Extra Trees",
-              "down": 0.3306,
-              "no_edge": 0.441,
-              "up": 0.2285
+              "down": 0.3289,
+              "no_edge": 0.4352,
+              "up": 0.236
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1424,
-              "no_edge": 0.774,
-              "up": 0.0836
+              "down": 0.1404,
+              "no_edge": 0.7494,
+              "up": 0.1101
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_down": 0.2935,
-          "probability_no_edge": 0.443,
-          "probability_up": 0.2635,
+          "probability_down": 0.2961,
+          "probability_no_edge": 0.4449,
+          "probability_up": 0.259,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4762,
@@ -947,29 +947,29 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.3514,
-              "no_edge": 0.4185,
-              "up": 0.2301
+              "down": 0.3602,
+              "no_edge": 0.4027,
+              "up": 0.2371
             },
             {
               "name": "Extra Trees",
-              "down": 0.3749,
-              "no_edge": 0.3652,
-              "up": 0.2599
+              "down": 0.3546,
+              "no_edge": 0.3744,
+              "up": 0.271
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1542,
-              "no_edge": 0.5452,
-              "up": 0.3006
+              "down": 0.1736,
+              "no_edge": 0.5576,
+              "up": 0.2688
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_down": 0.1642,
-          "probability_no_edge": 0.6567,
-          "probability_up": 0.179,
+          "probability_down": 0.1762,
+          "probability_no_edge": 0.6231,
+          "probability_up": 0.2006,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.3571,
@@ -985,21 +985,21 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.1996,
-              "no_edge": 0.5843,
-              "up": 0.2161
+              "down": 0.2093,
+              "no_edge": 0.5704,
+              "up": 0.2203
             },
             {
               "name": "Extra Trees",
-              "down": 0.2263,
-              "no_edge": 0.5582,
-              "up": 0.2155
+              "down": 0.2359,
+              "no_edge": 0.5404,
+              "up": 0.2237
             },
             {
               "name": "Gradient Boost",
-              "down": 0.0668,
-              "no_edge": 0.8278,
-              "up": 0.1054
+              "down": 0.0834,
+              "no_edge": 0.7586,
+              "up": 0.158
             }
           ]
         }
@@ -1025,15 +1025,15 @@
     },
     "silver": {
       "audit_grade": "FAIL",
-      "component_pass_rate": 0.0,
+      "component_pass_rate": 0.1,
       "probability_forecasts": [
         {
           "horizon_days": 1,
           "probability_up": 0.5,
-          "accuracy": 0.5391,
+          "accuracy": 0.5296,
           "baseline": 0.5635,
-          "edge": -0.0244,
-          "brier_score": 0.25,
+          "edge": -0.0339,
+          "brier_score": 0.2512,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300",
@@ -1042,10 +1042,10 @@
         {
           "horizon_days": 5,
           "probability_up": 0.5,
-          "accuracy": 0.4761,
+          "accuracy": 0.468,
           "baseline": 0.5893,
-          "edge": -0.1132,
-          "brier_score": 0.2769,
+          "edge": -0.1213,
+          "brier_score": 0.2783,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300",
@@ -1054,10 +1054,10 @@
         {
           "horizon_days": 20,
           "probability_up": 0.5,
-          "accuracy": 0.4444,
+          "accuracy": 0.4383,
           "baseline": 0.6587,
-          "edge": -0.2144,
-          "brier_score": 0.3093,
+          "edge": -0.2205,
+          "brier_score": 0.322,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300",
@@ -1069,12 +1069,12 @@
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
           "probability_up": 0.5,
-          "directional_accuracy": 0.4792,
-          "baseline_directional_accuracy": 0.5,
-          "directional_edge": -0.0208,
-          "mae_pct": 0.948,
-          "baseline_mae_pct": 0.945,
-          "mae_skill_vs_baseline": -0.0029,
+          "directional_accuracy": 0.4896,
+          "baseline_directional_accuracy": 0.5729,
+          "directional_edge": -0.0833,
+          "mae_pct": 1.075,
+          "baseline_mae_pct": 1.058,
+          "mae_skill_vs_baseline": -0.016,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
@@ -1162,8 +1162,8 @@
       "technical_selective": [
         {
           "horizon_days": 1,
-          "probability_up": 0.4982,
-          "probability_down": 0.5018,
+          "probability_up": 0.5074,
+          "probability_down": 0.4926,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.61,
@@ -1229,26 +1229,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.2745
+              "probability_up": 0.2938
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4288
+              "probability_up": 0.4516
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4399
+              "probability_up": 0.4484
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.3519
+              "probability_up": 0.4272
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_up": 0.5932,
-          "probability_down": 0.4068,
+          "probability_up": 0.5935,
+          "probability_down": 0.4065,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -1314,15 +1314,15 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.4608
+              "probability_up": 0.4639
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4531
+              "probability_up": 0.4444
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4764
+              "probability_up": 0.4741
             },
             {
               "name": "Gradient Boost",
@@ -1332,8 +1332,8 @@
         },
         {
           "horizon_days": 20,
-          "probability_up": 0.618,
-          "probability_down": 0.382,
+          "probability_up": 0.6181,
+          "probability_down": 0.3819,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.55,
@@ -1399,15 +1399,15 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.5209
+              "probability_up": 0.5254
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.6619
+              "probability_up": 0.6621
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.5484
+              "probability_up": 0.5418
             },
             {
               "name": "Gradient Boost",
@@ -1419,80 +1419,145 @@
       "technical_context": [
         {
           "horizon_days": 1,
-          "signal": "NO EDGE / UNAVAILABLE",
-          "active_signal": false,
-          "audit_pass": false,
-          "error": "Too few OOS context decisions 1D: 48"
-        },
-        {
-          "horizon_days": 5,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4781,
+          "meta_probability_base_correct": 0.5465,
           "decision_threshold": 0.56,
-          "oos_accuracy": 0.5192,
-          "base_signal_accuracy": 0.3718,
-          "lift_vs_base": 0.1474,
-          "coverage": 0.2761,
-          "oos_signals": 156,
-          "fold_positive_share": 0.5,
+          "oos_accuracy": 0.5098,
+          "base_signal_accuracy": 0.4706,
+          "lift_vs_base": 0.0392,
+          "coverage": 0.1818,
+          "oos_signals": 102,
+          "fold_positive_share": 0.8333,
           "audit_pass": false,
           "validation": "nested chronological meta-label walk-forward; purge measured on full trading-day timeline; threshold chosen only on earlier calibration slice",
           "folds": [
             {
               "threshold": 0.56,
               "candidate_setups": 87,
-              "coverage": 0.1264,
-              "signals": 11,
-              "accuracy": 0.6364,
-              "base_test_accuracy": 0.6897,
-              "lift": -0.0533
+              "coverage": 0.0575,
+              "signals": 5,
+              "accuracy": 0.2,
+              "base_test_accuracy": 0.4253,
+              "lift": -0.2253
             },
             {
               "threshold": 0.56,
               "candidate_setups": 91,
-              "coverage": 0.3297,
-              "signals": 30,
-              "accuracy": 0.4333,
-              "base_test_accuracy": 0.5165,
-              "lift": -0.0832
+              "coverage": 0.2198,
+              "signals": 20,
+              "accuracy": 0.5,
+              "base_test_accuracy": 0.4725,
+              "lift": 0.0275
             },
             {
-              "threshold": 0.58,
+              "threshold": 0.56,
               "candidate_setups": 94,
-              "coverage": 0.1809,
-              "signals": 17,
-              "accuracy": 0.4706,
-              "base_test_accuracy": 0.5957,
-              "lift": -0.1252
+              "coverage": 0.1702,
+              "signals": 16,
+              "accuracy": 0.5,
+              "base_test_accuracy": 0.4894,
+              "lift": 0.0106
             },
             {
               "threshold": 0.56,
               "candidate_setups": 103,
-              "coverage": 0.2621,
-              "signals": 27,
-              "accuracy": 0.5556,
-              "base_test_accuracy": 0.4951,
-              "lift": 0.0604
+              "coverage": 0.2233,
+              "signals": 23,
+              "accuracy": 0.5217,
+              "base_test_accuracy": 0.4563,
+              "lift": 0.0654
             },
             {
               "threshold": 0.56,
+              "candidate_setups": 106,
+              "coverage": 0.1887,
+              "signals": 20,
+              "accuracy": 0.6,
+              "base_test_accuracy": 0.3868,
+              "lift": 0.2132
+            },
+            {
+              "threshold": 0.56,
+              "candidate_setups": 80,
+              "coverage": 0.225,
+              "signals": 18,
+              "accuracy": 0.5,
+              "base_test_accuracy": 0.4125,
+              "lift": 0.0875
+            }
+          ]
+        },
+        {
+          "horizon_days": 5,
+          "signal": "NO EDGE / ABSTAIN",
+          "active_signal": false,
+          "mode": "ABSTAIN",
+          "meta_probability_base_correct": 0.51,
+          "decision_threshold": 0.56,
+          "oos_accuracy": 0.5625,
+          "base_signal_accuracy": 0.4297,
+          "lift_vs_base": 0.1328,
+          "coverage": 0.2265,
+          "oos_signals": 128,
+          "fold_positive_share": 0.5,
+          "audit_pass": true,
+          "validation": "nested chronological meta-label walk-forward; purge measured on full trading-day timeline; threshold chosen only on earlier calibration slice",
+          "folds": [
+            {
+              "threshold": 0.56,
+              "candidate_setups": 87,
+              "coverage": 0.2299,
+              "signals": 20,
+              "accuracy": 0.35,
+              "base_test_accuracy": 0.6897,
+              "lift": -0.3397
+            },
+            {
+              "threshold": 0.56,
+              "candidate_setups": 91,
+              "coverage": 0.1868,
+              "signals": 17,
+              "accuracy": 0.4118,
+              "base_test_accuracy": 0.5165,
+              "lift": -0.1047
+            },
+            {
+              "threshold": 0.56,
+              "candidate_setups": 94,
+              "coverage": 0.2234,
+              "signals": 21,
+              "accuracy": 0.5714,
+              "base_test_accuracy": 0.5957,
+              "lift": -0.0243
+            },
+            {
+              "threshold": 0.56,
+              "candidate_setups": 103,
+              "coverage": 0.2524,
+              "signals": 26,
+              "accuracy": 0.5769,
+              "base_test_accuracy": 0.4951,
+              "lift": 0.0818
+            },
+            {
+              "threshold": 0.58,
               "candidate_setups": 110,
-              "coverage": 0.3,
-              "signals": 33,
-              "accuracy": 0.3939,
+              "coverage": 0.1182,
+              "signals": 13,
+              "accuracy": 0.7692,
               "base_test_accuracy": 0.2545,
-              "lift": 0.1394
+              "lift": 0.5147
             },
             {
               "threshold": 0.58,
               "candidate_setups": 80,
-              "coverage": 0.475,
-              "signals": 38,
-              "accuracy": 0.6579,
+              "coverage": 0.3875,
+              "signals": 31,
+              "accuracy": 0.6774,
               "base_test_accuracy": 0.425,
-              "lift": 0.2329
+              "lift": 0.2524
             }
           ]
         },
@@ -1501,13 +1566,13 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.5228,
-          "decision_threshold": 0.57,
-          "oos_accuracy": 0.4132,
-          "base_signal_accuracy": 0.4669,
-          "lift_vs_base": -0.0537,
-          "coverage": 0.4298,
-          "oos_signals": 242,
+          "meta_probability_base_correct": 0.5393,
+          "decision_threshold": 0.56,
+          "oos_accuracy": 0.415,
+          "base_signal_accuracy": 0.4585,
+          "lift_vs_base": -0.0435,
+          "coverage": 0.4494,
+          "oos_signals": 253,
           "fold_positive_share": 0.6667,
           "audit_pass": false,
           "validation": "nested chronological meta-label walk-forward; purge measured on full trading-day timeline; threshold chosen only on earlier calibration slice",
@@ -1515,56 +1580,56 @@
             {
               "threshold": 0.56,
               "candidate_setups": 84,
-              "coverage": 0.2976,
-              "signals": 25,
-              "accuracy": 0.36,
+              "coverage": 0.3333,
+              "signals": 28,
+              "accuracy": 0.1429,
               "base_test_accuracy": 0.7857,
-              "lift": -0.4257
+              "lift": -0.6429
             },
             {
               "threshold": 0.56,
               "candidate_setups": 94,
-              "coverage": 0.7766,
-              "signals": 73,
-              "accuracy": 0.2466,
+              "coverage": 0.8511,
+              "signals": 80,
+              "accuracy": 0.2875,
               "base_test_accuracy": 0.5745,
-              "lift": -0.3279
+              "lift": -0.287
+            },
+            {
+              "threshold": 0.64,
+              "candidate_setups": 93,
+              "coverage": 0.0753,
+              "signals": 7,
+              "accuracy": 1.0,
+              "base_test_accuracy": 0.5591,
+              "lift": 0.4409
             },
             {
               "threshold": 0.62,
-              "candidate_setups": 93,
-              "coverage": 0.1935,
-              "signals": 18,
-              "accuracy": 0.6111,
-              "base_test_accuracy": 0.5591,
-              "lift": 0.052
-            },
-            {
-              "threshold": 0.6,
               "candidate_setups": 104,
-              "coverage": 0.1442,
-              "signals": 15,
-              "accuracy": 0.5333,
+              "coverage": 0.0962,
+              "signals": 10,
+              "accuracy": 0.7,
               "base_test_accuracy": 0.4423,
-              "lift": 0.091
+              "lift": 0.2577
             },
             {
-              "threshold": 0.58,
+              "threshold": 0.56,
               "candidate_setups": 113,
-              "coverage": 0.4779,
-              "signals": 54,
-              "accuracy": 0.4259,
+              "coverage": 0.6637,
+              "signals": 75,
+              "accuracy": 0.4667,
               "base_test_accuracy": 0.1327,
-              "lift": 0.2932
+              "lift": 0.3339
             },
             {
               "threshold": 0.56,
               "candidate_setups": 75,
-              "coverage": 0.76,
-              "signals": 57,
-              "accuracy": 0.5439,
+              "coverage": 0.7067,
+              "signals": 53,
+              "accuracy": 0.5472,
               "base_test_accuracy": 0.44,
-              "lift": 0.1039
+              "lift": 0.1072
             }
           ]
         }
@@ -1572,15 +1637,28 @@
       "technical_champions": [
         {
           "horizon_days": 1,
-          "source": "Selective nested technical model",
-          "accuracy": 0.5828,
-          "baseline": 0.5793,
-          "edge": 0.0034,
-          "coverage": 0.3836,
-          "signals": 290,
+          "source": "Technical + cross-market meta model",
+          "accuracy": 0.5098,
+          "baseline": 0.4706,
+          "edge": 0.0392,
+          "coverage": 0.1818,
+          "signals": 102,
           "current_signal": "NO EDGE / ABSTAIN",
+          "mode": "ABSTAIN",
           "pass": false,
           "candidates": [
+            {
+              "horizon_days": 1,
+              "source": "Technical + cross-market meta model",
+              "accuracy": 0.5098,
+              "baseline": 0.4706,
+              "edge": 0.0392,
+              "coverage": 0.1818,
+              "signals": 102,
+              "current_signal": "NO EDGE / ABSTAIN",
+              "mode": "ABSTAIN",
+              "pass": false
+            },
             {
               "horizon_days": 1,
               "source": "Selective nested technical model",
@@ -1608,26 +1686,26 @@
         {
           "horizon_days": 5,
           "source": "Technical + cross-market meta model",
-          "accuracy": 0.5192,
-          "baseline": 0.3718,
-          "edge": 0.1474,
-          "coverage": 0.2761,
-          "signals": 156,
+          "accuracy": 0.5625,
+          "baseline": 0.4297,
+          "edge": 0.1328,
+          "coverage": 0.2265,
+          "signals": 128,
           "current_signal": "NO EDGE / ABSTAIN",
           "mode": "ABSTAIN",
-          "pass": false,
+          "pass": true,
           "candidates": [
             {
               "horizon_days": 5,
               "source": "Technical + cross-market meta model",
-              "accuracy": 0.5192,
-              "baseline": 0.3718,
-              "edge": 0.1474,
-              "coverage": 0.2761,
-              "signals": 156,
+              "accuracy": 0.5625,
+              "baseline": 0.4297,
+              "edge": 0.1328,
+              "coverage": 0.2265,
+              "signals": 128,
               "current_signal": "NO EDGE / ABSTAIN",
               "mode": "ABSTAIN",
-              "pass": false
+              "pass": true
             },
             {
               "horizon_days": 5,
@@ -1655,15 +1733,28 @@
         },
         {
           "horizon_days": 20,
-          "source": "Selective nested technical model",
-          "accuracy": 0.5835,
-          "baseline": 0.636,
-          "edge": -0.0525,
-          "coverage": 0.705,
-          "signals": 533,
+          "source": "Technical + cross-market meta model",
+          "accuracy": 0.415,
+          "baseline": 0.4585,
+          "edge": -0.0435,
+          "coverage": 0.4494,
+          "signals": 253,
           "current_signal": "NO EDGE / ABSTAIN",
+          "mode": "ABSTAIN",
           "pass": false,
           "candidates": [
+            {
+              "horizon_days": 20,
+              "source": "Technical + cross-market meta model",
+              "accuracy": 0.415,
+              "baseline": 0.4585,
+              "edge": -0.0435,
+              "coverage": 0.4494,
+              "signals": 253,
+              "current_signal": "NO EDGE / ABSTAIN",
+              "mode": "ABSTAIN",
+              "pass": false
+            },
             {
               "horizon_days": 20,
               "source": "Selective nested technical model",
@@ -1673,18 +1764,6 @@
               "coverage": 0.705,
               "signals": 533,
               "current_signal": "NO EDGE / ABSTAIN",
-              "pass": false
-            },
-            {
-              "horizon_days": 20,
-              "source": "Technical + cross-market meta model",
-              "accuracy": 0.4132,
-              "baseline": 0.4669,
-              "edge": -0.0537,
-              "coverage": 0.4298,
-              "signals": 242,
-              "current_signal": "NO EDGE / ABSTAIN",
-              "mode": "ABSTAIN",
               "pass": false
             },
             {
@@ -1704,7 +1783,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "silver",
-        "updated_utc": "2026-08-19T17:05:55.175703+00:00",
+        "updated_utc": "2026-08-19T18:00:05.394850+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -1716,10 +1795,10 @@
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 76.77,
-          "predicted_price": 76.77,
-          "projected_return_pct": 16.43,
-          "raw_macro_return_pct": 22.41,
+          "model_price": 76.76,
+          "predicted_price": 76.76,
+          "projected_return_pct": 16.5,
+          "raw_macro_return_pct": 22.55,
           "historical_anchor_return_pct": 10.46,
           "macro_model_trust": 0.5,
           "probability_up": 0.6699,
@@ -1728,15 +1807,15 @@
           "forecast_status": "Estimate only",
           "tight_model_zone": [
             60.12,
-            93.41
+            93.39
           ],
           "focus_zone": [
             60.12,
-            93.41
+            93.39
           ],
           "risk_zone": [
-            41.74,
-            111.8
+            41.75,
+            111.76
           ],
           "backtest_directional_accuracy": 0.4844,
           "baseline_directional_accuracy": 0.375,
@@ -1756,14 +1835,14 @@
               "weight": 0.25,
               "oos_mae_skill": -0.2267,
               "oos_direction_accuracy": 0.4688,
-              "projected_return_pct": 15.52
+              "projected_return_pct": 15.67
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
               "oos_mae_skill": -0.4224,
               "oos_direction_accuracy": 0.5156,
-              "projected_return_pct": 11.13
+              "projected_return_pct": 11.28
             },
             {
               "name": "Random Forest",
@@ -1777,7 +1856,7 @@
               "weight": 0.25,
               "oos_mae_skill": 0.0675,
               "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 32.51
+              "projected_return_pct": 32.77
             }
           ]
         },
@@ -1800,10 +1879,10 @@
         {
           "horizon_days": 1,
           "probability_up": 0.5,
-          "accuracy": 0.5391,
+          "accuracy": 0.5296,
           "baseline": 0.5635,
-          "edge": -0.0244,
-          "brier_score": 0.25,
+          "edge": -0.0339,
+          "brier_score": 0.2512,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300"
@@ -1811,10 +1890,10 @@
         {
           "horizon_days": 5,
           "probability_up": 0.5,
-          "accuracy": 0.4761,
+          "accuracy": 0.468,
           "baseline": 0.5893,
-          "edge": -0.1132,
-          "brier_score": 0.2769,
+          "edge": -0.1213,
+          "brier_score": 0.2783,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300"
@@ -1822,10 +1901,10 @@
         {
           "horizon_days": 20,
           "probability_up": 0.5,
-          "accuracy": 0.4444,
+          "accuracy": 0.4383,
           "baseline": 0.6587,
-          "edge": -0.2144,
-          "brier_score": 0.3093,
+          "edge": -0.2205,
+          "brier_score": 0.322,
           "oos_observations": 504,
           "pass": false,
           "pass_rule": "edge >= 2%, Brier < 0.25, tests >= 300"
@@ -1834,115 +1913,115 @@
       "meaningful_probability_v4": [
         {
           "horizon_days": 1,
-          "probability_down": 0.3435,
-          "probability_no_edge": 0.3855,
-          "probability_up": 0.271,
+          "probability_down": 0.3339,
+          "probability_no_edge": 0.3745,
+          "probability_up": 0.2915,
           "signal": "NO EDGE",
           "pass": false,
-          "oos_accuracy": 0.4048,
+          "oos_accuracy": 0.3095,
           "majority_baseline": 0.2857,
-          "balanced_accuracy": 0.4207,
+          "balanced_accuracy": 0.3302,
           "active_direction_accuracy": 0.0,
           "active_baseline": 0.0,
           "active_edge": 0.0,
           "active_signals": 0,
           "walkforward_origins": 42,
-          "multiclass_brier": 0.6584,
+          "multiclass_brier": 0.6642,
           "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
           "models": [
             {
               "name": "Logistic",
-              "down": 0.4882,
-              "no_edge": 0.2091,
-              "up": 0.3027
+              "down": 0.4769,
+              "no_edge": 0.2064,
+              "up": 0.3167
             },
             {
               "name": "Extra Trees",
-              "down": 0.3712,
-              "no_edge": 0.3454,
-              "up": 0.2833
+              "down": 0.3434,
+              "no_edge": 0.3329,
+              "up": 0.3237
             },
             {
               "name": "Gradient Boost",
-              "down": 0.171,
-              "no_edge": 0.6018,
-              "up": 0.2271
+              "down": 0.1816,
+              "no_edge": 0.5842,
+              "up": 0.2342
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_down": 0.3127,
-          "probability_no_edge": 0.3671,
-          "probability_up": 0.3202,
+          "probability_down": 0.2938,
+          "probability_no_edge": 0.3558,
+          "probability_up": 0.3504,
           "signal": "NO EDGE",
           "pass": false,
-          "oos_accuracy": 0.4524,
+          "oos_accuracy": 0.381,
           "majority_baseline": 0.4762,
-          "balanced_accuracy": 0.4202,
-          "active_direction_accuracy": 0.5,
+          "balanced_accuracy": 0.3381,
+          "active_direction_accuracy": 1.0,
           "active_baseline": 1.0,
-          "active_edge": -0.5,
-          "active_signals": 2,
+          "active_edge": 0.0,
+          "active_signals": 1,
           "walkforward_origins": 42,
-          "multiclass_brier": 0.654,
+          "multiclass_brier": 0.6523,
           "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
           "models": [
             {
               "name": "Logistic",
-              "down": 0.4413,
-              "no_edge": 0.2317,
-              "up": 0.327
+              "down": 0.3992,
+              "no_edge": 0.2233,
+              "up": 0.3775
             },
             {
               "name": "Extra Trees",
-              "down": 0.2845,
-              "no_edge": 0.3719,
-              "up": 0.3436
+              "down": 0.293,
+              "no_edge": 0.3486,
+              "up": 0.3584
             },
             {
               "name": "Gradient Boost",
-              "down": 0.2122,
-              "no_edge": 0.4978,
-              "up": 0.29
+              "down": 0.1892,
+              "no_edge": 0.4956,
+              "up": 0.3153
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_down": 0.1556,
-          "probability_no_edge": 0.2749,
-          "probability_up": 0.5695,
+          "probability_down": 0.1517,
+          "probability_no_edge": 0.2493,
+          "probability_up": 0.599,
           "signal": "UP",
           "pass": false,
-          "oos_accuracy": 0.4048,
+          "oos_accuracy": 0.3333,
           "majority_baseline": 0.4762,
-          "balanced_accuracy": 0.3306,
+          "balanced_accuracy": 0.2722,
           "active_direction_accuracy": 0.0,
-          "active_baseline": 0.75,
-          "active_edge": -0.75,
-          "active_signals": 4,
+          "active_baseline": 1.0,
+          "active_edge": -1.0,
+          "active_signals": 3,
           "walkforward_origins": 42,
-          "multiclass_brier": 0.7063,
+          "multiclass_brier": 0.7154,
           "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
           "models": [
             {
               "name": "Logistic",
-              "down": 0.2433,
-              "no_edge": 0.184,
-              "up": 0.5727
+              "down": 0.1936,
+              "no_edge": 0.2151,
+              "up": 0.5913
             },
             {
               "name": "Extra Trees",
-              "down": 0.1784,
-              "no_edge": 0.3216,
-              "up": 0.5
+              "down": 0.2165,
+              "no_edge": 0.2757,
+              "up": 0.5078
             },
             {
               "name": "Gradient Boost",
-              "down": 0.0449,
-              "no_edge": 0.3193,
-              "up": 0.6358
+              "down": 0.045,
+              "no_edge": 0.2571,
+              "up": 0.6979
             }
           ]
         }
@@ -1950,9 +2029,9 @@
       "process_readiness": "INSTITUTIONAL-STYLE CONTROLS ACTIVE",
       "predictive_readiness": "NOT READY",
       "readiness_reasons": [
-        "overall champion pass rate is 0%, below 60%",
+        "overall champion pass rate is 10%, below 60%",
         "only 0/4 price horizons pass",
-        "only 0/3 technical champion horizons pass",
+        "only 1/3 technical champion horizons pass",
         "no probability horizon passes",
         "1-year champion does not pass"
       ],
