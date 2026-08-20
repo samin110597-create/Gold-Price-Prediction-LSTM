@@ -9,7 +9,9 @@ on:
       - "dashboard_numbers_patch.py"
       - "dashboard_chart_patch.py"
       - "dashboard_chart_fallback_patch.py"
+      - "dashboard_measured_move_patch.py"
       - "technical_overlay_enrich.py"
+      - "measured_move_enrich.py"
       - "technical_signal_audit.py"
       - "repair_dashboard_header.py"
       - "requirements-live.txt"
@@ -32,6 +34,8 @@ jobs:
         run: pip install -r requirements-live.txt
       - name: Refresh advanced chart patterns divergences and signal markers
         run: python technical_overlay_enrich.py
+      - name: Fill measured moves and structure objectives
+        run: python measured_move_enrich.py
       - name: Refresh fixed-rule signal event audit
         run: python technical_signal_audit.py
       - name: Patch dashboard
@@ -42,17 +46,19 @@ jobs:
         run: python dashboard_chart_patch.py
       - name: Add client-side overlay fallback
         run: python dashboard_chart_fallback_patch.py
+      - name: Show measured move values and target basis
+        run: python dashboard_measured_move_patch.py
       - name: Clean header and keep patch idempotent
         run: python repair_dashboard_header.py
       - name: Commit dashboard and technical overlay data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/gold_technicals.json data/silver_technicals.json dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py
+          git add index.html data/gold_technicals.json data/silver_technicals.json dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py dashboard_measured_move_patch.py measured_move_enrich.py
           if git diff --cached --quiet; then
             echo "Dashboard and technical overlays already current"
           else
-            git commit -m "Refresh advanced technical chart data"
+            git commit -m "Fill measured moves on technical patterns"
             git fetch origin master
             git rebase origin/master
             git push origin master
