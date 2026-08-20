@@ -1,0 +1,110 @@
+{
+  "status": "ok",
+  "asset": "silver",
+  "updated_utc": "2026-08-20T00:50:44.726951+00:00",
+  "model_version": "Precision Gate V7",
+  "method": "Selective release gate. It does not improve raw model predictions; it improves precision of published directional calls by abstaining unless predeclared evidence thresholds are met.",
+  "horizons": [
+    {
+      "horizon": "4H",
+      "call": "NO EDGE",
+      "watch_direction": "NO EDGE",
+      "probability_up": 0.4286,
+      "release": false,
+      "audit_ok": false,
+      "forward_ok": false,
+      "forward_samples": 31,
+      "forward_direction_accuracy": 0.3548,
+      "reason": "Released only with separated probability + 4H audit pass + >=20 live forecasts at >=60% direction accuracy."
+    },
+    {
+      "horizon": "1 Day",
+      "call": "NO EDGE",
+      "watch_direction": "NO EDGE",
+      "probability_up": 0.474,
+      "release": false,
+      "audit_ok": false,
+      "stability_ok": false,
+      "forward_ok": true,
+      "forward_samples": 2,
+      "forward_direction_accuracy": 1.0,
+      "scenario_20_50_80": [
+        65.76,
+        67.05,
+        68.31
+      ],
+      "risk_10_90": [
+        64.58,
+        70.06
+      ],
+      "directional_edge": 0.0556,
+      "mae_skill_vs_baseline": -0.0234,
+      "reason": "Released only when V6 PASS + recent stability + probability outside 42\u201358% no-edge band; once 20 live outcomes exist, live direction must be >=55%."
+    },
+    {
+      "horizon": "1 Week",
+      "call": "NO EDGE",
+      "watch_direction": "NO EDGE",
+      "probability_up": 0.4875,
+      "release": false,
+      "audit_ok": false,
+      "stability_ok": false,
+      "forward_ok": true,
+      "forward_samples": 0,
+      "forward_direction_accuracy": null,
+      "scenario_20_50_80": [
+        64.31,
+        66.78,
+        69.05
+      ],
+      "risk_10_90": [
+        62.26,
+        71.28
+      ],
+      "directional_edge": -0.0556,
+      "mae_skill_vs_baseline": -0.008,
+      "reason": "Released only when V6 PASS + recent stability + probability outside 42\u201358% no-edge band; once 20 live outcomes exist, live direction must be >=55%."
+    },
+    {
+      "horizon": "1 Month",
+      "call": "NO EDGE",
+      "watch_direction": "NO EDGE",
+      "probability_up": 0.4739,
+      "release": false,
+      "audit_ok": false,
+      "stability_ok": false,
+      "forward_ok": true,
+      "forward_samples": 0,
+      "forward_direction_accuracy": null,
+      "scenario_20_50_80": [
+        60.9,
+        65.9,
+        71.54
+      ],
+      "risk_10_90": [
+        58.2,
+        74.37
+      ],
+      "directional_edge": -0.0435,
+      "mae_skill_vs_baseline": -0.134,
+      "reason": "Released only when V6 PASS + recent stability + probability outside 42\u201358% no-edge band; once 20 live outcomes exist, live direction must be >=55%."
+    },
+    {
+      "horizon": "1Y",
+      "call": "NO EDGE",
+      "watch_direction": "UP",
+      "probability_up": 0.6699,
+      "release": false,
+      "audit_ok": false,
+      "predicted_price": 77.94,
+      "reason": "1Y direction is released only if the exact-formula macro challenger earns champion promotion."
+    }
+  ],
+  "released_calls": 0,
+  "abstained_horizons": 5,
+  "technical_context": {
+    "score": 75.0,
+    "bias": "Strong Bullish",
+    "market_structure": "Higher-high / bullish pressure"
+  }
+}
