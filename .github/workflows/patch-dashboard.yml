@@ -10,6 +10,7 @@ on:
       - "dashboard_chart_patch.py"
       - "dashboard_chart_fallback_patch.py"
       - "dashboard_measured_move_patch.py"
+      - "dashboard_future_price_action_patch.py"
       - "dashboard_precision_gate_patch.py"
       - "technical_overlay_enrich.py"
       - "measured_move_enrich.py"
@@ -52,6 +53,8 @@ jobs:
         run: python dashboard_chart_fallback_patch.py
       - name: Show measured move values and target basis
         run: python dashboard_measured_move_patch.py
+      - name: Re-mount V6 future price action panel
+        run: python dashboard_future_price_action_patch.py
       - name: Show Precision Gate V7
         run: python dashboard_precision_gate_patch.py
       - name: Clean header and keep patch idempotent
@@ -60,11 +63,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/gold_technicals.json data/silver_technicals.json data/gold_precision_gate_v7.json data/silver_precision_gate_v7.json dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py dashboard_measured_move_patch.py dashboard_precision_gate_patch.py measured_move_enrich.py precision_gate_v7.py
+          git add index.html data/gold_technicals.json data/silver_technicals.json data/gold_precision_gate_v7.json data/silver_precision_gate_v7.json dashboard_v4_patch.py dashboard_numbers_patch.py dashboard_chart_patch.py dashboard_chart_fallback_patch.py dashboard_measured_move_patch.py dashboard_future_price_action_patch.py dashboard_precision_gate_patch.py measured_move_enrich.py precision_gate_v7.py
           if git diff --cached --quiet; then
             echo "Dashboard and technical overlays already current"
           else
-            git commit -m "Refresh measured moves and V7 precision gate"
+            git commit -m "Keep measured moves V6 and V7 visible"
             git fetch origin master
             git rebase origin/master
             git push origin master
