@@ -1,71 +1,81 @@
 {
-  "status": "ok",
+  "status": "fallback",
   "asset": "gold",
-  "updated_utc": "2026-08-20T13:35:08.274484+00:00",
-  "current_regime": "High Volatility",
-  "selected_4h_model": "All-market enriched",
+  "updated_utc": "2026-08-20T14:23:47.602232+00:00",
+  "current_regime": "Regime comparison unavailable",
+  "selected_4h_model": "Calibrated main 4H model",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.7,
-      "directional_edge": 0.1,
-      "mae_skill": 0.1283,
-      "origins": 30
+      "directional_accuracy": 0.4688,
+      "directional_edge": -0.0625,
+      "mae_skill": -0.0024,
+      "origins": 96
     },
-    "regime_specific": {
-      "directional_accuracy": 0.6333,
-      "directional_edge": 0.0333,
-      "mae_skill": 0.1377,
-      "origins": 30
-    }
+    "regime_specific": null
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 4530.13,
-    "projected_return_pct": -0.193,
-    "probability_up": 0.2333,
-    "probability_down": 0.7667,
-    "confidence": "High",
+    "predicted_price": 4540.54,
+    "model_price": 4540.54,
+    "raw_ml_price": 4540.54,
+    "projected_return_pct": 0.005,
+    "probability_up": 0.4167,
+    "probability_down": 0.5833,
+    "confidence": "Low",
+    "confidence_score": 38,
+    "forecast_status": "Estimate only",
     "tight_model_zone": [
-      4519.65,
-      4540.62
+      4523.67,
+      4557.41
+    ],
+    "focus_zone": [
+      4523.67,
+      4557.41
+    ],
+    "risk_zone": [
+      4523.67,
+      4557.41
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.7,
-    "baseline_directional_accuracy": 0.6,
-    "directional_edge": 0.1,
-    "backtest_mae_pct": 0.298,
-    "baseline_mae_pct": 0.342,
-    "mae_skill_vs_baseline": 0.1283,
-    "model_agreement": 1.0,
-    "walkforward_origins": 30,
-    "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "All-market enriched",
-    "market_regime": "High Volatility",
+    "backtest_directional_accuracy": 0.4688,
+    "baseline_directional_accuracy": 0.5312,
+    "directional_edge": -0.0625,
+    "backtest_mae_pct": 0.382,
+    "baseline_mae_pct": 0.381,
+    "mae_skill_vs_baseline": -0.0024,
+    "recent_half_directional_edge": -0.0417,
+    "recent_half_mae_skill": -0.0078,
+    "model_agreement": 0.6667,
+    "walkforward_origins": 96,
+    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
+    "model_version": "stabilized champion V5",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": -0.3,
-        "weight": 0.317
+        "projected_return_pct": -0.012,
+        "backtest_mae_pct": 0.379,
+        "directional_accuracy": 0.5208,
+        "mae_skill_vs_baseline": 0.003,
+        "weight": 0.3978
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": -0.156,
-        "weight": 0.3272
+        "projected_return_pct": 0.015,
+        "backtest_mae_pct": 0.384,
+        "directional_accuracy": 0.4271,
+        "mae_skill_vs_baseline": -0.0084,
+        "weight": 0.2925
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": -0.132,
-        "weight": 0.3558
+        "projected_return_pct": 0.018,
+        "backtest_mae_pct": 0.386,
+        "directional_accuracy": 0.4479,
+        "mae_skill_vs_baseline": -0.0128,
+        "weight": 0.3097
       }
     ]
   },
-  "feature_explanation": {
-    "session_vwap": "where price sits versus today's volume-weighted average",
-    "previous_day_levels": "distance from previous session high/low/close",
-    "opening_range": "distance from early-session range",
-    "volume_acceleration": "whether recent volume is increasing versus the day",
-    "volatility_expansion": "whether short-term movement is expanding versus normal",
-    "hourly_momentum": "hourly RSI/MACD/EMA structure"
-  }
+  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
 }
