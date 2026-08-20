@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-08-20T08:19:24.071848+00:00",
+  "updated_utc": "2026-08-20T09:18:56.732299+00:00",
   "method": "Predictions are logged before outcomes exist. A forecast is resolved only when the required future market observations become available. This is forward validation, not backtest tuning.",
   "summary": [
     {
@@ -12,9 +12,9 @@
     {
       "asset": "gold",
       "horizon": "4H",
-      "resolved_forecasts": 38,
-      "forward_direction_accuracy": 0.6053,
-      "forward_mae_pct": 0.6183
+      "resolved_forecasts": 39,
+      "forward_direction_accuracy": 0.6154,
+      "forward_mae_pct": 0.6025
     },
     {
       "asset": "silver",
@@ -26,9 +26,9 @@
     {
       "asset": "silver",
       "horizon": "4H",
-      "resolved_forecasts": 38,
-      "forward_direction_accuracy": 0.4211,
-      "forward_mae_pct": 0.9956
+      "resolved_forecasts": 39,
+      "forward_direction_accuracy": 0.4103,
+      "forward_mae_pct": 0.9897
     }
   ],
   "entries": [
@@ -1908,7 +1908,11 @@
       "predicted_price": 4548.57,
       "probability_up": 0.5,
       "model_status": "FAIL",
-      "resolved": false
+      "resolved": true,
+      "resolved_market_time": "2026-08-20T09:00:00",
+      "actual_price": 4548.5,
+      "direction_correct": true,
+      "abs_error_pct": 0.0015
     },
     {
       "asset": "silver",
@@ -1922,7 +1926,11 @@
       "predicted_price": 67.31,
       "probability_up": 0.5357,
       "model_status": "FAIL",
-      "resolved": false
+      "resolved": true,
+      "resolved_market_time": "2026-08-20T09:00:00",
+      "actual_price": 66.8,
+      "direction_correct": false,
+      "abs_error_pct": 0.7635
     },
     {
       "asset": "gold",
@@ -1977,6 +1985,34 @@
       "start_price": 66.81,
       "predicted_price": 66.81,
       "probability_up": 0.5,
+      "model_status": "RECENT PASS / STABILITY FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "gold",
+      "horizon": "4H",
+      "source": "Recent 4H specialist",
+      "interval": "1h",
+      "steps": 4,
+      "issued_utc": "2026-08-20T09:18:56.732299+00:00",
+      "issued_market_time": "2026-08-20T09:00:00",
+      "start_price": 4548.5,
+      "predicted_price": 4547.11,
+      "probability_up": 0.3929,
+      "model_status": "FAIL",
+      "resolved": false
+    },
+    {
+      "asset": "silver",
+      "horizon": "4H",
+      "source": "Recent 4H specialist",
+      "interval": "1h",
+      "steps": 4,
+      "issued_utc": "2026-08-20T09:18:56.732299+00:00",
+      "issued_market_time": "2026-08-20T09:00:00",
+      "start_price": 66.8,
+      "predicted_price": 66.82,
+      "probability_up": 0.4643,
       "model_status": "RECENT PASS / STABILITY FAIL",
       "resolved": false
     }
