@@ -8,7 +8,9 @@ on:
       - "future_price_action_v6.py"
       - "future_price_action_v6_runner.py"
       - "forward_validation_ledger.py"
+      - "precision_gate_v7.py"
       - "dashboard_future_price_action_patch.py"
+      - "dashboard_precision_gate_patch.py"
       - ".github/workflows/update-v6-price-action.yml"
 
 permissions:
@@ -35,19 +37,23 @@ jobs:
         run: python future_price_action_v6_runner.py
       - name: Record forward-validation ledger
         run: python forward_validation_ledger.py
+      - name: Build selective Precision Gate V7
+        run: python precision_gate_v7.py
       - name: Add V6 future-price-action dashboard
         run: python dashboard_future_price_action_patch.py
-      - name: Commit V6 results
+      - name: Add Precision Gate V7 dashboard
+        run: python dashboard_precision_gate_patch.py
+      - name: Commit V6 and V7 results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html data/gold_projections.json data/silver_projections.json data/gold_future_price_action_v6.json data/silver_future_price_action_v6.json data/forward_validation_ledger.json
+          git add index.html data/gold_projections.json data/silver_projections.json data/gold_future_price_action_v6.json data/silver_future_price_action_v6.json data/gold_precision_gate_v7.json data/silver_precision_gate_v7.json data/forward_validation_ledger.json
           if git diff --cached --quiet; then
-            echo "No V6 changes to commit"
+            echo "No V6/V7 changes to commit"
           else
-            git commit -m "Update V6 future price action data"
+            git commit -m "Update V6 price action and V7 precision gate"
             git fetch origin master
             git rebase origin/master
             git push origin master
           fi
-      # Isolated maturity-safe trigger marker: 2026-08-17
+      # Isolated maturity-safe trigger marker: 2026-08-19
