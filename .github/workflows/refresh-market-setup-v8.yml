@@ -1,0 +1,49 @@
+name: Refresh Market Setup V8
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "actionable_setup_v8.py"
+      - "dashboard_actionable_setup_patch.py"
+      - "precision_gate_v7.py"
+      - "dashboard_precision_gate_patch.py"
+      - ".github/workflows/refresh-market-setup-v8.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-setup-v8-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Refresh directional readout
+        run: python precision_gate_v7.py
+      - name: Build Market Setup V8
+        run: python actionable_setup_v8.py
+      - name: Patch directional readout
+        run: python dashboard_precision_gate_patch.py
+      - name: Patch Market Setup V8 last
+        run: python dashboard_actionable_setup_patch.py
+      - name: Commit fast setup refresh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data/gold_precision_gate_v7.json data/silver_precision_gate_v7.json data/gold_actionable_setup_v8.json data/silver_actionable_setup_v8.json
+          if git diff --cached --quiet; then
+            echo "Market Setup V8 already current"
+          else
+            git commit -m "Refresh Market Setup V8 decision map"
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
+          fi
