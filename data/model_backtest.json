@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "updated_utc": "2026-08-23T10:06:38.783435+00:00",
+  "updated_utc": "2026-08-23T11:00:12.956496+00:00",
   "validation_method": "Purged walk-forward validation with strict PASS/FAIL rules. Price forecasts must beat the directional baseline by at least 2 percentage points, improve MAE by at least 2%, remain inside their tested zone, and meet horizon-specific minimum test counts. Probability forecasts need at least 2 percentage points of edge, Brier below 0.25, and at least 300 OOS observations. Technical challengers remain nested and chronologically purged. V4 probability champion uses a separate volatility-adjusted 3-state task and can replace the legacy probability component only after its own frozen walk-forward pass rule is met.",
   "assets": {
     "gold": {
@@ -48,13 +48,13 @@
         {
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.4792,
-          "directional_accuracy": 0.4792,
-          "baseline_directional_accuracy": 0.5,
-          "directional_edge": -0.0208,
-          "mae_pct": 0.432,
-          "baseline_mae_pct": 0.431,
-          "mae_skill_vs_baseline": -0.0021,
+          "probability_up": 0.5625,
+          "directional_accuracy": 0.5312,
+          "baseline_directional_accuracy": 0.4583,
+          "directional_edge": 0.0729,
+          "mae_pct": 0.436,
+          "baseline_mae_pct": 0.441,
+          "mae_skill_vs_baseline": 0.0112,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
@@ -761,7 +761,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "gold",
-        "updated_utc": "2026-08-23T10:01:30.352193+00:00",
+        "updated_utc": "2026-08-23T10:56:01.338437+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -769,41 +769,42 @@
             "broad_usd": true,
             "vix": true
           },
-          "cftc": true
+          "cftc": true,
+          "oil_error": "No market data for CL=F"
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 5429.39,
-          "predicted_price": 5429.39,
-          "projected_return_pct": 16.0,
-          "raw_macro_return_pct": 20.72,
+          "model_price": 5470.87,
+          "predicted_price": 5470.87,
+          "projected_return_pct": 16.88,
+          "raw_macro_return_pct": 22.49,
           "historical_anchor_return_pct": 11.28,
           "macro_model_trust": 0.5,
-          "probability_up": 0.6992,
+          "probability_up": 0.7344,
           "probability_method": "empirical OOS residual probability, blended with non-overlapping annual sample and shrunk toward 50%",
           "confidence": "Low",
           "forecast_status": "Estimate only",
           "tight_model_zone": [
-            4772.02,
-            6086.75
+            4778.79,
+            6162.94
           ],
           "focus_zone": [
-            4772.02,
-            6086.75
+            4778.79,
+            6162.94
           ],
           "risk_zone": [
-            4107.38,
-            6751.39
+            4124.04,
+            6817.7
           ],
-          "backtest_directional_accuracy": 0.625,
+          "backtest_directional_accuracy": 0.6094,
           "baseline_directional_accuracy": 0.5,
-          "directional_edge": 0.125,
-          "backtest_mae_pct": 17.96,
+          "directional_edge": 0.1094,
+          "backtest_mae_pct": 18.1,
           "baseline_mae_pct": 18.27,
-          "mae_skill_vs_baseline": 0.0173,
+          "mae_skill_vs_baseline": 0.0092,
           "walkforward_origins": 64,
           "nonoverlap_origins": 16,
-          "nonoverlap_mae_skill": 0.0639,
+          "nonoverlap_mae_skill": 0.0701,
           "nonoverlap_directional_edge": 0.1875,
           "audited_live_formula": true,
           "validation": "monthly purged expanding-origin walk-forward; 12-month label purge; fixed 50/50 macro-model/historical-anchor formula audited OOS; FRED and CFTC inputs lagged; non-overlapping 12-month sanity subset",
@@ -811,42 +812,42 @@
             {
               "name": "Ridge",
               "weight": 0.25,
-              "oos_mae_skill": -0.1379,
-              "oos_direction_accuracy": 0.5469,
-              "projected_return_pct": 21.64
+              "oos_mae_skill": -0.1502,
+              "oos_direction_accuracy": 0.5156,
+              "projected_return_pct": 21.54
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
-              "oos_mae_skill": -0.1786,
-              "oos_direction_accuracy": 0.5938,
-              "projected_return_pct": 20.32
+              "oos_mae_skill": -0.1929,
+              "oos_direction_accuracy": 0.5625,
+              "projected_return_pct": 21.22
             },
             {
               "name": "Random Forest",
               "weight": 0.25,
-              "oos_mae_skill": 0.0037,
-              "oos_direction_accuracy": 0.5625,
-              "projected_return_pct": 23.32
+              "oos_mae_skill": -0.0076,
+              "oos_direction_accuracy": 0.5781,
+              "projected_return_pct": 25.62
             },
             {
               "name": "Gradient Boost",
               "weight": 0.25,
-              "oos_mae_skill": 0.0517,
+              "oos_mae_skill": 0.0206,
               "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 17.57
+              "projected_return_pct": 21.57
             }
           ]
         },
         "selected_as_champion": false,
         "comparison": {
           "incumbent_score": 0.4742,
-          "challenger_score": 0.5471,
+          "challenger_score": 0.5106,
           "incumbent_skill": 0.0553,
-          "challenger_skill": 0.0173,
+          "challenger_skill": 0.0092,
           "incumbent_edge": 0.1579,
-          "challenger_edge": 0.125,
-          "challenger_nonoverlap_skill": 0.0639,
+          "challenger_edge": 0.1094,
+          "challenger_nonoverlap_skill": 0.0701,
           "challenger_nonoverlap_edge": 0.1875,
           "audited_live_formula": true
         },
@@ -1025,7 +1026,7 @@
     },
     "silver": {
       "audit_grade": "FAIL",
-      "component_pass_rate": 0.1,
+      "component_pass_rate": 0.0,
       "probability_forecasts": [
         {
           "horizon_days": 1,
@@ -1068,17 +1069,17 @@
         {
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.5833,
-          "directional_accuracy": 0.5521,
-          "baseline_directional_accuracy": 0.3854,
-          "directional_edge": 0.1667,
-          "mae_pct": 0.882,
-          "baseline_mae_pct": 0.91,
-          "mae_skill_vs_baseline": 0.0304,
+          "probability_up": 0.5104,
+          "directional_accuracy": 0.4792,
+          "baseline_directional_accuracy": 0.5417,
+          "directional_edge": -0.0625,
+          "mae_pct": 0.916,
+          "baseline_mae_pct": 0.914,
+          "mae_skill_vs_baseline": -0.0023,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
-          "pass": true,
+          "pass": false,
           "pass_rule": "direction edge >= 2%, MAE skill >= 2%, tests >= 24, model price inside tested zone"
         },
         {
@@ -1783,7 +1784,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "silver",
-        "updated_utc": "2026-08-23T10:01:55.928828+00:00",
+        "updated_utc": "2026-08-23T10:56:22.511264+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -1791,41 +1792,42 @@
             "broad_usd": true,
             "vix": true
           },
-          "cftc": true
+          "cftc": true,
+          "oil_error": "No market data for CL=F"
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 80.04,
-          "predicted_price": 80.04,
-          "projected_return_pct": 15.11,
-          "raw_macro_return_pct": 19.77,
+          "model_price": 81.28,
+          "predicted_price": 81.28,
+          "projected_return_pct": 16.9,
+          "raw_macro_return_pct": 23.35,
           "historical_anchor_return_pct": 10.46,
           "macro_model_trust": 0.5,
-          "probability_up": 0.6699,
+          "probability_up": 0.6816,
           "probability_method": "empirical OOS residual probability, blended with non-overlapping annual sample and shrunk toward 50%",
           "confidence": "Low",
           "forecast_status": "Estimate only",
           "tight_model_zone": [
-            62.48,
-            97.59
+            63.95,
+            98.61
           ],
           "focus_zone": [
-            62.48,
-            97.59
+            63.95,
+            98.61
           ],
           "risk_zone": [
-            43.1,
-            116.98
+            44.7,
+            117.86
           ],
-          "backtest_directional_accuracy": 0.4844,
+          "backtest_directional_accuracy": 0.4688,
           "baseline_directional_accuracy": 0.375,
-          "directional_edge": 0.1094,
-          "backtest_mae_pct": 33.33,
+          "directional_edge": 0.0938,
+          "backtest_mae_pct": 33.35,
           "baseline_mae_pct": 33.24,
-          "mae_skill_vs_baseline": -0.0029,
+          "mae_skill_vs_baseline": -0.0033,
           "walkforward_origins": 64,
           "nonoverlap_origins": 16,
-          "nonoverlap_mae_skill": -0.0433,
+          "nonoverlap_mae_skill": -0.037,
           "nonoverlap_directional_edge": 0.125,
           "audited_live_formula": true,
           "validation": "monthly purged expanding-origin walk-forward; 12-month label purge; fixed 50/50 macro-model/historical-anchor formula audited OOS; FRED and CFTC inputs lagged; non-overlapping 12-month sanity subset",
@@ -1833,42 +1835,42 @@
             {
               "name": "Ridge",
               "weight": 0.25,
-              "oos_mae_skill": -0.2267,
+              "oos_mae_skill": -0.2094,
               "oos_direction_accuracy": 0.4688,
-              "projected_return_pct": 10.36
+              "projected_return_pct": 12.78
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
-              "oos_mae_skill": -0.4224,
+              "oos_mae_skill": -0.4032,
               "oos_direction_accuracy": 0.5156,
-              "projected_return_pct": 5.86
+              "projected_return_pct": 7.43
             },
             {
               "name": "Random Forest",
               "weight": 0.25,
-              "oos_mae_skill": 0.0779,
-              "oos_direction_accuracy": 0.5938,
-              "projected_return_pct": 30.72
+              "oos_mae_skill": 0.0667,
+              "oos_direction_accuracy": 0.5469,
+              "projected_return_pct": 33.44
             },
             {
               "name": "Gradient Boost",
               "weight": 0.25,
-              "oos_mae_skill": 0.0675,
-              "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 32.14
+              "oos_mae_skill": 0.0683,
+              "oos_direction_accuracy": 0.5156,
+              "projected_return_pct": 39.74
             }
           ]
         },
         "selected_as_champion": false,
         "comparison": {
           "incumbent_score": 0.1583,
-          "challenger_score": 0.4922,
+          "challenger_score": 0.4719,
           "incumbent_skill": -0.0383,
-          "challenger_skill": -0.0029,
+          "challenger_skill": -0.0033,
           "incumbent_edge": -0.1053,
-          "challenger_edge": 0.1094,
-          "challenger_nonoverlap_skill": -0.0433,
+          "challenger_edge": 0.0938,
+          "challenger_nonoverlap_skill": -0.037,
           "challenger_nonoverlap_edge": 0.125,
           "audited_live_formula": true
         },
@@ -2029,8 +2031,8 @@
       "process_readiness": "INSTITUTIONAL-STYLE CONTROLS ACTIVE",
       "predictive_readiness": "NOT READY",
       "readiness_reasons": [
-        "overall champion pass rate is 10%, below 60%",
-        "only 1/4 price horizons pass",
+        "overall champion pass rate is 0%, below 60%",
+        "only 0/4 price horizons pass",
         "only 0/3 technical champion horizons pass",
         "no probability horizon passes",
         "1-year champion does not pass"
