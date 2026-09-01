@@ -1,81 +1,71 @@
 {
-  "status": "fallback",
+  "status": "ok",
   "asset": "silver",
-  "updated_utc": "2026-09-01T10:23:20.903969+00:00",
-  "current_regime": "Regime comparison unavailable",
-  "selected_4h_model": "Calibrated main 4H model",
+  "updated_utc": "2026-09-01T15:16:37.885887+00:00",
+  "current_regime": "High Volatility",
+  "selected_4h_model": "Regime-specific",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.5312,
-      "directional_edge": 0.1146,
-      "mae_skill": 0.0248,
-      "origins": 96
+      "directional_accuracy": 0.6,
+      "directional_edge": 0.05,
+      "mae_skill": 0.1823,
+      "origins": 20
     },
-    "regime_specific": null
+    "regime_specific": {
+      "directional_accuracy": 0.6,
+      "directional_edge": 0.05,
+      "mae_skill": 0.2097,
+      "origins": 20
+    }
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "predicted_price": 65.34,
-    "model_price": 65.34,
-    "raw_ml_price": 65.34,
-    "projected_return_pct": 0.112,
-    "probability_up": 0.5208,
-    "probability_down": 0.4792,
-    "confidence": "Low",
-    "confidence_score": 38,
-    "forecast_status": "Validated",
+    "model_price": 65.77,
+    "projected_return_pct": 0.585,
+    "probability_up": 0.7,
+    "probability_down": 0.3,
+    "confidence": "Moderate",
     "tight_model_zone": [
-      64.88,
-      65.81
-    ],
-    "focus_zone": [
-      64.88,
-      65.81
-    ],
-    "risk_zone": [
-      64.88,
-      65.81
+      65.15,
+      66.39
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.5312,
-    "baseline_directional_accuracy": 0.4167,
-    "directional_edge": 0.1146,
-    "backtest_mae_pct": 0.735,
-    "baseline_mae_pct": 0.754,
-    "mae_skill_vs_baseline": 0.0248,
-    "recent_half_directional_edge": 0.125,
-    "recent_half_mae_skill": 0.024,
-    "model_agreement": 0.6667,
-    "walkforward_origins": 96,
-    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
-    "model_version": "stabilized champion V5",
+    "backtest_directional_accuracy": 0.6,
+    "baseline_directional_accuracy": 0.55,
+    "directional_edge": 0.05,
+    "backtest_mae_pct": 0.806,
+    "baseline_mae_pct": 1.019,
+    "mae_skill_vs_baseline": 0.2097,
+    "model_agreement": 1.0,
+    "walkforward_origins": 20,
+    "validation": "purged hourly walk-forward with intraday/session features",
+    "selected_model": "Regime-specific",
+    "market_regime": "High Volatility",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.311,
-        "backtest_mae_pct": 0.739,
-        "directional_accuracy": 0.5729,
-        "mae_skill_vs_baseline": 0.0195,
-        "weight": 0.355
+        "projected_return_pct": 0.66,
+        "weight": 0.369
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 0.018,
-        "backtest_mae_pct": 0.742,
-        "directional_accuracy": 0.5417,
-        "mae_skill_vs_baseline": 0.0164,
-        "weight": 0.3377
+        "projected_return_pct": 0.273,
+        "weight": 0.2758
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": -0.016,
-        "backtest_mae_pct": 0.739,
-        "directional_accuracy": 0.4896,
-        "mae_skill_vs_baseline": 0.0205,
-        "weight": 0.3073
+        "projected_return_pct": 0.749,
+        "weight": 0.3552
       }
     ]
   },
-  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
+  "feature_explanation": {
+    "session_vwap": "where price sits versus today's volume-weighted average",
+    "previous_day_levels": "distance from previous session high/low/close",
+    "opening_range": "distance from early-session range",
+    "volume_acceleration": "whether recent volume is increasing versus the day",
+    "volatility_expansion": "whether short-term movement is expanding versus normal",
+    "hourly_momentum": "hourly RSI/MACD/EMA structure"
+  }
 }
