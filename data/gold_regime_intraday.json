@@ -1,71 +1,81 @@
 {
-  "status": "ok",
+  "status": "fallback",
   "asset": "gold",
-  "updated_utc": "2026-09-06T21:37:29.174157+00:00",
-  "current_regime": "High Volatility",
-  "selected_4h_model": "Regime-specific",
+  "updated_utc": "2026-09-07T00:17:44.877958+00:00",
+  "current_regime": "Regime comparison unavailable",
+  "selected_4h_model": "Calibrated main 4H model",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.72,
-      "directional_edge": 0.04,
-      "mae_skill": 0.2452,
-      "origins": 25
+      "directional_accuracy": 0.6042,
+      "directional_edge": 0.1562,
+      "mae_skill": 0.0292,
+      "origins": 96
     },
-    "regime_specific": {
-      "directional_accuracy": 0.68,
-      "directional_edge": 0.16,
-      "mae_skill": 0.267,
-      "origins": 25
-    }
+    "regime_specific": null
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 4479.26,
-    "projected_return_pct": -0.097,
-    "probability_up": 0.32,
-    "probability_down": 0.68,
+    "predicted_price": 4476.06,
+    "model_price": 4476.06,
+    "raw_ml_price": 4476.06,
+    "projected_return_pct": -0.012,
+    "probability_up": 0.5521,
+    "probability_down": 0.4479,
     "confidence": "Low",
+    "confidence_score": 38,
+    "forecast_status": "Validated",
     "tight_model_zone": [
-      4461.68,
-      4496.85
+      4454.49,
+      4497.63
+    ],
+    "focus_zone": [
+      4454.49,
+      4497.63
+    ],
+    "risk_zone": [
+      4454.49,
+      4497.63
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.68,
-    "baseline_directional_accuracy": 0.52,
-    "directional_edge": 0.16,
-    "backtest_mae_pct": 0.354,
-    "baseline_mae_pct": 0.484,
-    "mae_skill_vs_baseline": 0.267,
+    "backtest_directional_accuracy": 0.6042,
+    "baseline_directional_accuracy": 0.4479,
+    "directional_edge": 0.1562,
+    "backtest_mae_pct": 0.461,
+    "baseline_mae_pct": 0.475,
+    "mae_skill_vs_baseline": 0.0292,
+    "recent_half_directional_edge": 0.2083,
+    "recent_half_mae_skill": 0.0409,
     "model_agreement": 0.6667,
-    "walkforward_origins": 25,
-    "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "Regime-specific",
-    "market_regime": "High Volatility",
+    "walkforward_origins": 96,
+    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
+    "model_version": "stabilized champion V5",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.063,
-        "weight": 0.3576
+        "projected_return_pct": -0.065,
+        "backtest_mae_pct": 0.459,
+        "directional_accuracy": 0.5938,
+        "mae_skill_vs_baseline": 0.0347,
+        "weight": 0.3365
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": -0.095,
-        "weight": 0.2847
+        "projected_return_pct": 0.009,
+        "backtest_mae_pct": 0.465,
+        "directional_accuracy": 0.5938,
+        "mae_skill_vs_baseline": 0.0213,
+        "weight": 0.3297
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": -0.257,
-        "weight": 0.3576
+        "projected_return_pct": 0.021,
+        "backtest_mae_pct": 0.464,
+        "directional_accuracy": 0.6042,
+        "mae_skill_vs_baseline": 0.0246,
+        "weight": 0.3338
       }
     ]
   },
-  "feature_explanation": {
-    "session_vwap": "where price sits versus today's volume-weighted average",
-    "previous_day_levels": "distance from previous session high/low/close",
-    "opening_range": "distance from early-session range",
-    "volume_acceleration": "whether recent volume is increasing versus the day",
-    "volatility_expansion": "whether short-term movement is expanding versus normal",
-    "hourly_momentum": "hourly RSI/MACD/EMA structure"
-  }
+  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
 }
