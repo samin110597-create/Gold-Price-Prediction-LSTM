@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "updated_utc": "2026-09-08T05:00:22.070559+00:00",
+  "updated_utc": "2026-09-08T09:56:49.249205+00:00",
   "validation_method": "Purged walk-forward validation with strict PASS/FAIL rules. Price forecasts must beat the directional baseline by at least 2 percentage points, improve MAE by at least 2%, remain inside their tested zone, and meet horizon-specific minimum test counts. Probability forecasts need at least 2 percentage points of edge, Brier below 0.25, and at least 300 OOS observations. Technical challengers remain nested and chronologically purged. V4 probability champion uses a separate volatility-adjusted 3-state task and can replace the legacy probability component only after its own frozen walk-forward pass rule is met.",
   "assets": {
     "gold": {
@@ -48,13 +48,13 @@
         {
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.5521,
+          "probability_up": 0.5417,
           "directional_accuracy": 0.6042,
-          "baseline_directional_accuracy": 0.4479,
-          "directional_edge": 0.1562,
-          "mae_pct": 0.461,
-          "baseline_mae_pct": 0.475,
-          "mae_skill_vs_baseline": 0.0292,
+          "baseline_directional_accuracy": 0.4375,
+          "directional_edge": 0.1667,
+          "mae_pct": 0.466,
+          "baseline_mae_pct": 0.48,
+          "mae_skill_vs_baseline": 0.0282,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
@@ -64,7 +64,7 @@
         {
           "horizon": "1 Day",
           "selected_model": "V4 horizon specialist",
-          "probability_up": 0.6171,
+          "probability_up": 0.6318,
           "directional_accuracy": 0.7292,
           "baseline_directional_accuracy": 0.6875,
           "directional_edge": 0.0417,
@@ -80,7 +80,7 @@
         {
           "horizon": "1 Week",
           "selected_model": "V4 horizon specialist",
-          "probability_up": 0.5364,
+          "probability_up": 0.5545,
           "directional_accuracy": 0.5833,
           "baseline_directional_accuracy": 0.5208,
           "directional_edge": 0.0625,
@@ -127,7 +127,7 @@
           "hit_rate": 0.5385,
           "baseline_direction_rate": 0.6232,
           "edge": -0.0848,
-          "avg_signed_return_pct": 0.256
+          "avg_signed_return_pct": 0.257
         },
         {
           "horizon_days": 20,
@@ -136,14 +136,14 @@
           "hit_rate": 0.6109,
           "baseline_direction_rate": 0.6929,
           "edge": -0.082,
-          "avg_signed_return_pct": 1.433
+          "avg_signed_return_pct": 1.432
         }
       ],
       "technical_selective": [
         {
           "horizon_days": 1,
-          "probability_up": 0.5445,
-          "probability_down": 0.4555,
+          "probability_up": 0.5533,
+          "probability_down": 0.4467,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -209,26 +209,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.4419
+              "probability_up": 0.5228
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.474
+              "probability_up": 0.5172
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4997
+              "probability_up": 0.5076
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.4575
+              "probability_up": 0.4694
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_up": 0.6107,
-          "probability_down": 0.3893,
+          "probability_up": 0.6115,
+          "probability_down": 0.3885,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -294,26 +294,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.4393
+              "probability_up": 0.5075
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4441
+              "probability_up": 0.4665
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4925
+              "probability_up": 0.4987
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.3671
+              "probability_up": 0.398
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_up": 0.7548,
-          "probability_down": 0.2452,
+          "probability_up": 0.7516,
+          "probability_down": 0.2484,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -379,19 +379,19 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.6838
+              "probability_up": 0.741
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4865
+              "probability_up": 0.4724
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4798
+              "probability_up": 0.4649
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.518
+              "probability_up": 0.5298
             }
           ]
         }
@@ -402,7 +402,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4563,
+          "meta_probability_base_correct": 0.4715,
           "decision_threshold": 0.56,
           "oos_accuracy": 0.5156,
           "base_signal_accuracy": 0.5703,
@@ -474,7 +474,7 @@
           "signal": "Bearish",
           "active_signal": true,
           "mode": "INVERT",
-          "meta_probability_base_correct": 0.411,
+          "meta_probability_base_correct": 0.4165,
           "decision_threshold": 0.58,
           "oos_accuracy": 0.617,
           "base_signal_accuracy": 0.5745,
@@ -546,7 +546,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4085,
+          "meta_probability_base_correct": 0.4316,
           "decision_threshold": 0.59,
           "oos_accuracy": 0.5563,
           "base_signal_accuracy": 0.5358,
@@ -762,7 +762,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "gold",
-        "updated_utc": "2026-09-08T04:55:23.595156+00:00",
+        "updated_utc": "2026-09-08T09:53:26.650994+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -774,10 +774,10 @@
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 5242.11,
-          "predicted_price": 5242.11,
-          "projected_return_pct": 16.96,
-          "raw_macro_return_pct": 22.64,
+          "model_price": 5204.97,
+          "predicted_price": 5204.97,
+          "projected_return_pct": 17.07,
+          "raw_macro_return_pct": 22.86,
           "historical_anchor_return_pct": 11.28,
           "macro_model_trust": 0.5,
           "probability_up": 0.6992,
@@ -785,16 +785,16 @@
           "confidence": "Low",
           "forecast_status": "Estimate only",
           "tight_model_zone": [
-            4612.66,
-            5871.57
+            4580.55,
+            5829.4
           ],
           "focus_zone": [
-            4612.66,
-            5871.57
+            4580.55,
+            5829.4
           ],
           "risk_zone": [
-            3976.23,
-            6507.99
+            3949.2,
+            6460.74
           ],
           "backtest_directional_accuracy": 0.625,
           "baseline_directional_accuracy": 0.5,
@@ -814,28 +814,28 @@
               "weight": 0.25,
               "oos_mae_skill": -0.1377,
               "oos_direction_accuracy": 0.5469,
-              "projected_return_pct": 26.15
+              "projected_return_pct": 26.68
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
               "oos_mae_skill": -0.178,
               "oos_direction_accuracy": 0.5938,
-              "projected_return_pct": 27.19
+              "projected_return_pct": 27.72
             },
             {
               "name": "Random Forest",
               "weight": 0.25,
               "oos_mae_skill": 0.0037,
               "oos_direction_accuracy": 0.5625,
-              "projected_return_pct": 20.8
+              "projected_return_pct": 20.85
             },
             {
               "name": "Gradient Boost",
               "weight": 0.25,
               "oos_mae_skill": 0.0517,
               "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 16.43
+              "projected_return_pct": 16.19
             }
           ]
         },
@@ -892,9 +892,9 @@
       "meaningful_probability_v4": [
         {
           "horizon_days": 1,
-          "probability_down": 0.2604,
-          "probability_no_edge": 0.516,
-          "probability_up": 0.2236,
+          "probability_down": 0.2468,
+          "probability_no_edge": 0.4968,
+          "probability_up": 0.2564,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4762,
@@ -910,29 +910,29 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.284,
-              "no_edge": 0.5129,
-              "up": 0.2032
+              "down": 0.2696,
+              "no_edge": 0.5143,
+              "up": 0.2161
             },
             {
               "name": "Extra Trees",
-              "down": 0.3255,
-              "no_edge": 0.3757,
-              "up": 0.2988
+              "down": 0.308,
+              "no_edge": 0.3818,
+              "up": 0.3101
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1717,
-              "no_edge": 0.6593,
-              "up": 0.169
+              "down": 0.1627,
+              "no_edge": 0.5943,
+              "up": 0.243
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_down": 0.2568,
-          "probability_no_edge": 0.4857,
-          "probability_up": 0.2575,
+          "probability_down": 0.2403,
+          "probability_no_edge": 0.5071,
+          "probability_up": 0.2526,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4286,
@@ -948,29 +948,29 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.3498,
-              "no_edge": 0.3768,
-              "up": 0.2734
+              "down": 0.3045,
+              "no_edge": 0.3994,
+              "up": 0.296
             },
             {
               "name": "Extra Trees",
-              "down": 0.2658,
-              "no_edge": 0.4549,
-              "up": 0.2793
+              "down": 0.2433,
+              "no_edge": 0.5067,
+              "up": 0.25
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1549,
-              "no_edge": 0.6253,
-              "up": 0.2198
+              "down": 0.1732,
+              "no_edge": 0.6152,
+              "up": 0.2116
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_down": 0.2036,
-          "probability_no_edge": 0.5643,
-          "probability_up": 0.2321,
+          "probability_down": 0.1877,
+          "probability_no_edge": 0.5516,
+          "probability_up": 0.2607,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.3333,
@@ -986,21 +986,21 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.2284,
-              "no_edge": 0.4973,
-              "up": 0.2743
+              "down": 0.1768,
+              "no_edge": 0.4988,
+              "up": 0.3244
             },
             {
               "name": "Extra Trees",
-              "down": 0.2197,
-              "no_edge": 0.5317,
-              "up": 0.2486
+              "down": 0.2048,
+              "no_edge": 0.5192,
+              "up": 0.276
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1627,
-              "no_edge": 0.6639,
-              "up": 0.1734
+              "down": 0.1814,
+              "no_edge": 0.6368,
+              "up": 0.1818
             }
           ]
         }
@@ -1068,13 +1068,13 @@
         {
           "horizon": "4 Hours",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.5833,
-          "directional_accuracy": 0.5625,
-          "baseline_directional_accuracy": 0.4271,
+          "probability_up": 0.5938,
+          "directional_accuracy": 0.5521,
+          "baseline_directional_accuracy": 0.4167,
           "directional_edge": 0.1354,
-          "mae_pct": 0.791,
-          "baseline_mae_pct": 0.811,
-          "mae_skill_vs_baseline": 0.025,
+          "mae_pct": 0.8,
+          "baseline_mae_pct": 0.818,
+          "mae_skill_vs_baseline": 0.0216,
           "walkforward_origins": 96,
           "minimum_tests_required": 24,
           "zone_contains_model_price": true,
@@ -1100,13 +1100,13 @@
         {
           "horizon": "1 Week",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.5833,
+          "probability_up": 0.5729,
           "directional_accuracy": 0.5625,
           "baseline_directional_accuracy": 0.5521,
           "directional_edge": 0.0104,
-          "mae_pct": 4.194,
-          "baseline_mae_pct": 4.247,
-          "mae_skill_vs_baseline": 0.0124,
+          "mae_pct": 4.187,
+          "baseline_mae_pct": 4.239,
+          "mae_skill_vs_baseline": 0.0122,
           "walkforward_origins": 96,
           "minimum_tests_required": 30,
           "zone_contains_model_price": true,
@@ -1116,7 +1116,7 @@
         {
           "horizon": "1 Year",
           "selected_model": "Incumbent projection model",
-          "probability_up": 0.5263,
+          "probability_up": 0.4211,
           "directional_accuracy": 0.4737,
           "baseline_directional_accuracy": 0.5789,
           "directional_edge": -0.1053,
@@ -1147,7 +1147,7 @@
           "hit_rate": 0.4875,
           "baseline_direction_rate": 0.5799,
           "edge": -0.0925,
-          "avg_signed_return_pct": 0.058
+          "avg_signed_return_pct": 0.056
         },
         {
           "horizon_days": 20,
@@ -1156,14 +1156,14 @@
           "hit_rate": 0.5169,
           "baseline_direction_rate": 0.6404,
           "edge": -0.1236,
-          "avg_signed_return_pct": 1.885
+          "avg_signed_return_pct": 1.883
         }
       ],
       "technical_selective": [
         {
           "horizon_days": 1,
-          "probability_up": 0.5246,
-          "probability_down": 0.4754,
+          "probability_up": 0.5366,
+          "probability_down": 0.4634,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.6,
@@ -1229,26 +1229,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.3806
+              "probability_up": 0.4679
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4622
+              "probability_up": 0.5035
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4851
+              "probability_up": 0.4888
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.474
+              "probability_up": 0.5693
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_up": 0.6052,
-          "probability_down": 0.3948,
+          "probability_up": 0.6053,
+          "probability_down": 0.3947,
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "decision_threshold": 0.54,
@@ -1314,26 +1314,26 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.4553
+              "probability_up": 0.465
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.4741
+              "probability_up": 0.4766
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4846
+              "probability_up": 0.4746
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.4603
+              "probability_up": 0.4561
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_up": 0.6239,
-          "probability_down": 0.3761,
+          "probability_up": 0.6242,
+          "probability_down": 0.3758,
           "signal": "Bullish",
           "active_signal": true,
           "decision_threshold": 0.57,
@@ -1399,19 +1399,19 @@
           "models": [
             {
               "name": "Logistic",
-              "probability_up": 0.3221
+              "probability_up": 0.361
             },
             {
               "name": "Random Forest",
-              "probability_up": 0.5526
+              "probability_up": 0.5569
             },
             {
               "name": "Extra Trees",
-              "probability_up": 0.4641
+              "probability_up": 0.4638
             },
             {
               "name": "Gradient Boost",
-              "probability_up": 0.6088
+              "probability_up": 0.5839
             }
           ]
         }
@@ -1422,7 +1422,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4721,
+          "meta_probability_base_correct": 0.4896,
           "decision_threshold": 0.56,
           "oos_accuracy": 0.5217,
           "base_signal_accuracy": 0.4891,
@@ -1494,7 +1494,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4238,
+          "meta_probability_base_correct": 0.4208,
           "decision_threshold": 0.56,
           "oos_accuracy": 0.5433,
           "base_signal_accuracy": 0.4882,
@@ -1566,7 +1566,7 @@
           "signal": "NO EDGE / ABSTAIN",
           "active_signal": false,
           "mode": "ABSTAIN",
-          "meta_probability_base_correct": 0.4267,
+          "meta_probability_base_correct": 0.4342,
           "decision_threshold": 0.58,
           "oos_accuracy": 0.3715,
           "base_signal_accuracy": 0.6403,
@@ -1782,7 +1782,7 @@
       "macro_1y_challenger": {
         "status": "ok",
         "asset": "silver",
-        "updated_utc": "2026-09-08T04:55:48.996286+00:00",
+        "updated_utc": "2026-09-08T09:53:41.297685+00:00",
         "inputs_available": {
           "fred": {
             "real_yield_10y": true,
@@ -1794,10 +1794,10 @@
         },
         "macro_forecast": {
           "horizon": "1 Year",
-          "model_price": 75.19,
-          "predicted_price": 75.19,
-          "projected_return_pct": 11.15,
-          "raw_macro_return_pct": 11.85,
+          "model_price": 74.08,
+          "predicted_price": 74.08,
+          "projected_return_pct": 11.11,
+          "raw_macro_return_pct": 11.77,
           "historical_anchor_return_pct": 10.46,
           "macro_model_trust": 0.5,
           "probability_up": 0.6055,
@@ -1805,16 +1805,16 @@
           "confidence": "Low",
           "forecast_status": "Estimate only",
           "tight_model_zone": [
-            58.11,
-            92.27
+            57.25,
+            90.91
           ],
           "focus_zone": [
-            58.11,
-            92.27
+            57.25,
+            90.91
           ],
           "risk_zone": [
-            39.25,
-            111.13
+            38.66,
+            109.5
           ],
           "backtest_directional_accuracy": 0.4844,
           "baseline_directional_accuracy": 0.375,
@@ -1834,28 +1834,28 @@
               "weight": 0.25,
               "oos_mae_skill": -0.2267,
               "oos_direction_accuracy": 0.4688,
-              "projected_return_pct": 4.49
+              "projected_return_pct": 4.96
             },
             {
               "name": "Elastic Net",
               "weight": 0.25,
               "oos_mae_skill": -0.4224,
               "oos_direction_accuracy": 0.5156,
-              "projected_return_pct": -0.68
+              "projected_return_pct": -0.15
             },
             {
               "name": "Random Forest",
               "weight": 0.25,
               "oos_mae_skill": 0.0779,
               "oos_direction_accuracy": 0.5938,
-              "projected_return_pct": 28.51
+              "projected_return_pct": 28.78
             },
             {
               "name": "Gradient Boost",
               "weight": 0.25,
               "oos_mae_skill": 0.0675,
               "oos_direction_accuracy": 0.5781,
-              "projected_return_pct": 15.06
+              "projected_return_pct": 13.5
             }
           ]
         },
@@ -1912,9 +1912,9 @@
       "meaningful_probability_v4": [
         {
           "horizon_days": 1,
-          "probability_down": 0.311,
-          "probability_no_edge": 0.4215,
-          "probability_up": 0.2675,
+          "probability_down": 0.2982,
+          "probability_no_edge": 0.4397,
+          "probability_up": 0.2621,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.5476,
@@ -1930,29 +1930,29 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.3956,
-              "no_edge": 0.291,
-              "up": 0.3134
+              "down": 0.3593,
+              "no_edge": 0.3388,
+              "up": 0.3018
             },
             {
               "name": "Extra Trees",
-              "down": 0.3375,
-              "no_edge": 0.3545,
-              "up": 0.308
+              "down": 0.3251,
+              "no_edge": 0.3771,
+              "up": 0.2978
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1999,
-              "no_edge": 0.6189,
-              "up": 0.1812
+              "down": 0.2102,
+              "no_edge": 0.6031,
+              "up": 0.1867
             }
           ]
         },
         {
           "horizon_days": 5,
-          "probability_down": 0.2988,
-          "probability_no_edge": 0.3502,
-          "probability_up": 0.351,
+          "probability_down": 0.3081,
+          "probability_no_edge": 0.322,
+          "probability_up": 0.37,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4048,
@@ -1968,29 +1968,29 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.296,
-              "no_edge": 0.2556,
-              "up": 0.4484
+              "down": 0.2916,
+              "no_edge": 0.238,
+              "up": 0.4704
             },
             {
               "name": "Extra Trees",
-              "down": 0.3458,
-              "no_edge": 0.3497,
-              "up": 0.3045
+              "down": 0.3535,
+              "no_edge": 0.3532,
+              "up": 0.2933
             },
             {
               "name": "Gradient Boost",
-              "down": 0.2548,
-              "no_edge": 0.4451,
-              "up": 0.3001
+              "down": 0.2791,
+              "no_edge": 0.3747,
+              "up": 0.3462
             }
           ]
         },
         {
           "horizon_days": 20,
-          "probability_down": 0.2122,
-          "probability_no_edge": 0.383,
-          "probability_up": 0.4048,
+          "probability_down": 0.1782,
+          "probability_no_edge": 0.4168,
+          "probability_up": 0.4051,
           "signal": "NO EDGE",
           "pass": false,
           "oos_accuracy": 0.4048,
@@ -2006,21 +2006,21 @@
           "models": [
             {
               "name": "Logistic",
-              "down": 0.2146,
-              "no_edge": 0.364,
-              "up": 0.4215
+              "down": 0.1629,
+              "no_edge": 0.4077,
+              "up": 0.4294
             },
             {
               "name": "Extra Trees",
-              "down": 0.2724,
-              "no_edge": 0.362,
-              "up": 0.3656
+              "down": 0.2529,
+              "no_edge": 0.3754,
+              "up": 0.3717
             },
             {
               "name": "Gradient Boost",
-              "down": 0.1497,
-              "no_edge": 0.4229,
-              "up": 0.4274
+              "down": 0.1187,
+              "no_edge": 0.4672,
+              "up": 0.4141
             }
           ]
         }
