@@ -1,81 +1,71 @@
 {
-  "status": "fallback",
+  "status": "ok",
   "asset": "silver",
-  "updated_utc": "2026-09-11T09:59:42.389662+00:00",
-  "current_regime": "Regime comparison unavailable",
-  "selected_4h_model": "Calibrated main 4H model",
+  "updated_utc": "2026-09-11T14:50:18.360545+00:00",
+  "current_regime": "High Volatility",
+  "selected_4h_model": "Regime-specific",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.4792,
-      "directional_edge": -0.0729,
-      "mae_skill": -0.0165,
-      "origins": 96
+      "directional_accuracy": 0.7368,
+      "directional_edge": 0.0,
+      "mae_skill": 0.1481,
+      "origins": 19
     },
-    "regime_specific": null
+    "regime_specific": {
+      "directional_accuracy": 0.7368,
+      "directional_edge": 0.1579,
+      "mae_skill": 0.1637,
+      "origins": 19
+    }
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "predicted_price": 64.48,
-    "model_price": 64.48,
-    "raw_ml_price": 64.48,
-    "projected_return_pct": 0.106,
-    "probability_up": 0.5,
-    "probability_down": 0.5,
-    "confidence": "Low",
-    "confidence_score": 38,
-    "forecast_status": "Estimate only",
+    "model_price": 64.5,
+    "projected_return_pct": 0.268,
+    "probability_up": 0.5789,
+    "probability_down": 0.4211,
+    "confidence": "Moderate",
     "tight_model_zone": [
-      63.81,
-      65.16
-    ],
-    "focus_zone": [
-      63.81,
-      65.16
-    ],
-    "risk_zone": [
-      63.81,
-      65.16
+      64.07,
+      64.94
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.4792,
-    "baseline_directional_accuracy": 0.5521,
-    "directional_edge": -0.0729,
-    "backtest_mae_pct": 0.989,
-    "baseline_mae_pct": 0.973,
-    "mae_skill_vs_baseline": -0.0165,
-    "recent_half_directional_edge": -0.125,
-    "recent_half_mae_skill": -0.0384,
+    "backtest_directional_accuracy": 0.7368,
+    "baseline_directional_accuracy": 0.5789,
+    "directional_edge": 0.1579,
+    "backtest_mae_pct": 0.641,
+    "baseline_mae_pct": 0.766,
+    "mae_skill_vs_baseline": 0.1637,
     "model_agreement": 1.0,
-    "walkforward_origins": 96,
-    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
-    "model_version": "stabilized champion V5",
+    "walkforward_origins": 19,
+    "validation": "purged hourly walk-forward with intraday/session features",
+    "selected_model": "Regime-specific",
+    "market_regime": "High Volatility",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.208,
-        "backtest_mae_pct": 0.996,
-        "directional_accuracy": 0.5208,
-        "mae_skill_vs_baseline": -0.0236,
-        "weight": 0.3793
+        "projected_return_pct": 0.109,
+        "weight": 0.3275
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 0.041,
-        "backtest_mae_pct": 0.989,
-        "directional_accuracy": 0.4792,
-        "mae_skill_vs_baseline": -0.0165,
-        "weight": 0.3407
+        "projected_return_pct": 0.355,
+        "weight": 0.3125
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 0.045,
-        "backtest_mae_pct": 0.993,
-        "directional_accuracy": 0.4271,
-        "mae_skill_vs_baseline": -0.0206,
-        "weight": 0.28
+        "projected_return_pct": 0.338,
+        "weight": 0.36
       }
     ]
   },
-  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
+  "feature_explanation": {
+    "session_vwap": "where price sits versus today's volume-weighted average",
+    "previous_day_levels": "distance from previous session high/low/close",
+    "opening_range": "distance from early-session range",
+    "volume_acceleration": "whether recent volume is increasing versus the day",
+    "volatility_expansion": "whether short-term movement is expanding versus normal",
+    "hourly_momentum": "hourly RSI/MACD/EMA structure"
+  }
 }

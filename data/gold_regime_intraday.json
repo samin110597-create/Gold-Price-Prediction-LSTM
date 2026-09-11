@@ -1,81 +1,71 @@
 {
-  "status": "fallback",
+  "status": "ok",
   "asset": "gold",
-  "updated_utc": "2026-09-11T09:59:42.389323+00:00",
-  "current_regime": "Regime comparison unavailable",
-  "selected_4h_model": "Calibrated main 4H model",
+  "updated_utc": "2026-09-11T14:49:38.097300+00:00",
+  "current_regime": "High Volatility",
+  "selected_4h_model": "Regime-specific",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.5104,
-      "directional_edge": 0.0104,
-      "mae_skill": 0.0094,
-      "origins": 96
+      "directional_accuracy": 0.625,
+      "directional_edge": 0.0,
+      "mae_skill": 0.0249,
+      "origins": 24
     },
-    "regime_specific": null
+    "regime_specific": {
+      "directional_accuracy": 0.6667,
+      "directional_edge": 0.125,
+      "mae_skill": 0.0023,
+      "origins": 24
+    }
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "predicted_price": 4385.41,
-    "model_price": 4385.41,
-    "raw_ml_price": 4385.41,
-    "projected_return_pct": 0.021,
-    "probability_up": 0.4479,
-    "probability_down": 0.5521,
+    "model_price": 4384.08,
+    "projected_return_pct": 0.107,
+    "probability_up": 0.5833,
+    "probability_down": 0.4167,
     "confidence": "Low",
-    "confidence_score": 38,
-    "forecast_status": "Validated",
     "tight_model_zone": [
-      4364.4,
-      4406.42
-    ],
-    "focus_zone": [
-      4364.4,
-      4406.42
-    ],
-    "risk_zone": [
-      4364.4,
-      4406.42
+      4368.92,
+      4399.23
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.5104,
-    "baseline_directional_accuracy": 0.5,
-    "directional_edge": 0.0104,
-    "backtest_mae_pct": 0.455,
-    "baseline_mae_pct": 0.459,
-    "mae_skill_vs_baseline": 0.0094,
-    "recent_half_directional_edge": 0.125,
-    "recent_half_mae_skill": 0.0311,
-    "model_agreement": 1.0,
-    "walkforward_origins": 96,
-    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
-    "model_version": "stabilized champion V5",
+    "backtest_directional_accuracy": 0.6667,
+    "baseline_directional_accuracy": 0.5417,
+    "directional_edge": 0.125,
+    "backtest_mae_pct": 0.373,
+    "baseline_mae_pct": 0.374,
+    "mae_skill_vs_baseline": 0.0023,
+    "model_agreement": 0.6667,
+    "walkforward_origins": 24,
+    "validation": "purged hourly walk-forward with intraday/session features",
+    "selected_model": "Regime-specific",
+    "market_regime": "High Volatility",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": 0.032,
-        "backtest_mae_pct": 0.452,
-        "directional_accuracy": 0.5417,
-        "mae_skill_vs_baseline": 0.0154,
-        "weight": 0.3901
+        "projected_return_pct": -0.039,
+        "weight": 0.2392
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": 0.009,
-        "backtest_mae_pct": 0.456,
-        "directional_accuracy": 0.4375,
-        "mae_skill_vs_baseline": 0.0073,
-        "weight": 0.2948
+        "projected_return_pct": 0.149,
+        "weight": 0.4856
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": 0.018,
-        "backtest_mae_pct": 0.46,
-        "directional_accuracy": 0.4688,
-        "mae_skill_vs_baseline": -0.0012,
-        "weight": 0.3151
+        "projected_return_pct": 0.159,
+        "weight": 0.2752
       }
     ]
   },
-  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
+  "feature_explanation": {
+    "session_vwap": "where price sits versus today's volume-weighted average",
+    "previous_day_levels": "distance from previous session high/low/close",
+    "opening_range": "distance from early-session range",
+    "volume_acceleration": "whether recent volume is increasing versus the day",
+    "volatility_expansion": "whether short-term movement is expanding versus normal",
+    "hourly_momentum": "hourly RSI/MACD/EMA structure"
+  }
 }
