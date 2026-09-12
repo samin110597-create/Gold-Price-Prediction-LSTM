@@ -1,71 +1,81 @@
 {
-  "status": "ok",
+  "status": "fallback",
   "asset": "gold",
-  "updated_utc": "2026-09-12T00:42:02.017629+00:00",
-  "current_regime": "High Volatility",
-  "selected_4h_model": "Regime-specific",
+  "updated_utc": "2026-09-12T06:10:46.019023+00:00",
+  "current_regime": "Regime comparison unavailable",
+  "selected_4h_model": "Calibrated main 4H model",
   "comparison": {
     "all_market": {
-      "directional_accuracy": 0.6087,
-      "directional_edge": 0.1739,
-      "mae_skill": 0.0552,
-      "origins": 23
+      "directional_accuracy": 0.5208,
+      "directional_edge": 0.0625,
+      "mae_skill": -0.002,
+      "origins": 96
     },
-    "regime_specific": {
-      "directional_accuracy": 0.6522,
-      "directional_edge": 0.3478,
-      "mae_skill": 0.0567,
-      "origins": 23
-    }
+    "regime_specific": null
   },
   "enhanced_4h": {
     "horizon": "4 Hours",
     "steps": 4,
-    "model_price": 4400.44,
-    "projected_return_pct": -0.076,
-    "probability_up": 0.4348,
-    "probability_down": 0.5652,
-    "confidence": "Moderate",
+    "predicted_price": 4391.14,
+    "model_price": 4391.14,
+    "raw_ml_price": 4391.14,
+    "projected_return_pct": 0.026,
+    "probability_up": 0.4375,
+    "probability_down": 0.5625,
+    "confidence": "Low",
+    "confidence_score": 38,
+    "forecast_status": "Estimate only",
     "tight_model_zone": [
-      4379.3,
-      4421.59
+      4372.51,
+      4409.77
+    ],
+    "focus_zone": [
+      4372.51,
+      4409.77
+    ],
+    "risk_zone": [
+      4372.51,
+      4409.77
     ],
     "zone_target_coverage": 0.6,
-    "backtest_directional_accuracy": 0.6522,
-    "baseline_directional_accuracy": 0.3043,
-    "directional_edge": 0.3478,
-    "backtest_mae_pct": 0.444,
-    "baseline_mae_pct": 0.471,
-    "mae_skill_vs_baseline": 0.0567,
+    "backtest_directional_accuracy": 0.5208,
+    "baseline_directional_accuracy": 0.4583,
+    "directional_edge": 0.0625,
+    "backtest_mae_pct": 0.432,
+    "baseline_mae_pct": 0.431,
+    "mae_skill_vs_baseline": -0.002,
+    "recent_half_directional_edge": 0.0208,
+    "recent_half_mae_skill": -0.004,
     "model_agreement": 1.0,
-    "walkforward_origins": 23,
-    "validation": "purged hourly walk-forward with intraday/session features",
-    "selected_model": "Regime-specific",
-    "market_regime": "High Volatility",
+    "walkforward_origins": 96,
+    "validation": "stabilized purged expanding-origin walk-forward; larger OOS sample; 1Y uses approximately non-overlapping annual origins",
+    "model_version": "stabilized champion V5",
     "models": [
       {
         "name": "Ridge",
-        "projected_return_pct": -0.132,
-        "weight": 0.3325
+        "projected_return_pct": 0.06,
+        "backtest_mae_pct": 0.427,
+        "directional_accuracy": 0.5417,
+        "mae_skill_vs_baseline": 0.009,
+        "weight": 0.3962
       },
       {
         "name": "Random Forest",
-        "projected_return_pct": -0.047,
-        "weight": 0.3275
+        "projected_return_pct": 0.006,
+        "backtest_mae_pct": 0.433,
+        "directional_accuracy": 0.4479,
+        "mae_skill_vs_baseline": -0.004,
+        "weight": 0.3114
       },
       {
         "name": "Gradient Boost",
-        "projected_return_pct": -0.05,
-        "weight": 0.3401
+        "projected_return_pct": 0.001,
+        "backtest_mae_pct": 0.439,
+        "directional_accuracy": 0.4375,
+        "mae_skill_vs_baseline": -0.019,
+        "weight": 0.2923
       }
     ]
   },
-  "feature_explanation": {
-    "session_vwap": "where price sits versus today's volume-weighted average",
-    "previous_day_levels": "distance from previous session high/low/close",
-    "opening_range": "distance from early-session range",
-    "volume_acceleration": "whether recent volume is increasing versus the day",
-    "volatility_expansion": "whether short-term movement is expanding versus normal",
-    "hourly_momentum": "hourly RSI/MACD/EMA structure"
-  }
+  "note": "Regime engine was unavailable, so this panel mirrors the calibrated main 4H projection."
 }
