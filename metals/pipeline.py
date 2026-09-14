@@ -85,6 +85,7 @@ def run(raw_folder,stage,history):
         manifest=snapshot(raw_folder)
     asof=pd.Timestamp(manifest["asof"])
     commit=os.environ.get("GITHUB_SHA","local")
+    channel="production" if os.environ.get("GITHUB_REF")=="refs/heads/master" and os.environ.get("GITHUB_EVENT_NAME")!="pull_request" else "research"
     run_id=asof.strftime("%Y%m%dT%H%M%SZ")+"-"+os.environ.get("GITHUB_RUN_ID","local")
     code_hash=hashlib.sha256(b"".join(p.read_bytes() for p in sorted(Path("metals").glob("*.py")))).hexdigest()
     payload={"schema_version":1,"version":VERSION,"run_id":run_id,"asof":asof.isoformat(),"commit":commit,"code_hash":code_hash,"source_hash":manifest["source_hash"],"assets":{},"context":{},"limitations":["Yahoo continuous futures; per-bar contract mapping and revision vintages unavailable.","No exchange order book, participant identities or validated event calendar.","OHLCV liquidity and absorption labels are proxies.","Legacy model files and their frozen baseline are research history; corrected metrics are a new evaluation lineage."]}
@@ -125,13 +126,14 @@ def run(raw_folder,stage,history):
             result["status"] = "WAIT" if result["failed_gates"] else "VALIDATED"
             result["primary"] = result["research"] if result["status"]=="VALIDATED" else None
             result["cache_key"]=cache_key
+            result["model_id"]=VERSION+":"+code_hash[:12]+":"+result["recipe_version"]
             result["asset"]=asset
             result["source_hash"]=manifest["source_hash"]
             result["run_id"]=run_id
             write(stage/"validation"/(asset+"_"+h+".json"),result)
             forecasts[h]={k:v for k,v in result.items() if k!="records"}
             forecasts[h]["evidence_file"]="data/validation/"+asset+"_"+h+".json"
-            issue(forecast_ledger,asset,h,result,run_id,commit,manifest["source_hash"],asof.isoformat())
+            issue(forecast_ledger,asset,h,result,run_id,commit,manifest["source_hash"],asof.isoformat(),channel=channel)
             print(asset,h,result["status"],"OOS",result["oos"].get("n"),"holdout",result["holdout"].get("n"),"failed",result["failed_gates"],flush=True)
         quote_frame=frames["15m"]
         quote={"price":float(quote_frame.close.iloc[-1]),"time":quote_frame.index[-1].isoformat(),"basis":"Latest completed 15m close","stale":not reports["15m"]["latest_expected_bar_present"]}
@@ -141,7 +143,7 @@ def run(raw_folder,stage,history):
         if qp and quote_frame.index[-1]<=qt<=asof:
             quote.update(price=float(qp),time=qt.isoformat(),basis="Yahoo timestamped quote")
         fresh=all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
-        setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
+        setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d"))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
         payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
     for name in CONTEXT:
         raw=read(raw_folder/(name+"_1d.json"),None)
@@ -157,7 +159,7 @@ def run(raw_folder,stage,history):
     payload["context"]["event_calendar"]={"status":"UNAVAILABLE","note":"No verified scheduled-release feed connected"}
     resolve(forecast_ledger,all_frames)
     for asset,a in payload["assets"].items():
-        ids=[key for key,r in forecast_ledger["issued"].items() if r["asset"]==asset]
+        ids=[key for key,r in forecast_ledger["issued"].items() if r["asset"]==asset and r.get("channel")=="production" and r.get("forward_eligible")]
         resolved=[forecast_ledger["outcomes"][key] for key in ids if key in forecast_ledger["outcomes"]]
         a["forward"]={"issued":len(ids),"resolved":len(resolved),"directional_accuracy":sum(r["direction_correct"] for r in resolved)/len(resolved) if resolved else None,"note":"Corrected immutable ledger only. Legacy results are not mixed in."}
     validate(payload)

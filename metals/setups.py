@@ -100,7 +100,7 @@ def barrier(bars, direction, entry, stop, target):
         hit_target = r.high>=target if direction==1 else r.low<=target
         if hit_stop:
             exit_price = min(stop,r.open) if direction==1 else max(stop,r.open)
-            return {"outcome":"STOP","exit":exit_price,"time":str(t),"ambiguous":bool(hit_target),"mfe":mfe,"mae":mae}
+            return {"outcome":"STOP","exit":exit_price,"time":str(t),"ambiguous":bool(hit_target),"mfe_upper_bound":mfe,"mae_upper_bound":mae}
         if hit_target:
             return {"outcome":"TARGET","exit":target,"time":str(t),"ambiguous":False,"mfe":mfe,"mae":mae}
     return {"outcome":"TIMEOUT","exit":float(bars.close.iloc[-1]) if len(bars) else entry,"mfe":mfe,"mae":mae}

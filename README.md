@@ -23,6 +23,8 @@ python -m metals.pipeline --raw .snapshot --stage .stage --history data
 
 Both metals must pass schema, timing, geometry and model-integrity checks before the staged bundle is published. Missing essential sources abort the build.
 
+Production forward scoring also excludes issues more than 30 minutes after their completed reference origin.
+
 The single scheduled workflow is Canonical Metals Test Build Publish. It tests, builds, exercises desktop/mobile gold and silver views, commits one coherent bundle, and verifies the existing GitHub Pages site. Six old writers are retired; legacy HTML patchers are no longer run.
 
 ## Evidence

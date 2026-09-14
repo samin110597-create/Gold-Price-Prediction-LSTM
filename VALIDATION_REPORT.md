@@ -31,3 +31,7 @@ The workflow produces regression JUnit XML, timestamped evaluations, a browser r
 
 ## Source-quality correction (recipe 1.1)
 The first mechanical validation run exposed zero-volume/flat-bar CMF propagation and an overly broad historical-gap exclusion. Known zero volume is preserved, a zero-range bar contributes zero CMF multiplier, and actual missing volume remains unavailable. Known historical gaps become a fixed explicit feature; missing target bars and 61-bar suspected-roll dependencies still exclude scoring. No performance threshold changed. Earlier recipe 1.0 results are not mixed into recipe 1.1 evidence.
+
+Forward issues carry model-code identity and production/research channel. Pre-release branch evaluations are preserved but excluded from the displayed production-forward score. OHLC barrier excursion values are upper bounds because intrabar event order is unknown.
+
+Production forward scores include only forecasts issued within 30 minutes of their completed reference bar. Older reference origins remain recorded with their latency but cannot inflate the forward score. Forecast horizons are measured from the explicitly displayed completed reference bar, not from a later quote.

@@ -50,7 +50,7 @@ def scan(frame, left=3, right=3, retain_all=False):
             if invalid:
                 watch["stage"]="FAILED"
                 emit(i,"REVERSAL_FAILED",watch["direction"],origin=watch["time"])
-            elif i-watch["index"] > 20 and watch["stage"] != "CONFIRMED":
+            elif i-watch["index"] > 20:
                 watch["stage"]="EXPIRED"
         for old in events[-30:]:
             if old["kind"] in ("BOS","CHoCH") and (old["time"],old["scope"],old["kind"]) not in failed_breaks and 0 < i-old.get("index",i) <= 5:

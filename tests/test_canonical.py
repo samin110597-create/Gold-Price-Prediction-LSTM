@@ -191,3 +191,28 @@ def test_historical_gap_is_explicit_and_missing_targets_excluded():
     result=evaluate(f,1)
     assert result["oos"]["n"]>100
     assert all(not f.gap_before.loc[pd.Timestamp(r["target_time"])] for r in result["records"])
+
+
+def test_daily_source_sanitation_completion_and_zero_volume():
+    from metals.data import clean
+    cal=schedule("gold","2026-01-02","2026-06-01")
+    count=len(cal)
+    prices=(100+np.arange(count)*.1).tolist()
+    raw={"timestamp":[int(pd.Timestamp(t.date(),tz="UTC").timestamp()) for t in cal.index],"indicators":{"quote":[{"open":prices.copy(),"high":[p+1 for p in prices],"low":[p-1 for p in prices],"close":prices.copy(),"volume":[100]*count}]}}
+    raw["indicators"]["quote"][0]["volume"][30]=0
+    raw["indicators"]["quote"][0]["high"][40]=prices[40]-1
+    asof=cal.market_close.iloc[-2]+pd.Timedelta(minutes=1)
+    result,report,_=clean(raw,"gold","1d",asof)
+    assert report["invalid_ohlc"]==1 and report["forming_bars_excluded"]==1
+    assert result.index[-1]==cal.market_close.iloc[-2]
+    assert (result.volume==0).sum()==1
+    assert result.gap_before.sum()==1
+
+
+def test_delayed_reference_cannot_enter_live_forward_score():
+    f=frame(10)
+    forecast={"recipe_version":"1","horizon_bars":2,"unit":"bars","status":"WAIT","research":{"origin":f.index[2].isoformat(),"reference_price":100,"price":101,"interval80":[90,110]}}
+    ledger={}
+    issue(ledger,"gold","4H",forecast,"run","sha","hash",f.index[4].isoformat(),channel="production")
+    record=next(iter(ledger["issued"].values()))
+    assert not record["forward_eligible"] and record["origin_latency_seconds"]==7200
