@@ -72,7 +72,7 @@ def clean(raw, asset, interval, asof):
     report = {"raw_bars": len(frame), "duplicates": int(frame.index.duplicated().sum())}
     frame = frame.loc[~frame.index.duplicated(keep="first")].sort_index()
     missing = frame[["open","high","low","close"]].isna().any(axis=1)
-    invalid = (~missing)&((frame[["open","high","low","close"]] <= 0).any(axis=1) | (frame.high < frame[["open","close","low"]].max(axis=1)) | (frame.low > frame[["open","close","high"]].min(axis=1)))
+    invalid = (~missing)&((~np.isfinite(frame[["open","high","low","close"]])).any(axis=1) | (frame[["open","high","low","close"]] <= 0).any(axis=1) | (frame.high < frame[["open","close","low"]].max(axis=1)) | (frame.low > frame[["open","close","high"]].min(axis=1)))
     report.update(missing_ohlc=int(missing.sum()), invalid_ohlc=int(invalid.sum()), missing_volume=int(frame.volume.isna().sum()))
     frame = frame.loc[~(missing|invalid)].copy()
     frame.loc[frame.volume < 0, "volume"] = np.nan

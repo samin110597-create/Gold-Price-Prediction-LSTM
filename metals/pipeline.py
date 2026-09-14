@@ -10,7 +10,7 @@ from metals import VERSION
 from metals.data import SYMBOLS, CONTEXT, snapshot, clean, aggregate, session_context, digest
 from metals.indicators import compute
 from metals.structure import scan, families
-from metals.models import evaluate
+from metals.models import evaluate, features
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve
 
@@ -32,7 +32,7 @@ def read(path,default):
     return json.loads(path.read_text()) if path.exists() else default
 def write(path,value):
     path.parent.mkdir(parents=True,exist_ok=True)
-    path.write_text(json.dumps(safe(value),indent=2,allow_nan=False))
+    path.write_text(json.dumps(safe(value),indent=None if path.name=="dashboard.json" else 2,allow_nan=False))
 def price_context(structure,frame):
     majors=[p for p in structure["pivots"] if p["major"]]
     result={"fibonacci":[],"patterns":[],"elliott":"UNCONFIRMED — no validated wave count","wyckoff":"OHLCV phase interpretation unavailable; volume proxies shown separately"}
@@ -100,6 +100,7 @@ def run(raw_folder,stage,history):
         frames["1w"],reports["1w"]=aggregate(frames["1h"],cals["1d"],asof,weekly=True,daily=frames["1d"])
         frames={k:compute(v) for k,v in frames.items()}
         all_frames[asset]=frames
+        print("DATA DIAGNOSTIC",asset,json.dumps({k:{"bars":len(v),"feature_complete":int(features(v).notna().all(axis=1).sum()),"gaps":int(v.gap_before.sum()),"rolls":int(v.roll_gap_proxy.sum()),"cmf_missing":int(v.cmf.isna().sum()),"quality":reports[k]} for k,v in frames.items()}),flush=True)
         analyses={}
         columns=["open","high","low","close","volume","ema20","ema50","bb_upper","bb_lower","rsi","macd_hist"]
         for tf in ("15m","1h","4h","1d","1w"):
@@ -114,6 +115,10 @@ def run(raw_folder,stage,history):
             path=history/"validation"/(asset+"_"+h+".json")
             cached=read(path,{})
             result=cached if cached.get("cache_key")==cache_key else evaluate(frames[tf],bars,hourly=tf=="1h")
+            result["checks"]["latest_completed_bar"] = reports[tf]["latest_expected_bar_present"]
+            result["failed_gates"] = [k for k,v in result["checks"].items() if not v]
+            result["status"] = "WAIT" if result["failed_gates"] else "VALIDATED"
+            result["primary"] = result["research"] if result["status"]=="VALIDATED" else None
             result["cache_key"]=cache_key
             result["asset"]=asset
             result["source_hash"]=manifest["source_hash"]

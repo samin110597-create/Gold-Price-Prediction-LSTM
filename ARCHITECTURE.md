@@ -1,13 +1,24 @@
-# Architecture
+# Canonical architecture
 
-## Existing production chain
+Production: one source snapshot → completed exchange-session bars → causal indicators → confirmed structure → fixed-recipe evaluation → immutable issues → validated coherent bundle → static dashboard.
 
-Hourly GitHub Actions runs legacy probability V2, meaningful probability V4, probability gating, technical calculations, frameworks/overlay/measured-move patches, descriptive signal audits, selective and context challengers, projection V2, restored 4H, V4 horizons, macro V3, V6, ledger, V7, V8, regime challenger, focus adjustment, backtest/governance, narrative, and nine HTML patch scripts. Generated files are committed to master and GitHub Pages serves the root.
+## Data
+metals/data.py downloads each essential symbol/interval once. Both metals share an as-of time. Sources are hashed and retained in Actions evidence. Missing essential sources abort. Bad OHLC, duplicate timestamps, missing volume, forming bars, missing expected bars and suspected roll gaps are reported separately. No invented fill bars.
 
-## Migration contract
+CME GC/SI calendars handle New York DST, the 18:00 anchor, maintenance and holidays. A 4H aggregate requires every expected hourly constituent; the final bar follows the session close and may be shorter. Weekly bars require every expected daily session. Quote and analysis timestamps are separate.
 
-Retain this repository and GitHub Pages. Freeze legacy validation outputs before changes. Introduce one versioned run snapshot with actual market timestamps, completed session-aware bars, canonical indicators and causal structure, reversal/liquidity proxies, independently qualified model evidence, immutable setup levels, and one normalized dashboard JSON payload. Stage and validate both assets before publishing. Keep research history and rollback in git. Model FAIL must remain FAIL until defensible unseen evaluation earns promotion.
+## Indicators and structure
+metals/indicators.py centralizes Wilder-seeded indicators and qualified rolling volume measures. Eight fixed dimensionless features feed models. Gap/roll dependencies exclude affected model origins. Revised macro series are not predictive features.
 
-## Data semantics
+metals/structure.py processes the complete available history chronologically. Pivots require three right-hand bars. Major pivots require displacement, separation and structural quality. Signals carry pivot and confirmation times. Buffered closes create breaks; wick sweeps create watches. Reversals require later CHoCH, later HL/LH, then later BOS. Failed breaks create new events without rewriting the original signal.
 
-GC=F and SI=F remain separate Yahoo futures series, USD per troy ounce. Do not substitute spot or ETF prices. Roll mapping and adjustment provenance must be declared unknown until verifiable contract-level evidence exists. OHLCV cannot establish institutional order flow. Model probabilities, technical scores, and historical hit rates are separate quantities.
+## Forecasts
+Fixed Ridge returns and Logistic direction with separate Platt calibration. Every fold purges training and calibration labels before the next partition. Origins are globally horizon-spaced. The final year of daily data / 60 trading days of hourly data is held out under the same recipe. All gates must pass; research and primary forecasts are separate.
+
+## Publication
+metals/pipeline.py stages both assets and all eight validation files. A manifest records code, source and run hashes. The UI reads only dashboard.json; cards cannot mix independently refreshed files.
+
+The active workflow runs regression tests, full evaluation, desktop/mobile browser checks, and one data commit. Older writers are manual no-ops. The existing repository and GitHub Pages hosting are retained. The final master step checks the deployed run ID and both asset views.
+
+## History
+Setup issuance levels never move. Observations separately record stop/target touches. Forecast issues never change; outcomes use the exact completed origin plus the declared trading-bar horizon. Legacy history is preserved separately and cannot qualify a corrected model.

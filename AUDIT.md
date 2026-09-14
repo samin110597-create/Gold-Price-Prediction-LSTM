@@ -20,3 +20,19 @@ Baseline: `ebc895e988c3f07a18cee6d2b8802b6a60fc6eda`, captured 2026-09-14 before
 ## Model status
 
 No model is promoted by this audit. Existing published statuses and metrics are frozen in VALIDATION_BASELINE.md. Correctness changes require a new evaluation lineage; they are not evidence of higher predictive accuracy.
+
+
+## Canonical release dispositions
+Six legacy writers and nine HTML patchers are retired from production. V2–V8 scripts and frozen history remain research-only.
+
+- Invalid zones, wrong-sided targets and intersecting stops are rejected; new issued levels are immutable.
+- No negative historical signal edge is inverted into positive confluence. Three capped families replace correlated-indicator stacking.
+- Exchange-calendar completion replaces generic resampling; forming/incomplete bars are excluded.
+- Pivots have separate pivot and confirmation times. Later failure is a new event. Session ranges cannot look ahead.
+- Fixed formulas and purged evaluation replace contaminated ensemble promotion.
+- Every primary forecast must pass all gates; a small legacy forward sample cannot lift its status.
+- Wilder initialization and zero-loss RSI are centralized and corrected. Rolling/session VWAP approximations are explicitly labelled.
+- Exact completed-origin ledger resolution replaces nearest matching. No corrected history truncation.
+- Gold/silver desktop/mobile interactions are checked before publication and again on the deployed run.
+
+Remaining unavailable: roll mapping/vintages, verified release calendar, corrected long-horizon macro forecast, validated Elliott/Wyckoff phase model and independently validated setup barrier probabilities. No predictive-accuracy improvement or institutional participant detection is claimed.
