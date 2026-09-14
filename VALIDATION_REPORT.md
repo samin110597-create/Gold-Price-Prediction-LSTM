@@ -35,3 +35,22 @@ The first mechanical validation run exposed zero-volume/flat-bar CMF propagation
 Forward issues carry model-code identity and production/research channel. Pre-release branch evaluations are preserved but excluded from the displayed production-forward score. OHLC barrier excursion values are upper bounds because intrabar event order is unknown.
 
 Production forward scores include only forecasts issued within 30 minutes of their completed reference bar. Older reference origins remain recorded with their latency but cannot inflate the forward score. Forecast horizons are measured from the explicitly displayed completed reference bar, not from a later quote.
+
+## Recorded release evaluation
+
+Snapshot 20260914T184818Z-34882952760; engine commit 66735d168d0d44c2f20f46f786a6fdb74b564edd. These are the actual corrected results, not a baseline-comparable improvement claim.
+
+| Metal | Horizon | OOS origins | OOS hit rate | Baseline hit rate | MAE skill | Holdout origins | Primary |
+|---|---|---:|---:|---:|---:|---:|---|
+| gold | 4H | 1935 | 49.72% | 51.94% | -0.70% | 342 | WAIT |
+| gold | 1D | 3711 | 51.36% | 52.82% | -0.48% | 238 | WAIT |
+| gold | 1W | 592 | 53.38% | 55.24% | -0.38% | 44 | WAIT |
+| gold | 1M | 0 | Unavailable | Unavailable | Unavailable | 0 | WAIT |
+| silver | 4H | 1905 | 49.76% | 51.29% | -1.07% | 340 | WAIT |
+| silver | 1D | 3261 | 51.52% | 51.89% | -0.37% | 238 | WAIT |
+| silver | 1W | 524 | 49.43% | 50.00% | -2.72% | 44 | WAIT |
+| silver | 1M | 0 | Unavailable | Unavailable | Unavailable | 0 | WAIT |
+
+Monthly calibration has insufficient eligible contiguous target windows after source-gap exclusions. No monthly estimate or probability is fabricated.
+
+Branch verification: 21 regression tests passed, full pipeline schema/timing/geometry checks passed, and both assets passed desktop/mobile interactions across both modes and five chart timeframes without JavaScript errors. Evidence run: https://github.com/samin110597-create/Gold-Price-Prediction-LSTM/actions/runs/34882952760 . Deployed verification is a separate master-workflow step.
