@@ -1,0 +1,184 @@
+name: Update Metals Intelligence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "multi_asset_forecast_v2.py"
+      - "meaningful_probability_v4.py"
+      - "probability_gate.py"
+      - "technical_analysis.py"
+      - "technical_frameworks_enrich.py"
+      - "technical_overlay_enrich.py"
+      - "measured_move_enrich.py"
+      - "technical_signal_audit.py"
+      - "technical_selective_model.py"
+      - "technical_selective_runner.py"
+      - "technical_context_meta_model.py"
+      - "technical_context_runner.py"
+      - "projection_model_v2.py"
+      - "four_hour_specialist.py"
+      - "horizon_specialist_v4.py"
+      - "macro_1y_model.py"
+      - "macro_1y_model_v3.py"
+      - "macro_1y_runner.py"
+      - "future_price_action_v6.py"
+      - "future_price_action_v6_runner.py"
+      - "forward_validation_ledger.py"
+      - "precision_gate_v7.py"
+      - "actionable_setup_v8.py"
+      - "regime_intraday_model.py"
+      - "regime_intraday_runner.py"
+      - "projection_focus.py"
+      - "backtest_engine.py"
+      - "audit_v4_patch.py"
+      - "model_governance.py"
+      - "enhance_guru_summary.py"
+      - "dashboard_v4_patch.py"
+      - "dashboard_numbers_patch.py"
+      - "dashboard_chart_patch.py"
+      - "dashboard_chart_fallback_patch.py"
+      - "dashboard_measured_move_patch.py"
+      - "dashboard_future_price_action_patch.py"
+      - "dashboard_precision_gate_patch.py"
+      - "dashboard_actionable_setup_patch.py"
+      - "requirements-live.txt"
+      - ".github/workflows/update-gold-forecast.yml"
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: metals-intelligence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-live.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-live.txt
+
+      - name: Build legacy walk-forward probability forecasts
+        run: python multi_asset_forecast_v2.py
+
+      - name: Build V4 meaningful move probability challenger
+        run: python meaningful_probability_v4.py
+
+      - name: Gate weak legacy probability forecasts
+        run: python probability_gate.py
+
+      - name: Build full technical analysis
+        run: python technical_analysis.py
+
+      - name: Add support resistance Elliott Wyckoff and deep Fibonacci
+        run: python technical_frameworks_enrich.py
+
+      - name: Add advanced chart patterns divergences and signal markers
+        run: python technical_overlay_enrich.py
+
+      - name: Fill measured moves and structure objectives
+        run: python measured_move_enrich.py
+
+      - name: Backtest fixed-rule technical signal events
+        run: python technical_signal_audit.py
+
+      - name: Build nested selective technical challenger
+        run: python technical_selective_runner.py
+
+      - name: Build cross-market technical meta challenger
+        run: python technical_context_runner.py
+
+      - name: Build incumbent walk-forward 4H 1D 1W 1Y projections
+        run: python projection_model_v2.py
+
+      - name: Restore recent 4H specialist and compare with long-window stability
+        run: python four_hour_specialist.py
+
+      - name: Build V4 1D and 1W horizon specialists and promote only if stronger
+        run: python horizon_specialist_v4.py
+
+      - name: Build exact-formula macro positioning 1Y challenger and promote only if stronger
+        run: python macro_1y_runner.py
+
+      - name: Build maturity-safe regime-conditioned V6 future price action challenger
+        run: python future_price_action_v6_runner.py
+
+      - name: Record and score live forward forecasts
+        run: python forward_validation_ledger.py
+
+      - name: Build always-visible Directional Readout V7.1
+        run: python precision_gate_v7.py
+
+      - name: Build action-oriented Market Setup V8
+        run: python actionable_setup_v8.py
+
+      - name: Compare 4H regime model independently
+        run: python regime_intraday_runner.py
+
+      - name: Build tighter validation-weighted focus zones
+        run: python projection_focus.py
+
+      - name: Audit champion and challenger models
+        run: python backtest_engine.py
+
+      - name: Apply V4 probability champion audit gate
+        run: python audit_v4_patch.py
+
+      - name: Apply institutional readiness governance gate
+        run: python model_governance.py
+
+      - name: Compose evidence-gated market guru summary
+        run: python enhance_guru_summary.py
+
+      - name: Make V4 and restored 4H visible on dashboard
+        run: python dashboard_v4_patch.py
+
+      - name: Add hard numbers and direction panel
+        run: python dashboard_numbers_patch.py
+
+      - name: Add advanced technical overlays to charts
+        run: python dashboard_chart_patch.py
+
+      - name: Add immediate client-side overlay fallback
+        run: python dashboard_chart_fallback_patch.py
+
+      - name: Show measured move values and target basis
+        run: python dashboard_measured_move_patch.py
+
+      - name: Add V6 future price action panel
+        run: python dashboard_future_price_action_patch.py
+
+      - name: Add Directional Readout V7.1 panel
+        run: python dashboard_precision_gate_patch.py
+
+      - name: Add Market Setup V8 decision map last
+        run: python dashboard_actionable_setup_patch.py
+
+      - name: Commit updated intelligence data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data/live_forecast.json data/silver_forecast.json data/gold_technicals.json data/silver_technicals.json data/gold_technical_model.json data/silver_technical_model.json data/gold_technical_context.json data/silver_technical_context.json data/gold_projections.json data/silver_projections.json data/gold_macro_1y.json data/silver_macro_1y.json data/gold_regime_intraday.json data/silver_regime_intraday.json data/gold_4h_specialist.json data/silver_4h_specialist.json data/gold_horizon_specialist_v4.json data/silver_horizon_specialist_v4.json data/gold_meaningful_probability_v4.json data/silver_meaningful_probability_v4.json data/gold_future_price_action_v6.json data/silver_future_price_action_v6.json data/gold_precision_gate_v7.json data/silver_precision_gate_v7.json data/gold_actionable_setup_v8.json data/silver_actionable_setup_v8.json data/forward_validation_ledger.json data/model_backtest.json
+          if git diff --cached --quiet; then
+            echo "No market-data changes to commit"
+          else
+            git commit -m "Update Market Setup V8 metals intelligence"
+            git fetch origin master
+            git rebase origin/master
+            git push origin master
+          fi
