@@ -1,0 +1,68 @@
+{
+  "status": "WAIT",
+  "horizon_bars": 21,
+  "unit": "completed trading sessions",
+  "model": "Fixed Ridge return + Logistic/Platt direction; no ensemble selection",
+  "recipe_version": "1.1",
+  "primary": null,
+  "research": null,
+  "oos": {
+    "n": 0
+  },
+  "holdout": {
+    "n": 0
+  },
+  "checks": {
+    "oos_sample": false,
+    "oos_edge": false,
+    "edge_confidence": false,
+    "oos_mae": false,
+    "oos_brier": false,
+    "holdout_sample": false,
+    "holdout_edge": false,
+    "holdout_mae": false,
+    "holdout_brier": false,
+    "interval_coverage": false,
+    "in_distribution": false,
+    "live_available": false,
+    "positive_ordered_prices": false,
+    "latest_completed_bar": true
+  },
+  "failed_gates": [
+    "oos_sample",
+    "oos_edge",
+    "edge_confidence",
+    "oos_mae",
+    "oos_brier",
+    "holdout_sample",
+    "holdout_edge",
+    "holdout_mae",
+    "holdout_brier",
+    "interval_coverage",
+    "in_distribution",
+    "live_available",
+    "positive_ordered_prices"
+  ],
+  "thresholds": {
+    "min_oos": 100,
+    "edge": 0.03,
+    "mae_skill": 0.03,
+    "min_holdout": 12,
+    "confidence_lower": 0,
+    "brier_skill": 0
+  },
+  "records": [],
+  "integrity": {
+    "training_before_calibration": true,
+    "calibration_before_test": true,
+    "unique_origins": true,
+    "overlap_policy": "Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels",
+    "holdout": "Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout",
+    "data_note": "Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; future target gaps and past roll dependencies excluded; known historical gaps are an explicit feature."
+  },
+  "cache_key": "5a5c8add06c3c7281642e73a81c46cd054eb92beea066667fea19a6a89da0cc2",
+  "model_id": "metals-causal-v1:d55b5c784bed:1.1",
+  "asset": "gold",
+  "source_hash": "00c588703b8a5a7d1783679f71788b4628af32fa2c80c6458854884260f701d0",
+  "run_id": "20260914T184818Z-34882952760"
+}
