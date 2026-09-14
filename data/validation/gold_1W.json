@@ -1,0 +1,64 @@
+{
+  "status": "WAIT",
+  "horizon_bars": 5,
+  "unit": "completed trading sessions",
+  "model": "Fixed Ridge return + Logistic/Platt direction; no ensemble selection",
+  "recipe_version": "1.0",
+  "primary": null,
+  "research": null,
+  "oos": {
+    "n": 0
+  },
+  "holdout": {
+    "n": 0
+  },
+  "checks": {
+    "oos_sample": false,
+    "oos_edge": false,
+    "edge_confidence": false,
+    "oos_mae": false,
+    "oos_brier": false,
+    "holdout_sample": false,
+    "holdout_edge": false,
+    "holdout_mae": false,
+    "holdout_brier": false,
+    "interval_coverage": false,
+    "in_distribution": false,
+    "live_available": false
+  },
+  "failed_gates": [
+    "oos_sample",
+    "oos_edge",
+    "edge_confidence",
+    "oos_mae",
+    "oos_brier",
+    "holdout_sample",
+    "holdout_edge",
+    "holdout_mae",
+    "holdout_brier",
+    "interval_coverage",
+    "in_distribution",
+    "live_available"
+  ],
+  "thresholds": {
+    "min_oos": 100,
+    "edge": 0.03,
+    "mae_skill": 0.03,
+    "min_holdout": 12,
+    "confidence_lower": 0,
+    "brier_skill": 0
+  },
+  "records": [],
+  "integrity": {
+    "training_before_calibration": true,
+    "calibration_before_test": true,
+    "unique_origins": true,
+    "overlap_policy": "Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels",
+    "holdout": "Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout",
+    "data_note": "Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; suspect gap dependencies excluded."
+  },
+  "cache_key": "e062f4d9ee2021e92927a44a4aa011aa4d53c8b30f10b6ffd85b9a81fcbab7f9",
+  "asset": "gold",
+  "source_hash": "bbb10a564abad4c9a96ceca2e20166a11234a87533e8e5876367984d89ca7885",
+  "run_id": "20260914T183549Z-34881664357"
+}
