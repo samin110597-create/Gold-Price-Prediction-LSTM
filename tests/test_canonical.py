@@ -159,3 +159,35 @@ def test_nonfinite_serialization():
     result=safe({"a":float("nan"),"b":np.float64("inf"),"c":np.bool_(True)})
     assert result=={"a":None,"b":None,"c":True}
     json.dumps(result,allow_nan=False)
+
+
+def test_signal_audit_uses_confirmation_and_mature_nonoverlap():
+    from metals.signal_audit import evaluate_events
+    f=compute(frame(450))
+    result=evaluate_events(f,5)
+    assert result["records"]
+    for records in result["records"].values():
+        origins=[f.index.get_loc(pd.Timestamp(r["origin"])) for r in records]
+        assert all(b-a>=5 for a,b in zip(origins,origins[1:]))
+        assert all(f.index.get_loc(pd.Timestamp(r["target_time"]))-i==5 for i,r in zip(origins,records))
+
+
+def test_zero_volume_and_flat_bar_do_not_erase_known_flow():
+    f=frame(80)
+    f.loc[f.index[40],["open","high","low","close"]]=100
+    f.loc[f.index[40],"volume"]=0
+    out=compute(f)
+    assert out.cmf.iloc[40:60].notna().all()
+    assert out.rolling_vwap20.iloc[40:60].notna().all()
+    f.loc[f.index[40],"volume"]=np.nan
+    assert compute(f).cmf.iloc[40:60].isna().all()
+
+def test_historical_gap_is_explicit_and_missing_targets_excluded():
+    from metals.models import features
+    f=compute(frame(2300))
+    f.loc[f.index[::17],"gap_before"]=True
+    x=features(f)
+    assert x.gap_fraction.iloc[-1]>0
+    result=evaluate(f,1)
+    assert result["oos"]["n"]>100
+    assert all(not f.gap_before.loc[pd.Timestamp(r["target_time"])] for r in result["records"])

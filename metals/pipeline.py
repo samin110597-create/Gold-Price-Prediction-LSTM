@@ -13,6 +13,7 @@ from metals.structure import scan, families
 from metals.models import evaluate, features
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve
+from metals.signal_audit import evaluate_events
 
 def safe(value):
     if isinstance(value,dict):
@@ -107,7 +108,11 @@ def run(raw_folder,stage,history):
             frame=frames[tf]
             structure=scan(frame)
             chart=[{"time":t.isoformat(),**{k:r[k] for k in columns}} for t,r in frame.iloc[-150:].iterrows()]
+            structure["pivots"]=structure["pivots"][-40:]
+            structure["events"]=structure["events"][-60:]
             analyses[tf]={"last_completed":frame.index[-1].isoformat(),"quality":reports[tf],"indicators":{k:v for k,v in frame.iloc[-1].items() if k not in ("open_at","gap_before","roll_gap_proxy")},"structure":structure,"evidence":families(frame,structure),"chart":chart,"context":price_context(structure,frame)}
+        signal_audit=evaluate_events(frames["1d"])
+        write(stage/"validation"/(asset+"_signals.json"),signal_audit)
         forecasts={}
         for h,tf,bars in [("4H","1h",4),("1D","1d",1),("1W","1d",5),("1M","1d",21)]:
             data_hash=hashlib.sha256(pd.util.hash_pandas_object(frames[tf],index=True).values.tobytes()).hexdigest()
@@ -137,7 +142,7 @@ def run(raw_folder,stage,history):
             quote.update(price=float(qp),time=qt.isoformat(),basis="Yahoo timestamped quote")
         fresh=all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
         setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
-        payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
+        payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
     for name in CONTEXT:
         raw=read(raw_folder/(name+"_1d.json"),None)
         item={"status":"UNAVAILABLE"}

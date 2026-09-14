@@ -60,13 +60,14 @@ def compute(frame):
     f["stoch_k"] = 100*(c-lo)/(hi-lo).replace(0, np.nan)
     f["stoch_d"] = f.stoch_k.rolling(3).mean()
     typical = (h+l+c)/3
-    valid_v = v.where(v > 0)
+    valid_v = v.where(v >= 0)
     money = typical * valid_v
     mf_up = money.where(typical.diff() > 0, 0).where(valid_v.notna()).rolling(14).sum()
     mf_dn = money.where(typical.diff() < 0, 0).where(valid_v.notna()).rolling(14).sum()
     f["mfi"] = 100-100/(1+mf_up/mf_dn.replace(0, np.nan))
     f.loc[(mf_dn == 0) & (mf_up > 0), "mfi"] = 100
-    f["cmf"] = (((2*c-h-l)/(h-l).replace(0, np.nan))*valid_v).rolling(20).sum()/valid_v.rolling(20).sum()
+    multiplier = ((2*c-h-l)/(h-l).replace(0, np.nan)).where(h!=l, 0.0)
+    f["cmf"] = (multiplier*valid_v).rolling(20).sum()/valid_v.rolling(20).sum().replace(0,np.nan)
     f["obv"] = (np.sign(c.diff()).fillna(0)*v).cumsum()
     f["relative_volume"] = valid_v / valid_v.shift().rolling(20).mean()
     f["rolling_vwap20"] = (typical*valid_v).rolling(20).sum()/valid_v.rolling(20).sum()

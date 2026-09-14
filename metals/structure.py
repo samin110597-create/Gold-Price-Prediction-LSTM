@@ -1,7 +1,7 @@
 """Confirmed pivots, close-only structure breaks and staged reversals; no backdated signals."""
 import numpy as np
 
-def scan(frame, left=3, right=3):
+def scan(frame, left=3, right=3, retain_all=False):
     pivots, events = [], []
     books = {scope:{"high":None, "low":None, "direction":0} for scope in ("internal","major")}
     last_same = {}
@@ -113,7 +113,7 @@ def scan(frame, left=3, right=3):
         levels.append({"price":p["price"],"zone":[p["price"]-.25*last.atr,p["price"]+.25*last.atr],"basis":"Confirmed major swing","confirmed_at":p["confirmed_at"],"quality":p["quality"],"role":"support" if p["price"]<last.close else "resistance"})
         if len(levels)>=12:
             break
-    return {"direction":books["major"]["direction"],"internal_direction":books["internal"]["direction"],"pivots":pivots[-120:],"events":events[-180:],"levels":sorted(levels,key=lambda x:x["price"]),"reversals":[{k:v for k,v in w.items() if k not in ("index","choch","hl")} for w in watches[-8:]],"note":"Pivot coordinates are historical; every signal is dated when its required right-hand bars close."}
+    return {"direction":books["major"]["direction"],"internal_direction":books["internal"]["direction"],"pivots":pivots if retain_all else pivots[-120:],"events":events if retain_all else events[-180:],"levels":sorted(levels,key=lambda x:x["price"]),"reversals":[{k:v for k,v in w.items() if k not in ("index","choch","hl")} for w in watches[-8:]],"note":"Pivot coordinates are historical; every signal is dated when its required right-hand bars close."}
 
 def families(frame, structure):
     r = frame.iloc[-1]

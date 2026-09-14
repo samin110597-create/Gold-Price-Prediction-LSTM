@@ -8,7 +8,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, log_loss
 
-FEATURES = ["return1","return5","return20","trend","rsi","atr","range_position","flow"]
+FEATURES = ["return1","return5","return20","trend","rsi","atr","range_position","flow","gap_fraction"]
 GATES = {"min_oos":100,"edge":.03,"mae_skill":.03,"min_holdout":12,"confidence_lower":0,"brier_skill":0}
 def features(f):
     x = pd.DataFrame(index=f.index)
@@ -18,6 +18,7 @@ def features(f):
     x["atr"] = f.atr/f.close
     x["range_position"] = (f.close-f.donchian_low)/(f.donchian_high-f.donchian_low).replace(0,np.nan)-.5
     x["flow"] = f.cmf
+    x["gap_fraction"] = f.gap_before.astype(float).rolling(20,min_periods=20).mean()
     return x.replace([np.inf,-np.inf],np.nan)
 
 def metrics(records):
@@ -65,7 +66,9 @@ def evaluate(frame, horizon, hourly=False):
     pos = np.arange(n)
     # A suspect gap anywhere in a feature/target dependency excludes that origin.
     bad = (frame.gap_before | frame.roll_gap_proxy).astype(int)
-    past_bad = bad.rolling(61,min_periods=1).max().astype(bool)
+    # Historical missing bars are known at the origin and represented explicitly.
+    # Indicators use observed completed bars, never invented fills. Roll dependencies remain excluded.
+    past_bad = frame.roll_gap_proxy.astype(int).rolling(61,min_periods=1).max().astype(bool)
     future_bad = bad.iloc[::-1].rolling(horizon+1,min_periods=1).max().iloc[::-1].astype(bool)
     valid_x = x.notna().all(axis=1) & ~past_bad
     valid = valid_x & y.notna() & ~future_bad
@@ -113,4 +116,4 @@ def evaluate(frame, horizon, hourly=False):
         live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low),price*(1+p+high)],"feature_coefficients":dict(zip(FEATURES,map(float,reg[1].coef_))),"calibration_n":len(cal),"ood_distance":live_dist}
     checks = {"oos_sample":oos.get("n",0)>=100,"oos_edge":oos.get("edge",-1)>=.03,"edge_confidence":oos.get("edge_ci95",[-1])[0]>0,"oos_mae":(oos.get("mae_skill") or -1)>=.03,"oos_brier":(oos.get("brier_skill") or -1)>0,"holdout_sample":holdout.get("n",0)>=12,"holdout_edge":holdout.get("edge",-1)>0,"holdout_mae":(holdout.get("mae_skill") or -1)>0,"holdout_brier":(holdout.get("brier_skill") or -1)>0,"interval_coverage":.68<=holdout.get("coverage80",0)<=.9,"in_distribution":not ood,"live_available":live is not None,"positive_ordered_prices":live is not None and 0<live["interval80"][0]<live["interval80"][1] and live["price"]>0}
     status="VALIDATED" if all(checks.values()) else "WAIT"
-    return {"status":status,"horizon_bars":horizon,"unit":"completed exchange hourly bars" if hourly else "completed trading sessions","model":"Fixed Ridge return + Logistic/Platt direction; no ensemble selection","recipe_version":"1.0","primary":live if status=="VALIDATED" else None,"research":live,"oos":oos,"holdout":holdout,"checks":checks,"failed_gates":[k for k,v in checks.items() if not v],"thresholds":GATES,"records":records,"integrity":{"training_before_calibration":all(r["fit_end"]<r["calibration_start"] for r in records),"calibration_before_test":all(r["calibration_end"]<r["test_start"] for r in records),"unique_origins":len({r["origin"] for r in records})==len(records),"overlap_policy":"Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels","holdout":"Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout","data_note":"Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; suspect gap dependencies excluded."}}
+    return {"status":status,"horizon_bars":horizon,"unit":"completed exchange hourly bars" if hourly else "completed trading sessions","model":"Fixed Ridge return + Logistic/Platt direction; no ensemble selection","recipe_version":"1.1","primary":live if status=="VALIDATED" else None,"research":live,"oos":oos,"holdout":holdout,"checks":checks,"failed_gates":[k for k,v in checks.items() if not v],"thresholds":GATES,"records":records,"integrity":{"training_before_calibration":all(r["fit_end"]<r["calibration_start"] for r in records),"calibration_before_test":all(r["calibration_end"]<r["test_start"] for r in records),"unique_origins":len({r["origin"] for r in records})==len(records),"overlap_policy":"Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels","holdout":"Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout","data_note":"Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; future target gaps and past roll dependencies excluded; known historical gaps are an explicit feature."}}

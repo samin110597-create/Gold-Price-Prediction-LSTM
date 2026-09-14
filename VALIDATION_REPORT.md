@@ -5,7 +5,7 @@ The pre-change evidence in research/baseline-2026-09-14 is unchanged. Corrected 
 ## Exact production recipe
 - Ridge(alpha=20) for returns; LogisticRegression(C=0.1) for direction.
 - Separate LogisticRegression(C=1) calibrates decision functions on an earlier disjoint calibration window.
-- Eight fixed features: 1/5/20-bar returns, EMA20–50 spread, RSI, ATR fraction, prior Donchian range position, CMF.
+- Nine fixed features: 1/5/20-bar returns, EMA20–50 spread, RSI, ATR fraction, prior Donchian range position, CMF and the observed 20-bar gap fraction.
 - No grid search, ensemble weight selection or probability inversion.
 - Expanding training, purged disjoint calibration, sequential test blocks. Origins globally spaced by the horizon.
 - Final holdout: 252 daily / 1380 hourly bars, same fixed recipe, no holdout tuning.
@@ -28,3 +28,6 @@ The barrier helper resolves ambiguous candles stop-first and adverse stop gaps a
 
 ## Verification
 The workflow produces regression JUnit XML, timestamped evaluations, a browser report and desktop/mobile screenshots for each asset. Its final master step checks the exact deployed run ID. Consult the Actions conclusion; this document itself is not a passing test result.
+
+## Source-quality correction (recipe 1.1)
+The first mechanical validation run exposed zero-volume/flat-bar CMF propagation and an overly broad historical-gap exclusion. Known zero volume is preserved, a zero-range bar contributes zero CMF multiplier, and actual missing volume remains unavailable. Known historical gaps become a fixed explicit feature; missing target bars and 61-bar suspected-roll dependencies still exclude scoring. No performance threshold changed. Earlier recipe 1.0 results are not mixed into recipe 1.1 evidence.

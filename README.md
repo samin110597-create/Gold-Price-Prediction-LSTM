@@ -10,6 +10,7 @@ The deployed application is a causal market-research terminal for gold (GC=F) an
 - Internal and major pivots, BOS/CHoCH, divergence at confirmation time, failed breaks and staged reversal watches. Liquidity/absorption/distribution labels are OHLCV proxies.
 - Strict and Adaptive conditional setup maps with immutable entry zones, stops and observed swing objectives. Confluence is not probability. No BUY/SELL is issued without independently validated target-before-stop evidence.
 - Fixed-recipe purged walk-forward 4H/1D/1W/1M forecasts, calibrated directional probabilities, baseline comparisons and an untouched final evaluation period. Weak estimates remain research-only; the primary forecast says WAIT.
+- Exact-rule 5-session descriptive event audits for BOS/CHoCH, divergence, reversal and flow proxies; these do not qualify trade setups.
 - A new immutable forecast issue ledger with separate exact-bar outcomes. Legacy forward history remains separate.
 
 ## Run
