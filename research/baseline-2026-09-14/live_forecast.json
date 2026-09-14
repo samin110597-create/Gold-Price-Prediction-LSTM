@@ -1,0 +1,1439 @@
+{
+  "status": "ok",
+  "asset": "gold",
+  "symbol": "GC=F",
+  "instrument": "COMEX Gold Futures",
+  "updated_utc": "2026-09-14T06:18:40.579836+00:00",
+  "latest_market_time": "2026-09-14T02:00:00-04:00",
+  "latest_price": 4374.8,
+  "change_pct": 0.197,
+  "guru_summary": {
+    "bias": "Neutral / mixed",
+    "conviction": "Use PASS components only",
+    "model_view": "Gold trend: Strong uptrend. Technical score is 53/100 (Neutral / mixed) and chart structure is Inside recent 10-day structure. RSI is 48.46, ADX is 18.77. Cross-market picture: hurting: US 10Y Yield. Probability backtest: FAIL on all current horizons, so those percentages are shown only as model probabilities. PASS technical prediction: 5D Technical + cross-market meta model with 62.3% accuracy and 4.5% edge. PASS price horizons: 1 Week. Nearest PASS price is 1 Week at $4,374.41 with 58.3% model probability up. 1-year model: Incumbent projection model. Current model price is $4,838.79. Backtest: FAIL. Model probability up: 73.7%.",
+    "trigger": "Above $4,625.50 strengthens the higher-price case. Below $4,292.20 strengthens the lower-price case. Between those levels, conviction should stay lower.",
+    "risk": "Audit grade: FAIL. Component pass rate: 20.0%. Predictive readiness: NOT READY. Only PASS components receive predictive trust. FAIL components may still show a probability, but they have not proved enough historical edge. PASS is evidence, not a guarantee.",
+    "audit_grade": "FAIL",
+    "component_pass_rate": 0.2,
+    "passed_projection_horizons": [
+      "1 Week"
+    ],
+    "passed_technical_horizons": [
+      5
+    ],
+    "passed_probability_horizons": [],
+    "one_year_selected_model": "Incumbent projection model"
+  },
+  "regime": {
+    "overall": "Neutral / mixed",
+    "trend": "Strong uptrend",
+    "macro": "Mixed",
+    "macro_score": -1,
+    "volatility": "High",
+    "volatility_percentile": 0.7804
+  },
+  "indicators": {
+    "ema20": 4408.3,
+    "ema50": 4356.25,
+    "ema200": 4315.77,
+    "rsi14": 48.48,
+    "atr14_pct": 1.6
+  },
+  "levels": {
+    "daily_close_reference": 4373.5,
+    "support_20d": 4292.2,
+    "resistance_20d": 4670.9,
+    "support_60d": 3962.5,
+    "resistance_60d": 4670.9,
+    "atr14_dollars": 70.1,
+    "expected_move_1d": [
+      4303.4,
+      4443.6
+    ],
+    "expected_move_5d": [
+      4216.75,
+      4530.25
+    ]
+  },
+  "factors": [
+    {
+      "key": "silver",
+      "name": "Silver Futures",
+      "symbol": "SI=F",
+      "value": 64.415,
+      "change_5d_pct": -2.47,
+      "change_20d_pct": -0.88,
+      "impact": "Neutral",
+      "reason": "Silver mixed"
+    },
+    {
+      "key": "dxy",
+      "name": "US Dollar Index",
+      "symbol": "DX-Y.NYB",
+      "value": 99.372,
+      "change_5d_pct": 0.21,
+      "change_20d_pct": -0.3,
+      "impact": "Neutral",
+      "reason": "Dollar mixed"
+    },
+    {
+      "key": "us10y",
+      "name": "US 10Y Yield",
+      "symbol": "^TNX",
+      "value": 4.975,
+      "change_5d_pct": 3.99,
+      "change_20d_pct": 5.94,
+      "impact": "Headwind",
+      "reason": "10Y yield rose"
+    },
+    {
+      "key": "vix",
+      "name": "VIX",
+      "symbol": "^VIX",
+      "value": 15.84,
+      "change_5d_pct": 9.02,
+      "change_20d_pct": 11.16,
+      "impact": "Neutral",
+      "reason": "Volatility moderate"
+    },
+    {
+      "key": "spy",
+      "name": "S&P 500 ETF",
+      "symbol": "SPY",
+      "value": 764.29,
+      "change_5d_pct": -0.77,
+      "change_20d_pct": -1.55,
+      "impact": "Neutral",
+      "reason": "Equities mixed"
+    },
+    {
+      "key": "tlt",
+      "name": "Long Treasury ETF",
+      "symbol": "TLT",
+      "value": 80.87,
+      "change_5d_pct": -1.63,
+      "change_20d_pct": -1.43,
+      "impact": "Neutral",
+      "reason": "Bonds mixed"
+    }
+  ],
+  "forecasts": [
+    {
+      "horizon_days": 1,
+      "probability_up": 0.5049,
+      "probability_down": 0.4951,
+      "signal": "NO EDGE / ABSTAIN",
+      "confidence": "Low",
+      "forecast_mid": 4377.91,
+      "range_20_80": [
+        4345.35,
+        4410.73
+      ],
+      "backtest_accuracy": 0.5437,
+      "naive_baseline": 0.5714,
+      "backtest_edge": -0.0278,
+      "brier_score": 0.2503,
+      "model_agreement": 1.0,
+      "test_observations": 504,
+      "validation": "purged expanding-window walk-forward",
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.5134,
+          "walkforward_accuracy": 0.5258,
+          "walkforward_baseline": 0.5714,
+          "brier_score": 0.2555,
+          "weight": 0.3036,
+          "oos_observations": 504
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.5058,
+          "walkforward_accuracy": 0.5417,
+          "walkforward_baseline": 0.5714,
+          "brier_score": 0.248,
+          "weight": 0.314,
+          "oos_observations": 504
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.5354,
+          "walkforward_accuracy": 0.5595,
+          "walkforward_baseline": 0.5714,
+          "brier_score": 0.2481,
+          "weight": 0.3823,
+          "oos_observations": 504
+        }
+      ],
+      "raw_probability_up": 0.5049,
+      "forecast_status": "NO EDGE",
+      "use_in_summary": false,
+      "actionable_probability_up": 0.5
+    },
+    {
+      "horizon_days": 5,
+      "probability_up": 0.5095,
+      "probability_down": 0.4905,
+      "signal": "NO EDGE / ABSTAIN",
+      "confidence": "Low",
+      "forecast_mid": 4392.62,
+      "range_20_80": [
+        4309.25,
+        4472.11
+      ],
+      "backtest_accuracy": 0.4717,
+      "naive_baseline": 0.6131,
+      "backtest_edge": -0.1414,
+      "brier_score": 0.2755,
+      "model_agreement": 0.6667,
+      "test_observations": 504,
+      "validation": "purged expanding-window walk-forward",
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.5356,
+          "walkforward_accuracy": 0.4782,
+          "walkforward_baseline": 0.6131,
+          "brier_score": 0.2906,
+          "weight": 0.3111,
+          "oos_observations": 504
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.4976,
+          "walkforward_accuracy": 0.4504,
+          "walkforward_baseline": 0.6131,
+          "brier_score": 0.2627,
+          "weight": 0.3538,
+          "oos_observations": 504
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.5826,
+          "walkforward_accuracy": 0.4881,
+          "walkforward_baseline": 0.6131,
+          "brier_score": 0.2749,
+          "weight": 0.3351,
+          "oos_observations": 504
+        }
+      ],
+      "raw_probability_up": 0.5095,
+      "forecast_status": "NO EDGE",
+      "use_in_summary": false,
+      "actionable_probability_up": 0.5
+    },
+    {
+      "horizon_days": 20,
+      "probability_up": 0.5087,
+      "probability_down": 0.4913,
+      "signal": "NO EDGE / ABSTAIN",
+      "confidence": "Low",
+      "forecast_mid": 4429.96,
+      "range_20_80": [
+        4279.54,
+        4625.36
+      ],
+      "backtest_accuracy": 0.4611,
+      "naive_baseline": 0.6746,
+      "backtest_edge": -0.2135,
+      "brier_score": 0.2968,
+      "model_agreement": 0.6667,
+      "test_observations": 504,
+      "validation": "purged expanding-window walk-forward",
+      "models": [
+        {
+          "name": "Logistic",
+          "probability_up": 0.6353,
+          "walkforward_accuracy": 0.3988,
+          "walkforward_baseline": 0.6746,
+          "brier_score": 0.3641,
+          "weight": 0.3005,
+          "oos_observations": 504
+        },
+        {
+          "name": "Random Forest",
+          "probability_up": 0.4639,
+          "walkforward_accuracy": 0.4028,
+          "walkforward_baseline": 0.6746,
+          "brier_score": 0.2789,
+          "weight": 0.3334,
+          "oos_observations": 504
+        },
+        {
+          "name": "Gradient Boost",
+          "probability_up": 0.5164,
+          "walkforward_accuracy": 0.5655,
+          "walkforward_baseline": 0.6746,
+          "brier_score": 0.2578,
+          "weight": 0.3661,
+          "oos_observations": 504
+        }
+      ],
+      "raw_probability_up": 0.5087,
+      "forecast_status": "NO EDGE",
+      "use_in_summary": false,
+      "actionable_probability_up": 0.5
+    }
+  ],
+  "series": [
+    {
+      "date": "2025-09-02",
+      "close": 3549.4
+    },
+    {
+      "date": "2025-09-03",
+      "close": 3593.2
+    },
+    {
+      "date": "2025-09-04",
+      "close": 3565.8
+    },
+    {
+      "date": "2025-09-05",
+      "close": 3613.2
+    },
+    {
+      "date": "2025-09-08",
+      "close": 3638.1
+    },
+    {
+      "date": "2025-09-09",
+      "close": 3643.3
+    },
+    {
+      "date": "2025-09-10",
+      "close": 3643.6
+    },
+    {
+      "date": "2025-09-11",
+      "close": 3636.9
+    },
+    {
+      "date": "2025-09-12",
+      "close": 3649.4
+    },
+    {
+      "date": "2025-09-15",
+      "close": 3682.2
+    },
+    {
+      "date": "2025-09-16",
+      "close": 3688.9
+    },
+    {
+      "date": "2025-09-17",
+      "close": 3681.8
+    },
+    {
+      "date": "2025-09-18",
+      "close": 3643.7
+    },
+    {
+      "date": "2025-09-19",
+      "close": 3671.5
+    },
+    {
+      "date": "2025-09-22",
+      "close": 3740.7
+    },
+    {
+      "date": "2025-09-23",
+      "close": 3780.6
+    },
+    {
+      "date": "2025-09-24",
+      "close": 3732.1
+    },
+    {
+      "date": "2025-09-25",
+      "close": 3736.9
+    },
+    {
+      "date": "2025-09-26",
+      "close": 3775.3
+    },
+    {
+      "date": "2025-09-29",
+      "close": 3820.9
+    },
+    {
+      "date": "2025-09-30",
+      "close": 3840.8
+    },
+    {
+      "date": "2025-10-01",
+      "close": 3867.5
+    },
+    {
+      "date": "2025-10-02",
+      "close": 3839.7
+    },
+    {
+      "date": "2025-10-03",
+      "close": 3880.8
+    },
+    {
+      "date": "2025-10-06",
+      "close": 3948.5
+    },
+    {
+      "date": "2025-10-07",
+      "close": 3976.6
+    },
+    {
+      "date": "2025-10-08",
+      "close": 4043.3
+    },
+    {
+      "date": "2025-10-09",
+      "close": 3946.3
+    },
+    {
+      "date": "2025-10-10",
+      "close": 3975.9
+    },
+    {
+      "date": "2025-10-13",
+      "close": 4108.6
+    },
+    {
+      "date": "2025-10-14",
+      "close": 4138.7
+    },
+    {
+      "date": "2025-10-15",
+      "close": 4176.9
+    },
+    {
+      "date": "2025-10-16",
+      "close": 4280.2
+    },
+    {
+      "date": "2025-10-17",
+      "close": 4189.9
+    },
+    {
+      "date": "2025-10-20",
+      "close": 4336.4
+    },
+    {
+      "date": "2025-10-21",
+      "close": 4087.7
+    },
+    {
+      "date": "2025-10-22",
+      "close": 4044.4
+    },
+    {
+      "date": "2025-10-23",
+      "close": 4125.5
+    },
+    {
+      "date": "2025-10-24",
+      "close": 4118.4
+    },
+    {
+      "date": "2025-10-27",
+      "close": 4001.9
+    },
+    {
+      "date": "2025-10-28",
+      "close": 3966.2
+    },
+    {
+      "date": "2025-10-29",
+      "close": 3983.7
+    },
+    {
+      "date": "2025-10-30",
+      "close": 4001.3
+    },
+    {
+      "date": "2025-10-31",
+      "close": 3982.2
+    },
+    {
+      "date": "2025-11-03",
+      "close": 4000.3
+    },
+    {
+      "date": "2025-11-04",
+      "close": 3947.7
+    },
+    {
+      "date": "2025-11-05",
+      "close": 3980.3
+    },
+    {
+      "date": "2025-11-06",
+      "close": 3979.9
+    },
+    {
+      "date": "2025-11-07",
+      "close": 3999.4
+    },
+    {
+      "date": "2025-11-10",
+      "close": 4111.8
+    },
+    {
+      "date": "2025-11-11",
+      "close": 4106.8
+    },
+    {
+      "date": "2025-11-12",
+      "close": 4204.4
+    },
+    {
+      "date": "2025-11-13",
+      "close": 4186.9
+    },
+    {
+      "date": "2025-11-14",
+      "close": 4087.6
+    },
+    {
+      "date": "2025-11-17",
+      "close": 4068.3
+    },
+    {
+      "date": "2025-11-18",
+      "close": 4061.3
+    },
+    {
+      "date": "2025-11-19",
+      "close": 4077.7
+    },
+    {
+      "date": "2025-11-20",
+      "close": 4056.5
+    },
+    {
+      "date": "2025-11-21",
+      "close": 4076.7
+    },
+    {
+      "date": "2025-11-24",
+      "close": 4091.9
+    },
+    {
+      "date": "2025-11-25",
+      "close": 4139.2
+    },
+    {
+      "date": "2025-11-26",
+      "close": 4165.2
+    },
+    {
+      "date": "2025-11-28",
+      "close": 4218.3
+    },
+    {
+      "date": "2025-12-01",
+      "close": 4239.3
+    },
+    {
+      "date": "2025-12-02",
+      "close": 4186.6
+    },
+    {
+      "date": "2025-12-03",
+      "close": 4199.3
+    },
+    {
+      "date": "2025-12-04",
+      "close": 4211.8
+    },
+    {
+      "date": "2025-12-05",
+      "close": 4212.9
+    },
+    {
+      "date": "2025-12-08",
+      "close": 4187.2
+    },
+    {
+      "date": "2025-12-09",
+      "close": 4206.7
+    },
+    {
+      "date": "2025-12-10",
+      "close": 4196.4
+    },
+    {
+      "date": "2025-12-11",
+      "close": 4285.5
+    },
+    {
+      "date": "2025-12-12",
+      "close": 4300.1
+    },
+    {
+      "date": "2025-12-15",
+      "close": 4306.7
+    },
+    {
+      "date": "2025-12-16",
+      "close": 4304.5
+    },
+    {
+      "date": "2025-12-17",
+      "close": 4347.5
+    },
+    {
+      "date": "2025-12-18",
+      "close": 4339.5
+    },
+    {
+      "date": "2025-12-19",
+      "close": 4361.4
+    },
+    {
+      "date": "2025-12-22",
+      "close": 4444.6
+    },
+    {
+      "date": "2025-12-23",
+      "close": 4482.8
+    },
+    {
+      "date": "2025-12-24",
+      "close": 4480.6
+    },
+    {
+      "date": "2025-12-26",
+      "close": 4529.1
+    },
+    {
+      "date": "2025-12-29",
+      "close": 4325.1
+    },
+    {
+      "date": "2025-12-30",
+      "close": 4370.1
+    },
+    {
+      "date": "2025-12-31",
+      "close": 4325.6
+    },
+    {
+      "date": "2026-01-02",
+      "close": 4314.4
+    },
+    {
+      "date": "2026-01-05",
+      "close": 4436.9
+    },
+    {
+      "date": "2026-01-06",
+      "close": 4482.2
+    },
+    {
+      "date": "2026-01-07",
+      "close": 4449.3
+    },
+    {
+      "date": "2026-01-08",
+      "close": 4449.7
+    },
+    {
+      "date": "2026-01-09",
+      "close": 4490.3
+    },
+    {
+      "date": "2026-01-12",
+      "close": 4604.3
+    },
+    {
+      "date": "2026-01-13",
+      "close": 4589.2
+    },
+    {
+      "date": "2026-01-14",
+      "close": 4626.3
+    },
+    {
+      "date": "2026-01-15",
+      "close": 4616.3
+    },
+    {
+      "date": "2026-01-16",
+      "close": 4588.4
+    },
+    {
+      "date": "2026-01-20",
+      "close": 4759.6
+    },
+    {
+      "date": "2026-01-21",
+      "close": 4831.8
+    },
+    {
+      "date": "2026-01-22",
+      "close": 4908.8
+    },
+    {
+      "date": "2026-01-23",
+      "close": 4976.2
+    },
+    {
+      "date": "2026-01-26",
+      "close": 5079.7
+    },
+    {
+      "date": "2026-01-27",
+      "close": 5079.9
+    },
+    {
+      "date": "2026-01-28",
+      "close": 5301.6
+    },
+    {
+      "date": "2026-01-29",
+      "close": 5318.4
+    },
+    {
+      "date": "2026-01-30",
+      "close": 4713.9
+    },
+    {
+      "date": "2026-02-02",
+      "close": 4622.5
+    },
+    {
+      "date": "2026-02-03",
+      "close": 4903.7
+    },
+    {
+      "date": "2026-02-04",
+      "close": 4920.4
+    },
+    {
+      "date": "2026-02-05",
+      "close": 4861.4
+    },
+    {
+      "date": "2026-02-06",
+      "close": 4951.2
+    },
+    {
+      "date": "2026-02-09",
+      "close": 5050.9
+    },
+    {
+      "date": "2026-02-10",
+      "close": 5003.8
+    },
+    {
+      "date": "2026-02-11",
+      "close": 5071.6
+    },
+    {
+      "date": "2026-02-12",
+      "close": 4923.7
+    },
+    {
+      "date": "2026-02-13",
+      "close": 5022.0
+    },
+    {
+      "date": "2026-02-17",
+      "close": 4882.9
+    },
+    {
+      "date": "2026-02-18",
+      "close": 4986.5
+    },
+    {
+      "date": "2026-02-19",
+      "close": 4975.9
+    },
+    {
+      "date": "2026-02-20",
+      "close": 5059.3
+    },
+    {
+      "date": "2026-02-23",
+      "close": 5204.7
+    },
+    {
+      "date": "2026-02-24",
+      "close": 5155.8
+    },
+    {
+      "date": "2026-02-25",
+      "close": 5206.4
+    },
+    {
+      "date": "2026-02-26",
+      "close": 5176.5
+    },
+    {
+      "date": "2026-02-27",
+      "close": 5230.5
+    },
+    {
+      "date": "2026-03-02",
+      "close": 5294.4
+    },
+    {
+      "date": "2026-03-03",
+      "close": 5107.4
+    },
+    {
+      "date": "2026-03-04",
+      "close": 5120.2
+    },
+    {
+      "date": "2026-03-05",
+      "close": 5065.3
+    },
+    {
+      "date": "2026-03-06",
+      "close": 5146.1
+    },
+    {
+      "date": "2026-03-09",
+      "close": 5091.5
+    },
+    {
+      "date": "2026-03-10",
+      "close": 5229.7
+    },
+    {
+      "date": "2026-03-11",
+      "close": 5167.4
+    },
+    {
+      "date": "2026-03-12",
+      "close": 5115.8
+    },
+    {
+      "date": "2026-03-13",
+      "close": 5052.5
+    },
+    {
+      "date": "2026-03-16",
+      "close": 4994.0
+    },
+    {
+      "date": "2026-03-17",
+      "close": 5001.0
+    },
+    {
+      "date": "2026-03-18",
+      "close": 4889.9
+    },
+    {
+      "date": "2026-03-19",
+      "close": 4600.7
+    },
+    {
+      "date": "2026-03-20",
+      "close": 4570.4
+    },
+    {
+      "date": "2026-03-23",
+      "close": 4404.1
+    },
+    {
+      "date": "2026-03-24",
+      "close": 4399.3
+    },
+    {
+      "date": "2026-03-25",
+      "close": 4549.8
+    },
+    {
+      "date": "2026-03-26",
+      "close": 4375.5
+    },
+    {
+      "date": "2026-03-27",
+      "close": 4492.0
+    },
+    {
+      "date": "2026-03-30",
+      "close": 4526.0
+    },
+    {
+      "date": "2026-03-31",
+      "close": 4647.6
+    },
+    {
+      "date": "2026-04-01",
+      "close": 4783.2
+    },
+    {
+      "date": "2026-04-02",
+      "close": 4651.5
+    },
+    {
+      "date": "2026-04-06",
+      "close": 4656.8
+    },
+    {
+      "date": "2026-04-07",
+      "close": 4657.1
+    },
+    {
+      "date": "2026-04-08",
+      "close": 4749.5
+    },
+    {
+      "date": "2026-04-09",
+      "close": 4792.2
+    },
+    {
+      "date": "2026-04-10",
+      "close": 4761.9
+    },
+    {
+      "date": "2026-04-13",
+      "close": 4742.4
+    },
+    {
+      "date": "2026-04-14",
+      "close": 4825.0
+    },
+    {
+      "date": "2026-04-15",
+      "close": 4800.0
+    },
+    {
+      "date": "2026-04-16",
+      "close": 4785.4
+    },
+    {
+      "date": "2026-04-17",
+      "close": 4857.6
+    },
+    {
+      "date": "2026-04-20",
+      "close": 4806.6
+    },
+    {
+      "date": "2026-04-21",
+      "close": 4698.4
+    },
+    {
+      "date": "2026-04-22",
+      "close": 4732.5
+    },
+    {
+      "date": "2026-04-23",
+      "close": 4705.1
+    },
+    {
+      "date": "2026-04-24",
+      "close": 4722.3
+    },
+    {
+      "date": "2026-04-27",
+      "close": 4675.4
+    },
+    {
+      "date": "2026-04-28",
+      "close": 4591.5
+    },
+    {
+      "date": "2026-04-29",
+      "close": 4545.2
+    },
+    {
+      "date": "2026-04-30",
+      "close": 4614.7
+    },
+    {
+      "date": "2026-05-01",
+      "close": 4629.9
+    },
+    {
+      "date": "2026-05-04",
+      "close": 4519.5
+    },
+    {
+      "date": "2026-05-05",
+      "close": 4555.8
+    },
+    {
+      "date": "2026-05-06",
+      "close": 4681.9
+    },
+    {
+      "date": "2026-05-07",
+      "close": 4699.8
+    },
+    {
+      "date": "2026-05-08",
+      "close": 4720.4
+    },
+    {
+      "date": "2026-05-11",
+      "close": 4718.7
+    },
+    {
+      "date": "2026-05-12",
+      "close": 4677.6
+    },
+    {
+      "date": "2026-05-13",
+      "close": 4697.7
+    },
+    {
+      "date": "2026-05-14",
+      "close": 4678.1
+    },
+    {
+      "date": "2026-05-15",
+      "close": 4555.8
+    },
+    {
+      "date": "2026-05-18",
+      "close": 4552.5
+    },
+    {
+      "date": "2026-05-19",
+      "close": 4506.3
+    },
+    {
+      "date": "2026-05-20",
+      "close": 4531.3
+    },
+    {
+      "date": "2026-05-21",
+      "close": 4539.8
+    },
+    {
+      "date": "2026-05-22",
+      "close": 4521.0
+    },
+    {
+      "date": "2026-05-26",
+      "close": 4500.4
+    },
+    {
+      "date": "2026-05-27",
+      "close": 4447.5
+    },
+    {
+      "date": "2026-05-28",
+      "close": 4499.3
+    },
+    {
+      "date": "2026-05-29",
+      "close": 4560.5
+    },
+    {
+      "date": "2026-06-01",
+      "close": 4475.2
+    },
+    {
+      "date": "2026-06-02",
+      "close": 4489.1
+    },
+    {
+      "date": "2026-06-03",
+      "close": 4436.7
+    },
+    {
+      "date": "2026-06-04",
+      "close": 4475.8
+    },
+    {
+      "date": "2026-06-05",
+      "close": 4337.1
+    },
+    {
+      "date": "2026-06-08",
+      "close": 4335.9
+    },
+    {
+      "date": "2026-06-09",
+      "close": 4260.0
+    },
+    {
+      "date": "2026-06-10",
+      "close": 4108.2
+    },
+    {
+      "date": "2026-06-11",
+      "close": 4090.3
+    },
+    {
+      "date": "2026-06-12",
+      "close": 4215.0
+    },
+    {
+      "date": "2026-06-15",
+      "close": 4328.0
+    },
+    {
+      "date": "2026-06-16",
+      "close": 4330.9
+    },
+    {
+      "date": "2026-06-17",
+      "close": 4358.9
+    },
+    {
+      "date": "2026-06-18",
+      "close": 4224.1
+    },
+    {
+      "date": "2026-06-22",
+      "close": 4181.9
+    },
+    {
+      "date": "2026-06-23",
+      "close": 4129.9
+    },
+    {
+      "date": "2026-06-24",
+      "close": 3990.3
+    },
+    {
+      "date": "2026-06-25",
+      "close": 4030.5
+    },
+    {
+      "date": "2026-06-26",
+      "close": 4078.7
+    },
+    {
+      "date": "2026-06-29",
+      "close": 4022.3
+    },
+    {
+      "date": "2026-06-30",
+      "close": 4022.9
+    },
+    {
+      "date": "2026-07-01",
+      "close": 4068.3
+    },
+    {
+      "date": "2026-07-02",
+      "close": 4112.7
+    },
+    {
+      "date": "2026-07-06",
+      "close": 4155.1
+    },
+    {
+      "date": "2026-07-07",
+      "close": 4145.3
+    },
+    {
+      "date": "2026-07-08",
+      "close": 4070.9
+    },
+    {
+      "date": "2026-07-09",
+      "close": 4130.6
+    },
+    {
+      "date": "2026-07-10",
+      "close": 4104.1
+    },
+    {
+      "date": "2026-07-13",
+      "close": 3997.0
+    },
+    {
+      "date": "2026-07-14",
+      "close": 4061.1
+    },
+    {
+      "date": "2026-07-15",
+      "close": 4044.0
+    },
+    {
+      "date": "2026-07-16",
+      "close": 3985.6
+    },
+    {
+      "date": "2026-07-17",
+      "close": 4012.7
+    },
+    {
+      "date": "2026-07-20",
+      "close": 4010.3
+    },
+    {
+      "date": "2026-07-21",
+      "close": 4071.1
+    },
+    {
+      "date": "2026-07-22",
+      "close": 4146.9
+    },
+    {
+      "date": "2026-07-23",
+      "close": 4046.6
+    },
+    {
+      "date": "2026-07-24",
+      "close": 4067.6
+    },
+    {
+      "date": "2026-07-27",
+      "close": 4074.5
+    },
+    {
+      "date": "2026-07-28",
+      "close": 4036.3
+    },
+    {
+      "date": "2026-07-29",
+      "close": 4034.7
+    },
+    {
+      "date": "2026-07-30",
+      "close": 4100.1
+    },
+    {
+      "date": "2026-07-31",
+      "close": 4049.1
+    },
+    {
+      "date": "2026-08-03",
+      "close": 4033.7
+    },
+    {
+      "date": "2026-08-04",
+      "close": 4095.4
+    },
+    {
+      "date": "2026-08-05",
+      "close": 4245.8
+    },
+    {
+      "date": "2026-08-06",
+      "close": 4242.0
+    },
+    {
+      "date": "2026-08-07",
+      "close": 4340.7
+    },
+    {
+      "date": "2026-08-10",
+      "close": 4361.8
+    },
+    {
+      "date": "2026-08-11",
+      "close": 4383.0
+    },
+    {
+      "date": "2026-08-12",
+      "close": 4408.9
+    },
+    {
+      "date": "2026-08-13",
+      "close": 4363.6
+    },
+    {
+      "date": "2026-08-14",
+      "close": 4380.4
+    },
+    {
+      "date": "2026-08-17",
+      "close": 4417.8
+    },
+    {
+      "date": "2026-08-18",
+      "close": 4366.0
+    },
+    {
+      "date": "2026-08-19",
+      "close": 4489.4
+    },
+    {
+      "date": "2026-08-20",
+      "close": 4516.3
+    },
+    {
+      "date": "2026-08-21",
+      "close": 4624.1
+    },
+    {
+      "date": "2026-08-24",
+      "close": 4640.8
+    },
+    {
+      "date": "2026-08-25",
+      "close": 4638.1
+    },
+    {
+      "date": "2026-08-26",
+      "close": 4598.2
+    },
+    {
+      "date": "2026-08-27",
+      "close": 4609.7
+    },
+    {
+      "date": "2026-08-28",
+      "close": 4478.1
+    },
+    {
+      "date": "2026-08-31",
+      "close": 4431.1
+    },
+    {
+      "date": "2026-09-01",
+      "close": 4348.0
+    },
+    {
+      "date": "2026-09-02",
+      "close": 4366.3
+    },
+    {
+      "date": "2026-09-03",
+      "close": 4491.7
+    },
+    {
+      "date": "2026-09-04",
+      "close": 4429.8
+    },
+    {
+      "date": "2026-09-08",
+      "close": 4393.9
+    },
+    {
+      "date": "2026-09-09",
+      "close": 4416.0
+    },
+    {
+      "date": "2026-09-10",
+      "close": 4364.5
+    },
+    {
+      "date": "2026-09-11",
+      "close": 4366.2
+    },
+    {
+      "date": "2026-09-14",
+      "close": 4373.5
+    }
+  ],
+  "methodology": "Purged expanding-window walk-forward ensemble using momentum, trend, volatility and cross-market factors.",
+  "disclaimer": "Research/education only; probabilistic and can be wrong.",
+  "meaningful_probability_v4": [
+    {
+      "horizon_days": 1,
+      "probability_down": 0.2533,
+      "probability_no_edge": 0.4686,
+      "probability_up": 0.2781,
+      "signal": "NO EDGE",
+      "pass": false,
+      "oos_accuracy": 0.4048,
+      "majority_baseline": 0.4286,
+      "balanced_accuracy": 0.3667,
+      "active_direction_accuracy": 0.0,
+      "active_baseline": 0.0,
+      "active_edge": 0.0,
+      "active_signals": 0,
+      "walkforward_origins": 42,
+      "multiclass_brier": 0.6403,
+      "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
+      "models": [
+        {
+          "name": "Logistic",
+          "down": 0.266,
+          "no_edge": 0.4521,
+          "up": 0.2819
+        },
+        {
+          "name": "Extra Trees",
+          "down": 0.2905,
+          "no_edge": 0.3929,
+          "up": 0.3166
+        },
+        {
+          "name": "Gradient Boost",
+          "down": 0.2034,
+          "no_edge": 0.5608,
+          "up": 0.2358
+        }
+      ]
+    },
+    {
+      "horizon_days": 5,
+      "probability_down": 0.1924,
+      "probability_no_edge": 0.5462,
+      "probability_up": 0.2614,
+      "signal": "NO EDGE",
+      "pass": false,
+      "oos_accuracy": 0.381,
+      "majority_baseline": 0.3571,
+      "balanced_accuracy": 0.3322,
+      "active_direction_accuracy": 0.5,
+      "active_baseline": 0.5,
+      "active_edge": 0.0,
+      "active_signals": 2,
+      "walkforward_origins": 42,
+      "multiclass_brier": 0.64,
+      "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
+      "models": [
+        {
+          "name": "Logistic",
+          "down": 0.18,
+          "no_edge": 0.4543,
+          "up": 0.3656
+        },
+        {
+          "name": "Extra Trees",
+          "down": 0.2552,
+          "no_edge": 0.5214,
+          "up": 0.2233
+        },
+        {
+          "name": "Gradient Boost",
+          "down": 0.1419,
+          "no_edge": 0.6629,
+          "up": 0.1952
+        }
+      ]
+    },
+    {
+      "horizon_days": 20,
+      "probability_down": 0.1695,
+      "probability_no_edge": 0.5478,
+      "probability_up": 0.2828,
+      "signal": "NO EDGE",
+      "pass": false,
+      "oos_accuracy": 0.4286,
+      "majority_baseline": 0.4524,
+      "balanced_accuracy": 0.3158,
+      "active_direction_accuracy": 1.0,
+      "active_baseline": 1.0,
+      "active_edge": 0.0,
+      "active_signals": 2,
+      "walkforward_origins": 42,
+      "multiclass_brier": 0.6516,
+      "validation": "V4 purged expanding-origin 3-state meaningful-move classifier using proven V2 aligned data pipeline",
+      "models": [
+        {
+          "name": "Logistic",
+          "down": 0.1518,
+          "no_edge": 0.4675,
+          "up": 0.3806
+        },
+        {
+          "name": "Extra Trees",
+          "down": 0.246,
+          "no_edge": 0.4889,
+          "up": 0.2652
+        },
+        {
+          "name": "Gradient Boost",
+          "down": 0.1106,
+          "no_edge": 0.6869,
+          "up": 0.2025
+        }
+      ]
+    }
+  ],
+  "probability_gate_note": "Probability forecasts that do not beat baseline with acceptable Brier score are excluded from the top-level view. Raw probabilities remain visible for audit."
+}
