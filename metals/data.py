@@ -98,8 +98,21 @@ def clean(raw, asset, interval, asof):
         expected = pd.DatetimeIndex(ends)
     report["outside_calendar"] = int(frame.index.isna().sum())
     frame = frame.loc[frame.index.notna()]
-    report["forming_bars_excluded"] = int((frame.index > asof).sum())
-    frame = frame.loc[frame.index <= asof]
+    completed_cutoff=asof
+    provider_time=raw.get("meta",{}).get("regularMarketTime")
+    if provider_time:
+        observed=pd.Timestamp(provider_time,unit="s",tz="UTC")
+        if observed<=asof:
+            # A delayed current candle can have a nominal end before our wall clock.
+            # It is still forming at the provider. A closed session is allowed only
+            # after a conservative 30-minute finalization allowance.
+            finalized=cal.market_close[cal.market_close<=asof-pd.Timedelta(minutes=30)]
+            completed_cutoff=max(observed,finalized.iloc[-1]) if len(finalized) else observed
+            completed_cutoff=min(asof,completed_cutoff)
+    report["provider_available_through"]=completed_cutoff.isoformat()
+    report["provider_pending_bars_excluded"]=int(((frame.index>completed_cutoff)&(frame.index<=asof)).sum())
+    report["forming_bars_excluded"] = int((frame.index > completed_cutoff).sum())
+    frame = frame.loc[frame.index <= completed_cutoff]
     if len(frame) < 60:
         raise ValueError(f"{asset}/{interval}: insufficient completed data")
     expected = expected[(expected >= frame.index[0]) & (expected <= asof)]
