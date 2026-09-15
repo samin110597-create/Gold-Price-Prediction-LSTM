@@ -4,11 +4,12 @@ on:
   schedule:
     - cron: "17 * * * *"
   push:
-    branches: [master, work/causal-metals-release]
+    branches: [master, work/technical-signal-education]
     paths:
       - "metals/**"
       - "scripts/**"
-      - "tests/test_canonical.py"
+      - "tests/**"
+      - "assets/**"
       - "requirements-canonical.txt"
       - "index.html"
       - ".github/workflows/canonical-metals.yml"
@@ -39,7 +40,7 @@ jobs:
           pip install playwright==1.51.0
           python -m playwright install --with-deps chromium
       - name: Regression and causal timing tests
-        run: python -m pytest tests/test_canonical.py -q --junitxml=test-results.xml
+        run: python -m pytest tests -q --junitxml=test-results.xml
       - name: Fetch one snapshot and evaluate both metals
         env:
           OPENBLAS_NUM_THREADS: "1"
@@ -49,6 +50,7 @@ jobs:
         run: |
           mkdir -p site/data
           cp index.html site/index.html
+          cp -R assets site/assets
           cp -R .stage/. site/data/
           touch site/.nojekyll
       - name: Exercise gold silver modes and timeframes
@@ -66,7 +68,7 @@ jobs:
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/validation data/setup_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
+          git add data/dashboard.json data/validation data/setup_ledger.json data/signal_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
           if ! git diff --cached --quiet; then
             git commit -m "Publish coherent causal metals snapshot"
             git push origin "HEAD:$METALS_BRANCH"

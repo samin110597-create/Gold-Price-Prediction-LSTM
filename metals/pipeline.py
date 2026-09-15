@@ -14,6 +14,7 @@ from metals.models import evaluate, features
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve
 from metals.signal_audit import evaluate_events
+from metals.trading_signals import catalog, detect, historical_audit, workbench
 
 def safe(value):
     if isinstance(value,dict):
@@ -66,6 +67,14 @@ def validate(payload):
                 assert pd.Timestamp(e["time"])<=pd.Timestamp(detail["last_completed"])
                 if e.get("pivot_time"):
                     assert e["pivot_time"]<=e["time"]
+            for signal in detail.get("trading_signals",{}).get("items",[]):
+                assert signal["time"]<=detail["last_completed"]
+                assert signal["probability"] is None
+                assert signal["trigger"]>0 and signal["stop"]>0
+                assert (signal["trigger"]-signal["stop"])*signal["direction"]>0
+                assert all(t["known_at"]<=signal["time"] and (t["price"]-signal["trigger"])*signal["direction"]>0 for t in signal["targets"])
+                if not signal["fresh"] or signal["quote_tested"]:
+                    assert not signal["watch_eligible"]
         for setup in a["setups"].values():
             if setup["id"]:
                 valid,rr=geometry(setup["direction"],setup["entry_zone"],setup["stop"],setup["targets"])
@@ -91,6 +100,8 @@ def run(raw_folder,stage,history):
     payload={"schema_version":1,"version":VERSION,"run_id":run_id,"asof":asof.isoformat(),"commit":commit,"code_hash":code_hash,"source_hash":manifest["source_hash"],"assets":{},"context":{},"limitations":["Yahoo continuous futures; per-bar contract mapping and revision vintages unavailable.","No exchange order book, participant identities or validated event calendar.","OHLCV liquidity and absorption labels are proxies.","Legacy model files and their frozen baseline are research history; corrected metrics are a new evaluation lineage."]}
     all_frames={}
     setup_ledger=read(history/"setup_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
+    signal_ledger=read(history/"signal_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
+    payload["signal_catalog"]=catalog()
     forecast_ledger=read(history/"forward_ledger_v2.json",{"schema_version":2,"issued":{},"outcomes":{},"legacy_note":"Original forward_validation_ledger.json preserved separately; nearest-bar legacy scores are unverified."})
     for asset,symbol in SYMBOLS.items():
         print("Building",asset,flush=True)
@@ -104,14 +115,20 @@ def run(raw_folder,stage,history):
         all_frames[asset]=frames
         print("DATA DIAGNOSTIC",asset,json.dumps({k:{"bars":len(v),"feature_complete":int(features(v).notna().all(axis=1).sum()),"gaps":int(v.gap_before.sum()),"rolls":int(v.roll_gap_proxy.sum()),"cmf_missing":int(v.cmf.isna().sum()),"quality":reports[k]} for k,v in frames.items()}),flush=True)
         analyses={}
+        detected={}
+        higher_map={"15m":"1h","1h":"4h","4h":"1d","1d":"1w","1w":None}
         columns=["open","high","low","close","volume","ema20","ema50","bb_upper","bb_lower","rsi","macd_hist"]
         for tf in ("15m","1h","4h","1d","1w"):
             frame=frames[tf]
-            structure=scan(frame)
+            structure=scan(frame,retain_all=True)
+            detected[tf]=detect(frame,structure,asset,tf,frames.get(higher_map[tf]))
+            replay_report=historical_audit(detected[tf],frame)
+            write(stage/"validation"/(asset+"_"+tf+"_playbooks.json"),replay_report)
             chart=[{"time":t.isoformat(),**{k:r[k] for k in columns}} for t,r in frame.iloc[-150:].iterrows()]
             structure["pivots"]=structure["pivots"][-40:]
             structure["events"]=structure["events"][-60:]
             analyses[tf]={"last_completed":frame.index[-1].isoformat(),"quality":reports[tf],"indicators":{k:v for k,v in frame.iloc[-1].items() if k not in ("open_at","gap_before","roll_gap_proxy")},"structure":structure,"evidence":families(frame,structure),"chart":chart,"context":price_context(structure,frame)}
+            analyses[tf]["playbook_audit"]={"status":replay_report["status"],"note":replay_report["note"],"modes":{m:v["by_rule"] for m,v in replay_report["modes"].items()},"file":"data/validation/"+asset+"_"+tf+"_playbooks.json"}
         signal_audit=evaluate_events(frames["1d"])
         write(stage/"validation"/(asset+"_signals.json"),signal_audit)
         forecasts={}
@@ -142,6 +159,8 @@ def run(raw_folder,stage,history):
         qp=raw.get("regularMarketPrice")
         if qp and quote_frame.index[-1]<=qt<=asof:
             quote.update(price=float(qp),time=qt.isoformat(),basis="Yahoo timestamped quote")
+        for tf in analyses:
+            analyses[tf]["trading_signals"]=workbench(detected[tf],frames[tf],signal_ledger,asof.isoformat(),reports[tf]["latest_expected_bar_present"],quote,higher_fresh=reports.get(higher_map[tf],{}).get("latest_expected_bar_present",False))
         fresh=all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
         setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d"))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
         payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
@@ -165,6 +184,7 @@ def run(raw_folder,stage,history):
     validate(payload)
     write(stage/"dashboard.json",payload)
     write(stage/"setup_ledger.json",setup_ledger)
+    write(stage/"signal_ledger.json",signal_ledger)
     write(stage/"forward_ledger_v2.json",forecast_ledger)
     write(stage/"run_manifest.json",{"run_id":run_id,"asof":asof.isoformat(),"commit":commit,"code_hash":code_hash,"snapshot":manifest,"files":{str(p.relative_to(stage)):hashlib.sha256(p.read_bytes()).hexdigest() for p in stage.rglob("*.json") if p.name!="run_manifest.json"}})
     print("VALIDATED coherent staged payload",run_id,flush=True)

@@ -43,3 +43,7 @@ Yahoo continuous futures do not provide verified per-bar contract mappings or hi
 External daily prices are lagged by 24 hours and are context only. A verified release calendar, vintage-safe long-horizon macro model, validated Elliott/Wyckoff phase model, and independently validated Strict/Adaptive barrier probabilities are unavailable. These are explicitly withheld.
 
 Correctness improvements do not establish better predictive accuracy. No profitable-trading or out-of-sample performance improvement is claimed.
+
+## Technical signals and education
+
+The technical workbench adds 17 causal playbooks with fixed triggers, stops and available TP1/TP2, Strict/Adaptive filters, chart markers, individual lessons and separate historical replay evidence. See [TECHNICAL_SIGNALS.md](TECHNICAL_SIGNALS.md) for the exact interpretation and limitations. Replay hit rates are not live calibrated probabilities.

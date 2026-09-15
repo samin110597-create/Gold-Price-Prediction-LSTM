@@ -41,10 +41,29 @@ with sync_playwright() as p:
             page.locator('[data-tf="'+tf+'"]').click()
             assert page.locator('[data-tf="'+tf+'"]').get_attribute("aria-pressed")=="true"
             assert page.locator("#chart").evaluate("(c)=>c.width>0 && c.height>0")
+            assert page.locator("#signal-workbench").is_visible()
+        page.locator('[data-signal-view="learn"]').click()
+        assert page.locator('[data-lesson]').count()==17
+        page.locator('[data-lesson="SWEEP_DIVERGENCE"] summary').click()
+        assert page.locator('[data-lesson="SWEEP_DIVERGENCE"]').get_attribute("open") is not None
+        page.locator('#signal-family').select_option('Momentum')
+        assert page.locator('[data-lesson]').count()==2
+        page.locator('[data-signal-view="replay"]').click()
+        assert page.locator('.signal-table tbody tr').count()==2
+        page.locator('[data-signal-mode="Adaptive"]').click()
+        assert page.locator('[data-signal-mode="Adaptive"]').get_attribute('aria-pressed')=='true'
+        page.locator('#signal-family').select_option('All')
+        page.locator('[data-signal-view="trade"]').click()
+        page.locator('#signal-scope').select_option('watch')
+        for card in page.locator('[data-signal-card]').all():
+            assert 'WATCH' in card.inner_text() or 'CONFIRMED' in card.inner_text()
+        page.locator('#signal-scope').select_option('recent')
+        page.locator('#signal-markers').uncheck()
+        page.locator('#signal-markers').check()
         page.locator('[data-tf="1d"]').click()
         page.locator('[data-mode="Strict"]').click()
         page.screenshot(path="screenshots/"+asset+"-desktop.png",full_page=True)
-        report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5}
+        report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True}
         page.set_viewport_size({"width":390,"height":844})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth+1"),"Mobile horizontal overflow"
         page.screenshot(path="screenshots/"+asset+"-mobile.png",full_page=True)

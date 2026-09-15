@@ -79,8 +79,9 @@ def clean(raw, asset, interval, asof):
     cal = schedule(asset, frame.index.min().date()-timedelta(days=2), asof.date()+timedelta(days=10))
     if interval == "1d":
         by_date = {str(k.date()): v for k,v in cal.market_close.items()}
+        opens_by_date = {str(k.date()): v for k,v in cal.market_open.items()}
         ends = pd.to_datetime([by_date.get(str(t.date()), pd.NaT) for t in frame.index], utc=True)
-        frame["open_at"] = frame.index
+        frame["open_at"] = pd.to_datetime([opens_by_date.get(str(t.date()), pd.NaT) for t in frame.index], utc=True)
         frame.index = ends
         expected = pd.DatetimeIndex(cal.market_close)
     else:
@@ -131,6 +132,7 @@ def aggregate(hourly, calendar, asof, weekly=False, daily=None):
                 times = [min(t+pd.Timedelta(hours=1), end) for t in pd.date_range(start,end,freq="1h",inclusive="left")]
                 windows.append((start,end,times))
     rejected = 0
+    pending_gap = False
     expected_last = None
     for start,end,times in windows:
         if end > asof or end < source.index[0]:
@@ -138,9 +140,11 @@ def aggregate(hourly, calendar, asof, weekly=False, daily=None):
         expected_last = end
         if not all(t in source.index for t in times):
             rejected += 1
+            pending_gap = True
             continue
         part = source.loc[times]
-        rows.append({"time":end, "open":part.open.iloc[0], "high":part.high.max(), "low":part.low.min(), "close":part.close.iloc[-1], "volume":part.volume.sum(min_count=len(part)), "open_at":part.open_at.iloc[0], "gap_before":bool(part.gap_before.any()), "roll_gap_proxy":bool(part.roll_gap_proxy.any())})
+        rows.append({"time":end, "open":part.open.iloc[0], "high":part.high.max(), "low":part.low.min(), "close":part.close.iloc[-1], "volume":part.volume.sum(min_count=len(part)), "open_at":part.open_at.iloc[0], "gap_before":bool(part.gap_before.any() or pending_gap), "roll_gap_proxy":bool(part.roll_gap_proxy.any())})
+        pending_gap = False
     if not rows:
         raise ValueError("No complete aggregate bars")
     frame = pd.DataFrame(rows).set_index("time")
