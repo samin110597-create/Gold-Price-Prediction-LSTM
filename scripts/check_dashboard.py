@@ -34,6 +34,15 @@ with sync_playwright() as p:
         page.locator("#"+asset+"-tab").click()
         assert page.locator("#app").get_attribute("data-asset")==asset
         assert page.locator('[data-testid="price"]').inner_text().startswith("$")
+        assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
+        assert page.locator('[data-forecast]').count()==4
+        assert 'No validated edge' not in page.locator('.forecast-grid').inner_text()
+        assert page.locator('#quote-age').inner_text() not in ('—','unknown')
+        assert page.locator('#snapshot-age').inner_text() not in ('—','unknown')
+        with page.expect_response(lambda r:'run_manifest.json?t=' in r.url):
+            page.locator('#refresh-market').click()
+        page.wait_for_function("document.querySelector('#refresh-market').disabled === false")
+        assert 'Refresh failed' not in page.locator('#feed-status').inner_text()
         for mode in ("Strict","Adaptive"):
             page.locator('[data-mode="'+mode+'"]').click()
             assert page.locator('[data-mode="'+mode+'"]').get_attribute("aria-pressed")=="true"
@@ -63,7 +72,7 @@ with sync_playwright() as p:
         page.locator('[data-tf="1d"]').click()
         page.locator('[data-mode="Strict"]').click()
         page.screenshot(path="screenshots/"+asset+"-desktop.png",full_page=True)
-        report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True}
+        report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True,"forecast_cards":4,"checksum_verified":True,"manual_refresh_verified":True,"quote_age":page.locator('#quote-age').inner_text(),"snapshot_age":page.locator('#snapshot-age').inner_text()}
         page.set_viewport_size({"width":390,"height":844})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth+1"),"Mobile horizontal overflow"
         page.screenshot(path="screenshots/"+asset+"-mobile.png",full_page=True)

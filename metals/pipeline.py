@@ -10,7 +10,7 @@ from metals import VERSION
 from metals.data import SYMBOLS, CONTEXT, snapshot, clean, aggregate, session_context, digest
 from metals.indicators import compute
 from metals.structure import scan, families
-from metals.models import evaluate, features
+from metals.models import evaluate, features, paired_comparison
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve
 from metals.signal_audit import evaluate_events
@@ -57,6 +57,8 @@ def validate(payload):
         assert a["run_id"]==payload["run_id"] and a["asof"]==payload["asof"]
         assert a["quote"]["price"]>0
         assert pd.Timestamp(a["quote"]["time"])<=pd.Timestamp(payload["asof"])
+        if "source_lag_seconds" in a["quote"]:
+            assert abs(a["quote"]["source_lag_seconds"]-(pd.Timestamp(payload["asof"])-pd.Timestamp(a["quote"]["time"])).total_seconds())<.01
         assert set(a["timeframes"])=={"15m","1h","4h","1d","1w"}
         for tf,detail in a["timeframes"].items():
             assert pd.Timestamp(detail["last_completed"])<=pd.Timestamp(payload["asof"])
@@ -85,6 +87,9 @@ def validate(payload):
             assert (prediction["primary"] is not None)==(prediction["status"]=="VALIDATED")
             if prediction["primary"]:
                 assert all(prediction["checks"].values())
+            if prediction["research"]:
+                r=prediction["research"]
+                assert r["price"]>0 and 0<r["interval80"][0]<r["interval80"][1]
     json.dumps(safe(payload),allow_nan=False)
 
 def run(raw_folder,stage,history):
@@ -102,6 +107,7 @@ def run(raw_folder,stage,history):
     setup_ledger=read(history/"setup_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
     signal_ledger=read(history/"signal_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
     payload["signal_catalog"]=catalog()
+    payload["feed"]={"provider":"Yahoo Finance","instruments":"GC=F and SI=F continuous futures","delivery":"DELAYED SNAPSHOT","streaming":False,"snapshot_interval_seconds":900,"page_poll_seconds":60,"stale_after_seconds":1800,"note":"Real provider observations, not simulated prices. Quote timestamps can lag; this is not a real-time exchange stream. Scheduled builds may be delayed.","source_policy_url":"https://help.yahoo.com/kb/SLN2310.html"}
     forecast_ledger=read(history/"forward_ledger_v2.json",{"schema_version":2,"issued":{},"outcomes":{},"legacy_note":"Original forward_validation_ledger.json preserved separately; nearest-bar legacy scores are unverified."})
     for asset,symbol in SYMBOLS.items():
         print("Building",asset,flush=True)
@@ -137,7 +143,13 @@ def run(raw_folder,stage,history):
             cache_key=digest([VERSION,code_hash,data_hash,bars])
             path=history/"validation"/(asset+"_"+h+".json")
             cached=read(path,{})
-            result=cached if cached.get("cache_key")==cache_key else evaluate(frames[tf],bars,hourly=tf=="1h")
+            if cached.get("cache_key")==cache_key:
+                result=cached
+            else:
+                previous=evaluate(frames[tf],bars,hourly=tf=="1h")
+                result=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
+                result["previous_recipe_comparison"]=paired_comparison(result,previous)
+                result["previous_recipe_summary"]={k:previous[k] for k in ("status","research","oos","holdout","failed_gates")}
             result["checks"]["latest_completed_bar"] = reports[tf]["latest_expected_bar_present"]
             result["failed_gates"] = [k for k,v in result["checks"].items() if not v]
             result["status"] = "WAIT" if result["failed_gates"] else "VALIDATED"
@@ -159,11 +171,15 @@ def run(raw_folder,stage,history):
         qp=raw.get("regularMarketPrice")
         if qp and quote_frame.index[-1]<=qt<=asof:
             quote.update(price=float(qp),time=qt.isoformat(),basis="Yahoo timestamped quote")
+        session=session_context(frames["1h"],cals["1h"],asof)
+        quote["source_lag_seconds"]=max(0,float((asof-pd.Timestamp(quote["time"])).total_seconds()))
+        quote["delivery"]="DELAYED SNAPSHOT"
+        quote["stale"]=bool(quote["stale"] or (session["status"]=="OPEN" and quote["source_lag_seconds"]>1800))
         for tf in analyses:
-            analyses[tf]["trading_signals"]=workbench(detected[tf],frames[tf],signal_ledger,asof.isoformat(),reports[tf]["latest_expected_bar_present"],quote,higher_fresh=reports.get(higher_map[tf],{}).get("latest_expected_bar_present",False))
-        fresh=all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
-        setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d"))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
-        payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
+            analyses[tf]["trading_signals"]=workbench(detected[tf],frames[tf],signal_ledger,asof.isoformat(),reports[tf]["latest_expected_bar_present"] and not quote["stale"],quote,higher_fresh=reports.get(higher_map[tf],{}).get("latest_expected_bar_present",False))
+        fresh=not quote["stale"] and all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
+        setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else (not quote["stale"] and all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d")))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
+        payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session,"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
     for name in CONTEXT:
         raw=read(raw_folder/(name+"_1d.json"),None)
         item={"status":"UNAVAILABLE"}

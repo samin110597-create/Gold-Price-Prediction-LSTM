@@ -48,19 +48,29 @@ def metrics(records):
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
     return {"n":len(y),"directional_accuracy":float(wins.mean()),"baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def train(x,y,fit,cal):
+def train(x,y,fit,cal,scale=None):
     reg = make_pipeline(StandardScaler(),Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
-    reg.fit(x.iloc[fit],y.iloc[fit])
+    target=y if scale is None else y/scale
+    reg.fit(x.iloc[fit],target.iloc[fit])
     clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int))
     raw = clf.decision_function(x.iloc[cal]).reshape(-1,1)
     calibration = LogisticRegression(C=1,max_iter=300).fit(raw,(y.iloc[cal]>0).astype(int))
-    residual = y.iloc[cal].to_numpy()-reg.predict(x.iloc[cal])
+    residual = target.iloc[cal].to_numpy()-reg.predict(x.iloc[cal])
     low,high = np.quantile(residual,[.1,.9])
     return reg,clf,calibration,float(low),float(high)
 
-def evaluate(frame, horizon, hourly=False):
+def evaluate(frame, horizon, hourly=False, recipe="legacy"):
+    if recipe not in ("legacy","volatility_scaled"):
+        raise ValueError("Unknown fixed recipe")
+    scaled=recipe=="volatility_scaled"
     x = features(frame)
+    scale=(frame.atr/frame.close*np.sqrt(horizon)).clip(lower=1e-6) if scaled else pd.Series(1.0,index=frame.index)
+    if scaled:
+        # Every normalizer is available at the forecast origin, never at the target.
+        volatility=(frame.atr/frame.close).clip(lower=1e-6)
+        for key,period in (("return1",1),("return5",5),("return20",20),("trend",1)):
+            x[key]=x[key]/(volatility*np.sqrt(period))
     y = frame.close.shift(-horizon)/frame.close-1
     n = len(frame)
     pos = np.arange(n)
@@ -73,14 +83,21 @@ def evaluate(frame, horizon, hourly=False):
     valid_x = x.notna().all(axis=1) & ~past_bad
     valid = valid_x & y.notna() & ~future_bad
     minfit = 1500 if hourly else 756
-    calspan = max(504 if hourly else 252,30*horizon)
-    holdspan = 60*23 if hourly else 252
+    calspan = max(504 if hourly else 252,(60 if scaled else 30)*horizon)
+    holdspan = max(60*23 if hourly else 252,30*horizon) if scaled else (60*23 if hourly else 252)
     blockspan = 504 if hourly else 126
     hold_start = n-holdspan-horizon
     start = minfit+calspan+2*horizon
     records=[]
     def indices(start_test):
         cal_start = start_test-calspan-horizon
+        if scaled:
+            # Extend by sample availability only, without inspecting outcomes or scores.
+            while cal_start>minfit+horizon:
+                available=pos[(pos>=cal_start)&(pos<start_test-horizon)&(pos%horizon==0)&valid.to_numpy()]
+                if len(available)>=30:
+                    break
+                cal_start=max(minfit+horizon,cal_start-max(126,10*horizon))
         fit = pos[(pos<cal_start-horizon)&valid.to_numpy()]
         cal = pos[(pos>=cal_start)&(pos<start_test-horizon)&(pos%horizon==0)&valid.to_numpy()]
         return fit,cal
@@ -89,31 +106,57 @@ def evaluate(frame, horizon, hourly=False):
             continue
         end = min(test_start+blockspan,hold_start) if test_start<hold_start else n-horizon
         test = pos[(pos>=test_start)&(pos<end)&(pos%horizon==0)&valid.to_numpy()]
+        if scaled and test_start<hold_start:
+            test=test[test+horizon<hold_start]
         fit,cal = indices(test_start)
         if len(fit)<minfit//2 or len(cal)<20 or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high = train(x,y,fit,cal)
-        predictions = reg.predict(x.iloc[test])
+        reg,clf,calibrator,low,high = train(x,y,fit,cal,scale if scaled else None)
+        predictions = reg.predict(x.iloc[test])*scale.iloc[test].to_numpy()
         probabilities = calibrator.predict_proba(clf.decision_function(x.iloc[test]).reshape(-1,1))[:,1]
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
         for i,p,prob in zip(test,predictions,probabilities):
-            records.append({"origin":frame.index[i].isoformat(),"target_time":frame.index[i+horizon].isoformat(),"partition":"holdout" if test_start>=hold_start else "walk_forward","fit_end":frame.index[fit[-1]+horizon].isoformat(),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"test_start":frame.index[test[0]].isoformat(),"actual_return":float(y.iloc[i]),"predicted_return":float(p),"probability_up":float(prob),"baseline_return":baseline,"prior_up":prior,"lower_return":float(p+low),"upper_return":float(p+high),"atr_fraction":float(frame.atr.iloc[i]/frame.close.iloc[i])})
+            records.append({"origin":frame.index[i].isoformat(),"target_time":frame.index[i+horizon].isoformat(),"partition":"holdout" if test_start>=hold_start else "walk_forward","fit_end":frame.index[fit[-1]+horizon].isoformat(),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"test_start":frame.index[test[0]].isoformat(),"actual_return":float(y.iloc[i]),"predicted_return":float(p),"probability_up":float(prob),"baseline_return":baseline,"prior_up":prior,"lower_return":float(p+low*scale.iloc[i]),"upper_return":float(p+high*scale.iloc[i]),"atr_fraction":float(frame.atr.iloc[i]/frame.close.iloc[i])})
     oos = metrics([r for r in records if r["partition"]=="walk_forward"])
     holdout = metrics([r for r in records if r["partition"]=="holdout"])
     live = None
     ood = True
     fit,cal = indices(n-1)
     if len(cal)>=20 and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high = train(x,y,fit,cal)
-        p = float(reg.predict(x.iloc[[-1]])[0])
+        reg,clf,calibrator,low,high = train(x,y,fit,cal,scale if scaled else None)
+        p = float(reg.predict(x.iloc[[-1]])[0]*scale.iloc[-1])
         probability = float(calibrator.predict_proba(clf.decision_function(x.iloc[[-1]]).reshape(-1,1))[0,1])
         scaler=reg[0]
         dist = np.max(abs(scaler.transform(x.iloc[fit])),axis=1)
         live_dist=float(np.max(abs(scaler.transform(x.iloc[[-1]]))))
         ood=live_dist>max(4,float(np.quantile(dist,.995)))
         price=float(frame.close.iloc[-1])
-        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low),price*(1+p+high)],"feature_coefficients":dict(zip(FEATURES,map(float,reg[1].coef_))),"calibration_n":len(cal),"ood_distance":live_dist}
+        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(FEATURES,map(float,reg[1].coef_))),"calibration_n":len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist}
     checks = {"oos_sample":oos.get("n",0)>=100,"oos_edge":oos.get("edge",-1)>=.03,"edge_confidence":oos.get("edge_ci95",[-1])[0]>0,"oos_mae":(oos.get("mae_skill") or -1)>=.03,"oos_brier":(oos.get("brier_skill") or -1)>0,"holdout_sample":holdout.get("n",0)>=12,"holdout_edge":holdout.get("edge",-1)>0,"holdout_mae":(holdout.get("mae_skill") or -1)>0,"holdout_brier":(holdout.get("brier_skill") or -1)>0,"interval_coverage":.68<=holdout.get("coverage80",0)<=.9,"in_distribution":not ood,"live_available":live is not None,"positive_ordered_prices":live is not None and 0<live["interval80"][0]<live["interval80"][1] and live["price"]>0}
+    if scaled:
+        checks["oos_vs_no_change"]=oos.get("mae_percent",float("inf"))<.97*oos.get("zero_change_mae_percent",0)
+        checks["holdout_vs_no_change"]=holdout.get("mae_percent",float("inf"))<holdout.get("zero_change_mae_percent",0)
     status="VALIDATED" if all(checks.values()) else "WAIT"
-    return {"status":status,"horizon_bars":horizon,"unit":"completed exchange hourly bars" if hourly else "completed trading sessions","model":"Fixed Ridge return + Logistic/Platt direction; no ensemble selection","recipe_version":"1.1","primary":live if status=="VALIDATED" else None,"research":live,"oos":oos,"holdout":holdout,"checks":checks,"failed_gates":[k for k,v in checks.items() if not v],"thresholds":GATES,"records":records,"integrity":{"training_before_calibration":all(r["fit_end"]<r["calibration_start"] for r in records),"calibration_before_test":all(r["calibration_end"]<r["test_start"] for r in records),"unique_origins":len({r["origin"] for r in records})==len(records),"overlap_policy":"Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels","holdout":"Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout","data_note":"Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; future target gaps and past roll dependencies excluded; known historical gaps are an explicit feature."}}
+    result = {"status":status,"horizon_bars":horizon,"unit":"completed exchange hourly bars" if hourly else "completed trading sessions","model":"Fixed Ridge return + Logistic/Platt direction; no ensemble selection","recipe_version":"1.1","primary":live if status=="VALIDATED" else None,"research":live,"oos":oos,"holdout":holdout,"checks":checks,"failed_gates":[k for k,v in checks.items() if not v],"thresholds":GATES,"records":records,"integrity":{"training_before_calibration":all(r["fit_end"]<r["calibration_start"] for r in records),"calibration_before_test":all(r["calibration_end"]<r["test_start"] for r in records),"unique_origins":len({r["origin"] for r in records})==len(records),"overlap_policy":"Origins are globally spaced by the horizon; training/calibration boundaries purge immature labels","holdout":"Final 252 daily / 1380 hourly bars; same fixed recipe, no tuning on holdout","data_note":"Latest Yahoo continuous history. Roll mapping and historical data vintages unavailable; future target gaps and past roll dependencies excluded; known historical gaps are an explicit feature."}}
+
+    result["data_evidence"]={"completed_bars":n,"eligible_nonoverlapping_targets":int((valid & (pos%horizon==0)).sum()),"feature_complete_origins":int(valid_x.sum()),"excluded_target_or_feature_origins":int((~valid & y.notna()).sum()),"live_fit_n":len(fit),"live_calibration_n":len(cal),"holdout_start":frame.index[max(0,hold_start)].isoformat(),"last_completed":frame.index[-1].isoformat()}
+    if scaled:
+        result.update(model="Volatility-scaled Ridge return + Logistic/Platt direction; fixed recipe",recipe_version="2.0")
+        result["integrity"].update(holdout=f"Final {holdspan} bars; walk-forward targets purged before this boundary; no model selection on these results",data_note="Latest Yahoo continuous history, not point-in-time vintages. Missing target windows and roll dependencies excluded. This revised recipe requires prospective confirmation; historical results are research evidence.",normalization="ATR at each origin scales returns and interval residuals; no target-period volatility is used",calibration="Non-overlapping completed labels; monthly initial window 1260 bars, extended using sample counts only")
+    return result
+
+
+def paired_comparison(current,previous):
+    """Compare errors only where both fixed recipes made a forecast for the same target."""
+    old={(r["origin"],r["target_time"]):r for r in previous["records"]}
+    result={"reference_recipe":previous["recipe_version"],"reference_model":previous["model"],"selection":"Neither recipe is selected or tuned using this comparison"}
+    for partition in ("walk_forward","holdout"):
+        pairs=[(r,old[(r["origin"],r["target_time"])]) for r in current["records"] if r["partition"]==partition and (r["origin"],r["target_time"]) in old and old[(r["origin"],r["target_time"])]["partition"]==partition]
+        if not pairs:
+            result[partition]={"n":0}
+            continue
+        a,b=map(list,zip(*pairs))
+        ma,mb=metrics(a),metrics(b)
+        result[partition]={"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"]}
+    return result

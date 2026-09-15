@@ -9,7 +9,7 @@ The deployed application is a causal market-research terminal for gold (GC=F) an
 - Wilder-seeded RSI/ATR/ADX; moving averages, momentum, volatility and qualified volume measures.
 - Internal and major pivots, BOS/CHoCH, divergence at confirmation time, failed breaks and staged reversal watches. Liquidity/absorption/distribution labels are OHLCV proxies.
 - Strict and Adaptive conditional setup maps with immutable entry zones, stops and observed swing objectives. Confluence is not probability. No BUY/SELL is issued without independently validated target-before-stop evidence.
-- Fixed-recipe purged walk-forward 4H/1D/1W/1M forecasts, calibrated directional probabilities, baseline comparisons and an untouched final evaluation period. Weak estimates remain research-only; the primary forecast says WAIT.
+- Fixed-recipe purged walk-forward 4H/1D/1W/1M research estimates, probability calibration and explicit baseline comparisons. Revised recipes use a separate recent evaluation period; this is research evidence, not a claim of an untouched dataset or a profitable edge. Unvalidated estimates are labeled prominently.
 - Exact-rule 5-session descriptive event audits for BOS/CHoCH, divergence, reversal and flow proxies; these do not qualify trade setups.
 - A new immutable forecast issue ledger with separate exact-bar outcomes. Legacy forward history remains separate.
 
@@ -47,3 +47,13 @@ Correctness improvements do not establish better predictive accuracy. No profita
 ## Technical signals and education
 
 The technical workbench adds 17 causal playbooks with fixed triggers, stops and available TP1/TP2, Strict/Adaptive filters, chart markers, individual lessons and separate historical replay evidence. See [TECHNICAL_SIGNALS.md](TECHNICAL_SIGNALS.md) for the exact interpretation and limitations. Replay hit rates are not live calibrated probabilities.
+
+## Forecast evidence and data freshness
+
+The page displays actual observed reference prices separately from model estimates, estimated 80% ranges, sample counts, error rates, interval coverage and failed validation gates. Recipe 2.0 scales returns and calibration residuals by volatility known at each origin. Monthly calibration starts with 1,260 daily bars and extends backward based on available complete sample counts, never based on performance. Monthly recent evaluation uses 630 daily bars. Missing target windows remain excluded; a small sample does not become validated just because an estimate exists.
+
+The previous recipe is evaluated on the same source history. Paired comparisons use only identical origin, target and partition tuples. The revised model improves recent interval coverage in the release audit, but point errors and direction do not consistently beat the baseline. The interface exposes that limitation. Neither model is selected or tuned using the displayed comparison.
+
+Data comes from Yahoo Finance GC=F and SI=F continuous futures. It is **real provider data delivered as delayed snapshots**, not a streaming exchange feed. The observed quote timestamp can lag the build; the page displays quote age, snapshot age and last successful page check. Builds are scheduled at minutes 7, 22, 37 and 52 of each hour. GitHub scheduling may delay publication. The visible page polls the manifest every 60 seconds, fetches changed bundles, verifies the dashboard SHA-256 and matching run metadata, and preserves the last verified snapshot if a refresh fails. Snapshots older than 30 minutes pause current-watch eligibility. Reloading cannot eliminate provider delay.
+
+Background: [Yahoo exchange data policies](https://help.yahoo.com/kb/SLN2310.html), [GitHub scheduled workflow behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule), [chronological evaluation and gaps](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html).

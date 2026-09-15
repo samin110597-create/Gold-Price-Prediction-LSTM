@@ -49,16 +49,17 @@ def snapshot(folder, asof=None):
         key = name+"_"+interval
         try:
             result = download(symbol, interval, days, asof)
-            return key, result, None
+            return key, result, None, pd.Timestamp.now(tz="UTC").isoformat()
         except Exception as exc:
-            return key, None, str(exc)
+            return key, None, str(exc), pd.Timestamp.now(tz="UTC").isoformat()
     with ThreadPoolExecutor(max_workers=3) as pool:
-        for key, value, error in pool.map(work, tasks):
+        for key, value, error, retrieved_at in pool.map(work, tasks):
             if error:
                 manifest["errors"][key] = error
             else:
                 (folder/(key+".json")).write_text(json.dumps(value))
-                manifest["sources"][key] = {"sha256": digest(value), "bars": len(value.get("timestamp", []))}
+                meta=value.get("meta",{})
+                manifest["sources"][key] = {"sha256": digest(value), "bars": len(value.get("timestamp", [])),"retrieved_at":retrieved_at,"symbol":meta.get("symbol"),"interval":meta.get("dataGranularity"),"quote_time":pd.Timestamp(meta["regularMarketTime"],unit="s",tz="UTC").isoformat() if meta.get("regularMarketTime") else None,"quote_price":meta.get("regularMarketPrice")}
     required = {a+"_"+i for a in SYMBOLS for i in ("1d", "60m", "15m")}
     if not required.issubset(manifest["sources"]):
         raise RuntimeError("Essential sources incomplete: "+str(manifest["errors"]))
