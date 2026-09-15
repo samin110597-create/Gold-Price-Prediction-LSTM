@@ -35,3 +35,8 @@ test('old snapshots pause current eligibility and invalid quote timestamps are r
  const h=harness();h.set(bundle('stale','2020-01-01T00:00:00Z'));await h.run('loadMarketSnapshot()');assert.equal(h.run('snapshotIsStale()'),true);
  const b=bundle('future');const p=JSON.parse(b.raw);p.assets.gold.quote.time='2099-01-01T00:00:00Z';assert.throws(()=>h.context.validateSnapshot(p,b.manifest),/Invalid gold/);
 });
+
+test('an old open-market quote pauses eligibility even in a fresh snapshot',async()=>{
+ const h=harness();await h.run('loadMarketSnapshot()');h.context.data.assets.gold.quote.time='2020-01-01T00:00:00Z';assert.equal(h.run('quoteIsStale()'),true);
+ h.context.data.assets.gold.session={status:'MARKET CLOSED'};assert.equal(h.run('quoteIsStale()'),false);
+});

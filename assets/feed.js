@@ -1,6 +1,7 @@
 'use strict';
 let feedBusy=false,lastFeedCheck=null,feedError='',lastFreshnessState='';
 function snapshotIsStale(){return !data||Date.now()-Date.parse(data.asof)>(data.feed?.stale_after_seconds||1800)*1000;}
+function quoteIsStale(){const a=data?.assets?.[asset];return !a||Boolean(a.quote.stale)||(a.session?.status!=='MARKET CLOSED'&&Date.now()-Date.parse(a.quote.time)>1800000);}
 function ageLabel(timestamp){
  const seconds=Math.max(0,Math.floor((Date.now()-Date.parse(timestamp))/1000));
  if(!Number.isFinite(seconds))return 'unknown';
@@ -12,7 +13,7 @@ function refreshFeedLabels(){
  if($('#quote-age'))$('#quote-age').textContent=ageLabel(a.quote.time);
  if($('#snapshot-age'))$('#snapshot-age').textContent=ageLabel(data.asof);
  if($('#page-check'))$('#page-check').textContent=lastFeedCheck?time(lastFeedCheck):'Checking…';
- if($('#feed-status'))$('#feed-status').textContent=feedBusy?'Checking published data…':feedError?'Refresh failed: '+feedError+'. Showing the last verified snapshot.':snapshotIsStale()?'Snapshot is over 30 minutes old; current-watch eligibility is paused.':'Latest published snapshot loaded. Source quote '+time(a.quote.time)+'.';
+ if($('#feed-status'))$('#feed-status').textContent=feedBusy?'Checking published data…':feedError?'Refresh failed: '+feedError+'. Showing the last verified snapshot.':snapshotIsStale()?'Snapshot is over 30 minutes old; current-watch eligibility is paused.':quoteIsStale()?'Open-market quote is over 30 minutes old; current-watch eligibility is paused.':'Latest published snapshot loaded. Source quote '+time(a.quote.time)+'.';
  if($('#refresh-market')){$('#refresh-market').disabled=feedBusy;$('#refresh-market').onclick=()=>loadMarketSnapshot();}
 }
 function validateSnapshot(d,manifest){
@@ -55,7 +56,7 @@ function startMarketFeed(){
  setInterval(()=>{if(!document.hidden)loadMarketSnapshot();},60000);
  setInterval(()=>{
   if(!data||document.hidden)return;
-  const state=String(snapshotIsStale());
+  const state=String(snapshotIsStale())+':'+String(quoteIsStale());
   if(lastFreshnessState&&state!==lastFreshnessState)render();
   lastFreshnessState=state;refreshFeedLabels();
  },1000);
