@@ -2,9 +2,9 @@ name: Canonical Metals Test Build Publish
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "7,22,37,52 * * * *"
   push:
-    branches: [master, work/technical-signal-education]
+    branches: [master]
     paths:
       - "metals/**"
       - "scripts/**"
@@ -40,7 +40,9 @@ jobs:
           pip install playwright==1.51.0
           python -m playwright install --with-deps chromium
       - name: Regression and causal timing tests
-        run: python -m pytest tests -q --junitxml=test-results.xml
+        run: |
+          python -m pytest tests -q --junitxml=test-results.xml
+          node --test tests/test_feed.mjs
       - name: Fetch one snapshot and evaluate both metals
         env:
           OPENBLAS_NUM_THREADS: "1"

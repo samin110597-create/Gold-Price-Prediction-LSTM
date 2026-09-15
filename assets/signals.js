@@ -5,7 +5,7 @@ function signalItems(detail){return detail.trading_signals?.items||[]}
 function lessonFor(kind){return (data.signal_catalog||[]).find(x=>x.kind===kind)}
 function signalStatus(s){
  if(!['WATCH','CONFIRMED'].includes(s.observation.state))return s.observation.state;
- if(Date.now()-Date.parse(data.asof)>7200000||!s.fresh||s.mode_fresh?.[mode]===false)return 'DATA STALE / WAIT';
+ if(snapshotIsStale()||quoteIsStale()||!s.fresh||s.mode_fresh?.[mode]===false)return 'DATA STALE / WAIT';
  if(s.quote_tested)return 'LEVEL TESTED / WAIT';
  return s.observation.state;
 }
