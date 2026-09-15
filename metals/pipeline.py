@@ -160,7 +160,7 @@ def run(raw_folder,stage,history):
         if qp and quote_frame.index[-1]<=qt<=asof:
             quote.update(price=float(qp),time=qt.isoformat(),basis="Yahoo timestamped quote")
         for tf in analyses:
-            analyses[tf]["trading_signals"]=workbench(detected[tf],frames[tf],signal_ledger,asof.isoformat(),reports[tf]["latest_expected_bar_present"],quote)
+            analyses[tf]["trading_signals"]=workbench(detected[tf],frames[tf],signal_ledger,asof.isoformat(),reports[tf]["latest_expected_bar_present"],quote,higher_fresh=reports.get(higher_map[tf],{}).get("latest_expected_bar_present",False))
         fresh=all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
         setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d"))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
         payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session_context(frames["1h"],cals["1h"],asof),"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}

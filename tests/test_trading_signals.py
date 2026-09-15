@@ -130,3 +130,9 @@ def test_rejected_aggregate_bar_leaves_a_replay_gap():
     out,report=aggregate(f,cal,day.market_close)
     assert report["incomplete_groups_rejected"]==1
     assert not out.gap_before.iloc[0] and out.gap_before.iloc[1]
+
+
+def test_strict_requires_fresh_higher_timeframe():
+    f,s=example()
+    item=workbench([s],f.iloc[:1],{},f.index[0].isoformat(),True,higher_fresh=False)["items"][0]
+    assert item["mode_fresh"]=={"Adaptive":True,"Strict":False}

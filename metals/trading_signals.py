@@ -272,7 +272,7 @@ def historical_audit(issues, frame):
     return {"version":VERSION,"status":"DESCRIPTIVE REPLAY — NOT CALIBRATED","note":"Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.","cutoff":cutoff.isoformat(),"modes":summaries}
 
 
-def workbench(issues, frame, ledger, asof, fresh, quote=None):
+def workbench(issues, frame, ledger, asof, fresh, quote=None, higher_fresh=True):
     issued=ledger.setdefault("issued",{})
     observations=ledger.setdefault("observations",{})
     start=frame.index[max(0,len(frame)-100)].isoformat()
@@ -291,6 +291,6 @@ def workbench(issues, frame, ledger, asof, fresh, quote=None):
         if quote and pd.Timestamp(quote["time"])>pd.Timestamp(fixed["time"]):
             d=fixed["direction"]
             quote_tested=(quote["price"]-fixed["stop"])*d<=0 or bool(fixed["targets"] and (quote["price"]-fixed["targets"][0]["price"])*d>=0)
-        current.append({**fixed,"observation":result,"age_bars":int(len(frame)-1-frame.index.get_loc(pd.Timestamp(fixed["time"]))),"fresh":fresh,"quote_tested":quote_tested,"watch_eligible":bool(fresh and not quote_tested and result["state"] in ("WATCH","CONFIRMED") and any(fixed["mode_match"].values()))})
+        current.append({**fixed,"observation":result,"age_bars":int(len(frame)-1-frame.index.get_loc(pd.Timestamp(fixed["time"]))),"fresh":fresh,"mode_fresh":{"Adaptive":bool(fresh),"Strict":bool(fresh and higher_fresh)},"quote_tested":quote_tested,"watch_eligible":bool(fresh and not quote_tested and result["state"] in ("WATCH","CONFIRMED") and any(fixed["mode_match"].values()))})
     current.sort(key=lambda s:(s["time"],s["quality"]),reverse=True)
     return {"version":VERSION,"items":current[:36],"status_note":"Rule matches are conditional research plans, not calibrated buy/sell recommendations. Expired, touched and unmapped signals remain available for learning."}
