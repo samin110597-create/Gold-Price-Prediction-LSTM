@@ -1,0 +1,31 @@
+name: Verify configured market data providers
+on:
+  push:
+    branches: [work/api-forecast]
+    paths: [metals/providers.py, .github/workflows/provider-audit.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provider-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas==2.2.3 requests==2.32.3
+      - name: Read actual entitled data without exposing credentials
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY || secrets.FINNHUB_KEY || secrets.FINHUB_API_KEY || secrets.FINNHUB_TOKEN || secrets.FINNHUB }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY || secrets.FMP_KEY || secrets.FINANCIAL_MODELING_PREP_API_KEY || secrets.FMP }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY || secrets.FRED_KEY || secrets.FRED }}
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY || secrets.POLYGON_KEY || secrets.MASSIVE_API_KEY || secrets.POLYGON }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY || secrets.ALPHAVANTAGE_API_KEY || secrets.ALPHA_VANTAGE_KEY || secrets.ALPHAVANTAGE_KEY || secrets.ALPHA_VANTAGE }}
+        run: python -m metals.providers --output provider-audit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: provider-access-evidence
+          path: provider-audit.json
+          retention-days: 7
