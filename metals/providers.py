@@ -12,8 +12,8 @@ import pandas as pd
 import requests
 
 SPECS = {
-    'finnhub': ('FINNHUB_API_KEY', 3600, 'https://finnhub.io/docs/api/quote'),
-    'fmp': ('FMP_API_KEY', 3600, 'https://site.financialmodelingprep.com/developer/docs/stable/commodities-quote'),
+    'finnhub': ('FINNHUB_API_KEY', 900, 'https://finnhub.io/docs/api/quote'),
+    'fmp': ('FMP_API_KEY', 900, 'https://site.financialmodelingprep.com/developer/docs/stable/commodities-quote'),
     'fred': ('FRED_API_KEY', 86400, 'https://fred.stlouisfed.org/docs/api/fred/series_observations.html'),
     'polygon': ('POLYGON_API_KEY', 86400, 'https://massive.com/docs/rest/forex/aggregates/previous-day-bar'),
     'alpha_vantage': ('ALPHA_VANTAGE_API_KEY', 21600, 'https://www.alphavantage.co/documentation/'),

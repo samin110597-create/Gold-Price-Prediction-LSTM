@@ -26,7 +26,7 @@ def metrics(records):
         return {"n":0}
     y,p,prob,base,prior,lo,hi,atr = (np.asarray([r[k] for r in records],dtype=float) for k in ("actual_return","predicted_return","probability_up","baseline_return","prior_up","lower_return","upper_return","atr_fraction"))
     labels = y>0
-    wins = ((p>0)==labels).astype(float)
+    wins = (((p>0)==labels) & (abs(p)>1e-6)).astype(float)
     baseline_wins = ((base>0)==labels).astype(float)
     mae = np.mean(abs(y-p))
     bmae = np.mean(abs(y-base))
@@ -46,25 +46,55 @@ def metrics(records):
         if mask.any():
             bins.append({"from":left,"to":left+.2,"n":int(mask.sum()),"mean_probability":float(prob[mask].mean()),"observed_up":float(labels[mask].mean())})
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
-    return {"n":len(y),"directional_accuracy":float(wins.mean()),"baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
+    return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def train(x,y,fit,cal,scale=None):
+def train(x,y,fit,cal,scale=None,adaptive=False):
     reg = make_pipeline(StandardScaler(),Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
     target=y if scale is None else y/scale
     reg.fit(x.iloc[fit],target.iloc[fit])
     clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int))
+    selector=None
+    if adaptive:
+        # Fixed candidate set. Select only on the FIRST half of past calibration labels.
+        # The later half remains untouched until probability/interval calibration.
+        selection,cal=np.array_split(cal,2)
+        drift=float(y.iloc[fit].median())
+        raw_prediction=reg.predict(x.iloc[selection])*scale.iloc[selection].to_numpy()
+        candidates=[(0.,0.),(0.,drift),(.25,0.),(.5,0.),(1.,0.)]
+        losses=[float(np.mean(abs(y.iloc[selection].to_numpy()-(w*raw_prediction+b)))) for w,b in candidates]
+        best=int(np.argmin(losses))
+        weight,offset=candidates[best]
+        selector={'ridge_weight':weight,'return_offset':offset,'selection_n':len(selection),
+                  'selection_end_position':int(selection[-1]),'interval_n':len(cal),
+                  'candidate_mae_percent':[v*100 for v in losses],
+                  'candidates':['no change','past median return','25% Ridge','50% Ridge','Ridge']}
     raw = clf.decision_function(x.iloc[cal]).reshape(-1,1)
-    calibration = LogisticRegression(C=1,max_iter=300).fit(raw,(y.iloc[cal]>0).astype(int))
-    residual = target.iloc[cal].to_numpy()-reg.predict(x.iloc[cal])
+    calibration = LogisticRegression(C=1,max_iter=300).fit(raw,(y.iloc[cal]>0).astype(int)) if y.iloc[cal].gt(0).nunique()==2 else None
+    predicted=reg.predict(x.iloc[cal])
+    if selector:
+        predicted=selector['ridge_weight']*predicted+selector['return_offset']/scale.iloc[cal].to_numpy()
+    residual = target.iloc[cal].to_numpy()-predicted
     low,high = np.quantile(residual,[.1,.9])
-    return reg,clf,calibration,float(low),float(high)
+    return reg,clf,calibration,float(low),float(high),selector
+
+def predict(reg,clf,calibrator,x,scale,selector,prior):
+    p=reg.predict(x)*scale
+    if selector:
+        p=selector['ridge_weight']*p+selector['return_offset']
+    prob=calibrator.predict_proba(clf.decision_function(x).reshape(-1,1))[:,1] if calibrator is not None else np.repeat(prior,len(x))
+    return p,prob
 
 def evaluate(frame, horizon, hourly=False, recipe="legacy"):
-    if recipe not in ("legacy","volatility_scaled"):
+    if recipe not in ("legacy","volatility_scaled","history_selected"):
         raise ValueError("Unknown fixed recipe")
-    scaled=recipe=="volatility_scaled"
+    scaled=recipe!="legacy"
+    adaptive=recipe=="history_selected"
     x = features(frame)
+    if adaptive:
+        for key in sorted(k for k in frame if k.startswith('macro_')):
+            x[key]=frame[key]
+            x[key+'_change20']=frame[key].diff(20)
     scale=(frame.atr/frame.close*np.sqrt(horizon)).clip(lower=1e-6) if scaled else pd.Series(1.0,index=frame.index)
     if scaled:
         # Every normalizer is available at the forecast origin, never at the target.
@@ -111,28 +141,27 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         fit,cal = indices(test_start)
         if len(fit)<minfit//2 or len(cal)<20 or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high = train(x,y,fit,cal,scale if scaled else None)
-        predictions = reg.predict(x.iloc[test])*scale.iloc[test].to_numpy()
-        probabilities = calibrator.predict_proba(clf.decision_function(x.iloc[test]).reshape(-1,1))[:,1]
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive)
+        predictions,probabilities = predict(reg,clf,calibrator,x.iloc[test],scale.iloc[test].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
         for i,p,prob in zip(test,predictions,probabilities):
-            records.append({"origin":frame.index[i].isoformat(),"target_time":frame.index[i+horizon].isoformat(),"partition":"holdout" if test_start>=hold_start else "walk_forward","fit_end":frame.index[fit[-1]+horizon].isoformat(),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"test_start":frame.index[test[0]].isoformat(),"actual_return":float(y.iloc[i]),"predicted_return":float(p),"probability_up":float(prob),"baseline_return":baseline,"prior_up":prior,"lower_return":float(p+low*scale.iloc[i]),"upper_return":float(p+high*scale.iloc[i]),"atr_fraction":float(frame.atr.iloc[i]/frame.close.iloc[i])})
+            records.append({"origin":frame.index[i].isoformat(),"target_time":frame.index[i+horizon].isoformat(),"partition":"holdout" if test_start>=hold_start else "walk_forward","fit_end":frame.index[fit[-1]+horizon].isoformat(),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"test_start":frame.index[test[0]].isoformat(),"selection":selector,"actual_return":float(y.iloc[i]),"predicted_return":float(p),"probability_up":float(prob),"baseline_return":baseline,"prior_up":prior,"lower_return":float(p+low*scale.iloc[i]),"upper_return":float(p+high*scale.iloc[i]),"atr_fraction":float(frame.atr.iloc[i]/frame.close.iloc[i])})
     oos = metrics([r for r in records if r["partition"]=="walk_forward"])
     holdout = metrics([r for r in records if r["partition"]=="holdout"])
     live = None
     ood = True
     fit,cal = indices(n-1)
     if len(cal)>=20 and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high = train(x,y,fit,cal,scale if scaled else None)
-        p = float(reg.predict(x.iloc[[-1]])[0]*scale.iloc[-1])
-        probability = float(calibrator.predict_proba(clf.decision_function(x.iloc[[-1]]).reshape(-1,1))[0,1])
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive)
+        ps,probs=predict(reg,clf,calibrator,x.iloc[[-1]],scale.iloc[[-1]].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
+        p,probability=float(ps[0]),float(probs[0])
         scaler=reg[0]
         dist = np.max(abs(scaler.transform(x.iloc[fit])),axis=1)
         live_dist=float(np.max(abs(scaler.transform(x.iloc[[-1]]))))
         ood=live_dist>max(4,float(np.quantile(dist,.995)))
         price=float(frame.close.iloc[-1])
-        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(FEATURES,map(float,reg[1].coef_))),"calibration_n":len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist}
+        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(x.columns,map(float,reg[1].coef_))),"calibration_n":len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist,"selection":selector}
     checks = {"oos_sample":oos.get("n",0)>=100,"oos_edge":oos.get("edge",-1)>=.03,"edge_confidence":oos.get("edge_ci95",[-1])[0]>0,"oos_mae":(oos.get("mae_skill") or -1)>=.03,"oos_brier":(oos.get("brier_skill") or -1)>0,"holdout_sample":holdout.get("n",0)>=12,"holdout_edge":holdout.get("edge",-1)>0,"holdout_mae":(holdout.get("mae_skill") or -1)>0,"holdout_brier":(holdout.get("brier_skill") or -1)>0,"interval_coverage":.68<=holdout.get("coverage80",0)<=.9,"in_distribution":not ood,"live_available":live is not None,"positive_ordered_prices":live is not None and 0<live["interval80"][0]<live["interval80"][1] and live["price"]>0}
     if scaled:
         checks["oos_vs_no_change"]=oos.get("mae_percent",float("inf"))<.97*oos.get("zero_change_mae_percent",0)
@@ -144,6 +173,13 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     if scaled:
         result.update(model="Volatility-scaled Ridge return + Logistic/Platt direction; fixed recipe",recipe_version="2.0")
         result["integrity"].update(holdout=f"Final {holdspan} bars; walk-forward targets purged before this boundary; no model selection on these results",data_note="Latest Yahoo continuous history, not point-in-time vintages. Missing target windows and roll dependencies excluded. This revised recipe requires prospective confirmation; historical results are research evidence.",normalization="ATR at each origin scales returns and interval residuals; no target-period volatility is used",calibration="Non-overlapping completed labels; monthly initial window 1260 bars, extended using sample counts only")
+    if adaptive:
+        result.update(model="Past-only selection of no-change, historical drift and damped Ridge; release-lagged FRED features when available",recipe_version="3.0")
+        result['integrity']['selection']='Fixed candidates selected by MAE on first half of pre-test calibration; second half calibrates intervals and probabilities. No future or final-holdout scores select the recipe.'
+        result['integrity']['macro_features']=[k for k in x if k.startswith('macro_')]
+        result['integrity']['macro_timing']='FRED initial-release values only; available no earlier than release date + 2 UTC days; no current snapshots inserted into history.'
+        if live and live.get('selection'):
+            live['selection']['selection_end']=frame.index[live['selection']['selection_end_position']+horizon].isoformat()
     return result
 
 

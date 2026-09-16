@@ -47,6 +47,11 @@ jobs:
         env:
           OPENBLAS_NUM_THREADS: "1"
           OMP_NUM_THREADS: "1"
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY || secrets.FINNHUB_KEY || secrets.FINHUB_API_KEY || secrets.FINNHUB_TOKEN || secrets.FINNHUB }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY || secrets.FMP_KEY || secrets.FINANCIAL_MODELING_PREP_API_KEY || secrets.FMP }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY || secrets.FRED_KEY || secrets.FRED }}
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY || secrets.POLYGON_KEY || secrets.MASSIVE_API_KEY || secrets.POLYGON }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY || secrets.ALPHAVANTAGE_API_KEY || secrets.ALPHA_VANTAGE_KEY || secrets.ALPHAVANTAGE_KEY || secrets.ALPHA_VANTAGE }}
         run: python -m metals.pipeline --raw .snapshot --stage .stage --history data
       - name: Build isolated site
         run: |
@@ -70,7 +75,7 @@ jobs:
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/dashboard.json data/validation data/setup_ledger.json data/signal_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
+          git add data/provider_cache.json data/dashboard.json data/validation data/setup_ledger.json data/signal_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
           if ! git diff --cached --quiet; then
             git commit -m "Publish coherent causal metals snapshot"
             git push origin "HEAD:$METALS_BRANCH"
