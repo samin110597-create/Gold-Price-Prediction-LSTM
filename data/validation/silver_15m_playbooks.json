@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-02T13:45:00+00:00",
+  "cutoff": "2026-09-02T17:15:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -245,13 +245,13 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 1,
+            "n": 2,
             "tp1_first": 1.0,
             "wilson95": [
-              0.20654329147389294,
+              0.34237195288961925,
               1
             ],
-            "mean_gross_r": 2.306008948231368,
+            "mean_gross_r": 2.6147177482316373,
             "stops": 0,
             "timeouts": 0
           },
@@ -847,6 +847,23 @@
           "ambiguous": false
         },
         {
+          "id": "e1619aacf286774881234369",
+          "kind": "STRUCTURE_BREAK",
+          "direction": 1,
+          "origin": "2026-09-02T12:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-09-02T12:15:00+00:00",
+          "entry_bar_close": "2026-09-02T12:30:00+00:00",
+          "confirmation_time": "2026-09-02T12:15:00+00:00",
+          "entry": 64.98999786376953,
+          "entry_rr": 2.923426548231906,
+          "time": "2026-09-02T13:45:00+00:00",
+          "exit": 65.75,
+          "gross_r": 2.923426548231906,
+          "ambiguous": false
+        },
+        {
           "id": "0f3ad861d13e073d3ff642f0",
           "kind": "RANGE_BREAKOUT",
           "direction": 1,
@@ -1121,8 +1138,7 @@
         "EXPIRED": 30,
         "MISSED": 12,
         "UNAVAILABLE": 2,
-        "OVERLAP": 2,
-        "PARTITION_BOUNDARY": 1
+        "OVERLAP": 2
       }
     },
     "Strict": {
