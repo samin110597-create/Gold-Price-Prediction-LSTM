@@ -2,20 +2,20 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-04T00:30:00+00:00",
+  "cutoff": "2026-09-04T04:30:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 5,
-            "tp1_first": 0.2,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.03622316096978745,
-              0.6244717358814613
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": -0.3764874906778549,
-            "stops": 4,
+            "mean_gross_r": -0.22060936334731862,
+            "stops": 3,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -53,14 +53,14 @@
         },
         "BREAKOUT_RETEST": {
           "earlier_history": {
-            "n": 6,
-            "tp1_first": 0.16666666666666666,
+            "n": 5,
+            "tp1_first": 0.2,
             "wilson95": [
-              0.03005258587173032,
-              0.563509436563646
+              0.03622316096978745,
+              0.6244717358814613
             ],
-            "mean_gross_r": -0.6113276003785789,
-            "stops": 5,
+            "mean_gross_r": -0.5335931204542946,
+            "stops": 4,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -74,14 +74,14 @@
         },
         "SQUEEZE_RELEASE": {
           "earlier_history": {
-            "n": 5,
-            "tp1_first": 0.4,
+            "n": 4,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.1176182311592533,
-              0.769280067791163
+              0.15003570882017148,
+              0.8499642911798285
             ],
-            "mean_gross_r": 0.0036099500507544404,
-            "stops": 3,
+            "mean_gross_r": 0.25451243756344305,
+            "stops": 2,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -269,14 +269,11 @@
         },
         "FLOW_TURN": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
+            "stops": 0,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -332,14 +329,11 @@
         },
         "INSIDE_BREAKOUT": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
+            "stops": 0,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -356,91 +350,6 @@
         }
       },
       "records": [
-        {
-          "id": "4030a30ab231bf30975afc5d",
-          "kind": "EMA_PULLBACK",
-          "direction": 1,
-          "origin": "2026-07-21T09:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T09:15:00+00:00",
-          "entry_bar_close": "2026-07-21T09:30:00+00:00",
-          "confirmation_time": "2026-07-21T09:15:00+00:00",
-          "entry": 4069.699951171875,
-          "entry_rr": 2.7600146125366973,
-          "time": "2026-07-21T11:15:00+00:00",
-          "exit": 4062.924642415561,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "9beb540f619708410e5fa8d5",
-          "kind": "FLOW_TURN",
-          "direction": 1,
-          "origin": "2026-07-21T09:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T09:15:00+00:00",
-          "entry_bar_close": "2026-07-21T09:30:00+00:00",
-          "confirmation_time": "2026-07-21T09:15:00+00:00",
-          "entry": 4069.699951171875,
-          "entry_rr": 2.7600146125366973,
-          "time": "2026-07-21T11:15:00+00:00",
-          "exit": 4062.924642415561,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "454148df4349e6a819d08a31",
-          "kind": "BREAKOUT_RETEST",
-          "direction": -1,
-          "origin": "2026-07-21T13:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T13:45:00+00:00",
-          "entry_bar_close": "2026-07-21T14:00:00+00:00",
-          "confirmation_time": "2026-07-21T13:45:00+00:00",
-          "entry": 4050.199951171875,
-          "entry_rr": 2.555069436769013,
-          "time": "2026-07-21T14:15:00+00:00",
-          "exit": 4066.8335500042194,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "cf1b8e97bd9f453306cfaf76",
-          "kind": "SQUEEZE_RELEASE",
-          "direction": -1,
-          "origin": "2026-07-21T13:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T13:45:00+00:00",
-          "entry_bar_close": "2026-07-21T14:00:00+00:00",
-          "confirmation_time": "2026-07-21T13:45:00+00:00",
-          "entry": 4050.199951171875,
-          "entry_rr": 2.555069436769013,
-          "time": "2026-07-21T14:15:00+00:00",
-          "exit": 4066.8335500042194,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "f08d68aa250268586b3c6943",
-          "kind": "INSIDE_BREAKOUT",
-          "direction": -1,
-          "origin": "2026-07-21T13:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T13:45:00+00:00",
-          "entry_bar_close": "2026-07-21T14:00:00+00:00",
-          "confirmation_time": "2026-07-21T13:45:00+00:00",
-          "entry": 4050.199951171875,
-          "entry_rr": 2.555069436769013,
-          "time": "2026-07-21T14:15:00+00:00",
-          "exit": 4066.8335500042194,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
         {
           "id": "1df4d4388d48117acb632570",
           "kind": "RSI_RECLAIM",
@@ -979,10 +888,10 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 101,
-        "EXPIRED": 38,
+        "INVALIDATED": 98,
         "MISSED": 6,
         "POOR ENTRY": 87,
+        "EXPIRED": 31,
         "OVERLAP": 1,
         "UNAVAILABLE": 1
       }
@@ -991,14 +900,14 @@
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 2,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.09452865480086614,
+              0.9054713451991339
             ],
-            "mean_gross_r": 0.0391875155369085,
-            "stops": 2,
+            "mean_gross_r": 0.5587812733053628,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -1240,14 +1149,11 @@
         },
         "FLOW_TURN": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
+            "stops": 0,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -1321,40 +1227,6 @@
         }
       },
       "records": [
-        {
-          "id": "4030a30ab231bf30975afc5d",
-          "kind": "EMA_PULLBACK",
-          "direction": 1,
-          "origin": "2026-07-21T09:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T09:15:00+00:00",
-          "entry_bar_close": "2026-07-21T09:30:00+00:00",
-          "confirmation_time": "2026-07-21T09:15:00+00:00",
-          "entry": 4069.699951171875,
-          "entry_rr": 2.7600146125366973,
-          "time": "2026-07-21T11:15:00+00:00",
-          "exit": 4062.924642415561,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "9beb540f619708410e5fa8d5",
-          "kind": "FLOW_TURN",
-          "direction": 1,
-          "origin": "2026-07-21T09:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-21T09:15:00+00:00",
-          "entry_bar_close": "2026-07-21T09:30:00+00:00",
-          "confirmation_time": "2026-07-21T09:15:00+00:00",
-          "entry": 4069.699951171875,
-          "entry_rr": 2.7600146125366973,
-          "time": "2026-07-21T11:15:00+00:00",
-          "exit": 4062.924642415561,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
         {
           "id": "1df4d4388d48117acb632570",
           "kind": "RSI_RECLAIM",
@@ -1544,9 +1416,9 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 32,
-        "EXPIRED": 9,
+        "INVALIDATED": 30,
         "MISSED": 1,
+        "EXPIRED": 3,
         "POOR ENTRY": 3
       }
     }
