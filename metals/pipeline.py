@@ -11,6 +11,8 @@ from metals.data import SYMBOLS, CONTEXT, snapshot, clean, aggregate, session_co
 from metals.indicators import compute
 from metals.structure import scan, families
 from metals.models import evaluate, features, paired_comparison
+from metals.providers import collect, public_summary, macro_features
+from metals.outlook import describe, paths
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve
 from metals.signal_audit import evaluate_events
@@ -98,11 +100,17 @@ def run(raw_folder,stage,history):
     if manifest is None:
         manifest=snapshot(raw_folder)
     asof=pd.Timestamp(manifest["asof"])
+    provider_cache=collect(read(history/'provider_cache.json',{}), now=asof)
+    write(stage/'provider_cache.json',provider_cache)
+    provider_summary=public_summary(provider_cache)
+    for name,item in provider_summary['providers'].items():
+        print('PROVIDER',name,item['status'],'observations',len(item['observations']),flush=True)
     commit=os.environ.get("GITHUB_SHA","local")
     channel="production" if os.environ.get("GITHUB_REF")=="refs/heads/master" and os.environ.get("GITHUB_EVENT_NAME")!="pull_request" else "research"
     run_id=asof.strftime("%Y%m%dT%H%M%SZ")+"-"+os.environ.get("GITHUB_RUN_ID","local")
     code_hash=hashlib.sha256(b"".join(p.read_bytes() for p in sorted(Path("metals").glob("*.py")))).hexdigest()
     payload={"schema_version":1,"version":VERSION,"run_id":run_id,"asof":asof.isoformat(),"commit":commit,"code_hash":code_hash,"source_hash":manifest["source_hash"],"assets":{},"context":{},"limitations":["Yahoo continuous futures; per-bar contract mapping and revision vintages unavailable.","No exchange order book, participant identities or validated event calendar.","OHLCV liquidity and absorption labels are proxies.","Legacy model files and their frozen baseline are research history; corrected metrics are a new evaluation lineage."]}
+    payload["external_data"]=provider_summary
     all_frames={}
     setup_ledger=read(history/"setup_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
     signal_ledger=read(history/"signal_ledger.json",{"schema_version":1,"issued":{},"observations":{}})
@@ -118,6 +126,9 @@ def run(raw_folder,stage,history):
         frames["4h"],reports["4h"]=aggregate(frames["1h"],cals["1h"],asof)
         frames["1w"],reports["1w"]=aggregate(frames["1h"],cals["1d"],asof,weekly=True,daily=frames["1d"])
         frames={k:compute(v) for k,v in frames.items()}
+        for model_tf in ('1h','1d'):
+            macro=macro_features(frames[model_tf].index,provider_cache)
+            frames[model_tf]=frames[model_tf].join(macro)
         all_frames[asset]=frames
         print("DATA DIAGNOSTIC",asset,json.dumps({k:{"bars":len(v),"feature_complete":int(features(v).notna().all(axis=1).sum()),"gaps":int(v.gap_before.sum()),"rolls":int(v.roll_gap_proxy.sum()),"cmf_missing":int(v.cmf.isna().sum()),"quality":reports[k]} for k,v in frames.items()}),flush=True)
         analyses={}
@@ -146,14 +157,35 @@ def run(raw_folder,stage,history):
             if cached.get("cache_key")==cache_key:
                 result=cached
             else:
-                previous=evaluate(frames[tf],bars,hourly=tf=="1h")
-                result=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
-                result["previous_recipe_comparison"]=paired_comparison(result,previous)
+                previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
+                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="history_selected")
+                comparison=paired_comparison(challenger,previous)
+                promotion={}
+                for partition in ('walk_forward','holdout'):
+                    m=comparison[partition]
+                    promotion[partition+'_sample']=m.get('n',0)>=(100 if partition=='walk_forward' else 12)
+                    promotion[partition+'_price_improvement']=(m.get('mae_improvement') or 0)>=.05
+                    promotion[partition+'_brier']=m.get('current_brier',1)<=m.get('previous_brier',0)
+                    promotion[partition+'_coverage']=.68<=m.get('current_coverage80',0)<=.90
+                promoted=all(promotion.values())
+                result=challenger if promoted else previous
+                result['challenger_review']={'recipe':'3.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
+                    'research':challenger['research'],'oos':challenger['oos'],'holdout':challenger['holdout'],
+                    'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
+                result["previous_recipe_comparison"]=comparison if promoted else paired_comparison(previous,previous)
                 result["previous_recipe_summary"]={k:previous[k] for k in ("status","research","oos","holdout","failed_gates")}
+                challenger['run_id']=run_id
+                write(stage/'validation'/(asset+'_'+h+'_challenger.json'),challenger)
             result["checks"]["latest_completed_bar"] = reports[tf]["latest_expected_bar_present"]
             result["failed_gates"] = [k for k,v in result["checks"].items() if not v]
             result["status"] = "WAIT" if result["failed_gates"] else "VALIDATED"
             result["primary"] = result["research"] if result["status"]=="VALIDATED" else None
+            result['outlook']=describe(result,asset,tf=='1h',asof)
+            result['checks']['target_in_future']=not result['outlook'].get('expired',False)
+            if not result['checks']['target_in_future']:
+                result['status']='WAIT'
+                result['primary']=None
+                result['failed_gates']=[k for k,v in result['checks'].items() if not v]
             result["cache_key"]=cache_key
             result["model_id"]=VERSION+":"+code_hash[:12]+":"+result["recipe_version"]
             result["asset"]=asset
@@ -180,6 +212,7 @@ def run(raw_folder,stage,history):
         fresh=not quote["stale"] and all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d","1w"))
         setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else (not quote["stale"] and all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d")))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
         payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session,"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
+        payload['assets'][asset]['price_paths']=paths(analyses['4h'],quote)
     for name in CONTEXT:
         raw=read(raw_folder/(name+"_1d.json"),None)
         item={"status":"UNAVAILABLE"}
@@ -189,6 +222,8 @@ def run(raw_folder,stage,history):
                 t,c=candidates[-1]
                 item={"status":"CONTEXT ONLY","value":c,"source_time":pd.Timestamp(t,unit="s",tz="UTC").isoformat(),"available_after":(pd.Timestamp(t,unit="s",tz="UTC")+pd.Timedelta(hours=24)).isoformat(),"note":"Conservative daily lag; no vintage proof; not a model feature"}
         payload["context"][name]=item
+    for item in provider_cache['providers'].get('fred',{}).get('observations',[]):
+        payload['context']['fred_'+item['symbol']]={**item,'status':'FRED INITIAL RELEASE · LAGGED'}
     aligned=pd.concat([all_frames["gold"]["1d"].close,all_frames["silver"]["1d"].close],axis=1,join="inner").dropna()
     payload["context"]["gold_silver_ratio"]={"value":float(aligned.iloc[-1,0]/aligned.iloc[-1,1]),"source_time":aligned.index[-1].isoformat(),"status":"CONTEXT ONLY"}
     payload["context"]["event_calendar"]={"status":"UNAVAILABLE","note":"No verified scheduled-release feed connected"}

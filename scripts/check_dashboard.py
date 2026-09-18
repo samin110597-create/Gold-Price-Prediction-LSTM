@@ -36,6 +36,11 @@ with sync_playwright() as p:
         assert page.locator('[data-testid="price"]').inner_text().startswith("$")
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
         assert page.locator('[data-forecast]').count()==4
+        assert page.locator('[data-target-date]').count()==4
+        assert all('UTC' in x.inner_text() for x in page.locator('[data-target-date]').all())
+        assert page.locator('[data-provider]').count()==5
+        assert page.locator('#price-paths').is_visible()
+        assert 'UNVALIDATED' in page.locator('.forecast-grid').inner_text() or 'VALIDATED' in page.locator('.forecast-grid').inner_text()
         assert 'No validated edge' not in page.locator('.forecast-grid').inner_text()
         assert page.locator('#quote-age').inner_text() not in ('—','unknown')
         assert page.locator('#snapshot-age').inner_text() not in ('—','unknown')
