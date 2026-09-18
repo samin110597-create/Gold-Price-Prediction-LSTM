@@ -2,19 +2,19 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-04T11:30:00+00:00",
+  "cutoff": "2026-09-04T16:30:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 6,
-            "tp1_first": 0.6666666666666666,
+            "n": 5,
+            "tp1_first": 0.6,
             "wilson95": [
-              0.29998832134152864,
-              0.9032306674407831
+              0.23071993220883708,
+              0.8823817688407467
             ],
-            "mean_gross_r": 0.9818588023411192,
+            "mean_gross_r": 0.8410672330022713,
             "stops": 1,
             "timeouts": 1
           },
@@ -104,13 +104,13 @@
         },
         "RSI_RECLAIM": {
           "earlier_history": {
-            "n": 4,
-            "tp1_first": 0.75,
+            "n": 3,
+            "tp1_first": 0.6666666666666666,
             "wilson95": [
-              0.3006360524426366,
-              0.9544139373553637
+              0.2076549551264879,
+              0.9385096847238394
             ],
-            "mean_gross_r": 1.086466919448986,
+            "mean_gross_r": 0.886683675646479,
             "stops": 1,
             "timeouts": 0
           },
@@ -152,7 +152,7 @@
               0.2076549551264879,
               0.9385096847238394
             ],
-            "mean_gross_r": 0.7665291653460141,
+            "mean_gross_r": 0.7665291659530634,
             "stops": 1,
             "timeouts": 0
           },
@@ -375,40 +375,6 @@
       },
       "records": [
         {
-          "id": "0c3ce8bf09ab94c84ca8eebd",
-          "kind": "EMA_PULLBACK",
-          "direction": 1,
-          "origin": "2026-07-21T23:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-07-22T00:00:00+00:00",
-          "entry_bar_close": "2026-07-22T00:15:00+00:00",
-          "confirmation_time": "2026-07-22T00:00:00+00:00",
-          "entry": 59.165000915527344,
-          "entry_rr": 1.6858166508565064,
-          "time": "2026-07-22T00:15:00+00:00",
-          "exit": 59.33000183105469,
-          "gross_r": 1.6858166508565064,
-          "ambiguous": false
-        },
-        {
-          "id": "61e03ffb256d3d23e9e4424e",
-          "kind": "RSI_RECLAIM",
-          "direction": 1,
-          "origin": "2026-07-21T23:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-07-22T00:00:00+00:00",
-          "entry_bar_close": "2026-07-22T00:15:00+00:00",
-          "confirmation_time": "2026-07-22T00:00:00+00:00",
-          "entry": 59.165000915527344,
-          "entry_rr": 1.6858166508565064,
-          "time": "2026-07-22T00:15:00+00:00",
-          "exit": 59.33000183105469,
-          "gross_r": 1.6858166508565064,
-          "ambiguous": false
-        },
-        {
           "id": "5ad9ff04c6ddf0b8fe2095ab",
           "kind": "PIN_REJECTION",
           "direction": 1,
@@ -419,9 +385,9 @@
           "entry_bar_close": "2026-07-22T05:30:00+00:00",
           "confirmation_time": "2026-07-22T05:15:00+00:00",
           "entry": 59.959999084472656,
-          "entry_rr": 2.883199939858714,
+          "entry_rr": 2.88344570986563,
           "time": "2026-07-22T05:30:00+00:00",
-          "exit": 59.84207450078785,
+          "exit": 59.84208455206978,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -436,10 +402,10 @@
           "entry_bar_close": "2026-07-24T00:15:00+00:00",
           "confirmation_time": "2026-07-24T00:00:00+00:00",
           "entry": 57.849998474121094,
-          "entry_rr": 2.195047966216276,
+          "entry_rr": 2.1950479680374237,
           "time": "2026-07-24T00:15:00+00:00",
           "exit": 57.67499923706055,
-          "gross_r": 2.195047966216276,
+          "gross_r": 2.1950479680374237,
           "ambiguous": false
         },
         {
@@ -453,10 +419,10 @@
           "entry_bar_close": "2026-07-24T00:15:00+00:00",
           "confirmation_time": "2026-07-24T00:00:00+00:00",
           "entry": 57.849998474121094,
-          "entry_rr": 2.195047966216276,
+          "entry_rr": 2.1950479680374237,
           "time": "2026-07-24T00:15:00+00:00",
           "exit": 57.67499923706055,
-          "gross_r": 2.195047966216276,
+          "gross_r": 2.1950479680374237,
           "ambiguous": false
         },
         {
@@ -1133,9 +1099,9 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 105,
+        "INVALIDATED": 106,
+        "EXPIRED": 35,
         "POOR ENTRY": 45,
-        "EXPIRED": 33,
         "MISSED": 12,
         "UNAVAILABLE": 2,
         "OVERLAP": 2
@@ -1145,13 +1111,13 @@
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 1,
+            "tp1_first": 0.0,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0,
+              0.7934567085261071
             ],
-            "mean_gross_r": 1.0336334414249175,
+            "mean_gross_r": 0.3814502319933284,
             "stops": 0,
             "timeouts": 1
           },
@@ -1226,13 +1192,13 @@
         },
         "RSI_RECLAIM": {
           "earlier_history": {
-            "n": 2,
+            "n": 1,
             "tp1_first": 1.0,
             "wilson95": [
-              0.34237195288961925,
+              0.20654329147389294,
               1
             ],
-            "mean_gross_r": 2.1206640739870886,
+            "mean_gross_r": 2.5555114971176707,
             "stops": 0,
             "timeouts": 0
           },
@@ -1479,40 +1445,6 @@
       },
       "records": [
         {
-          "id": "0c3ce8bf09ab94c84ca8eebd",
-          "kind": "EMA_PULLBACK",
-          "direction": 1,
-          "origin": "2026-07-21T23:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-07-22T00:00:00+00:00",
-          "entry_bar_close": "2026-07-22T00:15:00+00:00",
-          "confirmation_time": "2026-07-22T00:00:00+00:00",
-          "entry": 59.165000915527344,
-          "entry_rr": 1.6858166508565064,
-          "time": "2026-07-22T00:15:00+00:00",
-          "exit": 59.33000183105469,
-          "gross_r": 1.6858166508565064,
-          "ambiguous": false
-        },
-        {
-          "id": "61e03ffb256d3d23e9e4424e",
-          "kind": "RSI_RECLAIM",
-          "direction": 1,
-          "origin": "2026-07-21T23:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-07-22T00:00:00+00:00",
-          "entry_bar_close": "2026-07-22T00:15:00+00:00",
-          "confirmation_time": "2026-07-22T00:00:00+00:00",
-          "entry": 59.165000915527344,
-          "entry_rr": 1.6858166508565064,
-          "time": "2026-07-22T00:15:00+00:00",
-          "exit": 59.33000183105469,
-          "gross_r": 1.6858166508565064,
-          "ambiguous": false
-        },
-        {
           "id": "5ad9ff04c6ddf0b8fe2095ab",
           "kind": "PIN_REJECTION",
           "direction": 1,
@@ -1523,9 +1455,9 @@
           "entry_bar_close": "2026-07-22T05:30:00+00:00",
           "confirmation_time": "2026-07-22T05:15:00+00:00",
           "entry": 59.959999084472656,
-          "entry_rr": 2.883199939858714,
+          "entry_rr": 2.88344570986563,
           "time": "2026-07-22T05:30:00+00:00",
-          "exit": 59.84207450078785,
+          "exit": 59.84208455206978,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1697,7 +1629,7 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 28,
+        "INVALIDATED": 26,
         "POOR ENTRY": 12,
         "EXPIRED": 1,
         "OVERLAP": 1,
