@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-08T04:15:00+00:00",
+  "cutoff": "2026-09-08T08:30:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -14,7 +14,7 @@
               0.23071993220883708,
               0.8823817688407467
             ],
-            "mean_gross_r": 0.8410672277571164,
+            "mean_gross_r": 0.8410672440546353,
             "stops": 1,
             "timeouts": 1
           },
@@ -152,7 +152,7 @@
               0.2076549551264879,
               0.9385096847238394
             ],
-            "mean_gross_r": 0.7665291572111385,
+            "mean_gross_r": 0.7665291843736699,
             "stops": 1,
             "timeouts": 0
           },
@@ -167,14 +167,14 @@
         },
         "PIN_REJECTION": {
           "earlier_history": {
-            "n": 2,
+            "n": 1,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.6576280471103807
+              0.7934567085261071
             ],
             "mean_gross_r": -1.0,
-            "stops": 2,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -256,14 +256,14 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 2,
+            "n": 3,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.6576280471103807
+              0.5615060804490177
             ],
-            "mean_gross_r": -0.6635462120309576,
-            "stops": 1,
+            "mean_gross_r": -0.7756974746873051,
+            "stops": 2,
             "timeouts": 1
           }
         },
@@ -375,23 +375,6 @@
       },
       "records": [
         {
-          "id": "5ad9ff04c6ddf0b8fe2095ab",
-          "kind": "PIN_REJECTION",
-          "direction": 1,
-          "origin": "2026-07-22T05:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-22T05:15:00+00:00",
-          "entry_bar_close": "2026-07-22T05:30:00+00:00",
-          "confirmation_time": "2026-07-22T05:15:00+00:00",
-          "entry": 59.959999084472656,
-          "entry_rr": 2.879910437809359,
-          "time": "2026-07-22T05:30:00+00:00",
-          "exit": 59.84193980452973,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
           "id": "f24a3935b68429c990f6f7f3",
           "kind": "EMA_PULLBACK",
           "direction": -1,
@@ -402,10 +385,10 @@
           "entry_bar_close": "2026-07-24T00:15:00+00:00",
           "confirmation_time": "2026-07-24T00:00:00+00:00",
           "entry": 57.849998474121094,
-          "entry_rr": 2.195047941811649,
+          "entry_rr": 2.1950480232992433,
           "time": "2026-07-24T00:15:00+00:00",
           "exit": 57.67499923706055,
-          "gross_r": 2.195047941811649,
+          "gross_r": 2.1950480232992433,
           "ambiguous": false
         },
         {
@@ -419,10 +402,10 @@
           "entry_bar_close": "2026-07-24T00:15:00+00:00",
           "confirmation_time": "2026-07-24T00:00:00+00:00",
           "entry": 57.849998474121094,
-          "entry_rr": 2.195047941811649,
+          "entry_rr": 2.1950480232992433,
           "time": "2026-07-24T00:15:00+00:00",
           "exit": 57.67499923706055,
-          "gross_r": 2.195047941811649,
+          "gross_r": 2.1950480232992433,
           "ambiguous": false
         },
         {
@@ -1096,15 +1079,33 @@
           "exit": 66.03106978758413,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "e5b18bfc8c79ae9126c90341",
+          "kind": "STRUCTURE_BREAK",
+          "direction": -1,
+          "origin": "2026-09-18T14:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-18T14:30:00+00:00",
+          "entry_bar_close": "2026-09-18T14:45:00+00:00",
+          "confirmation_time": "2026-09-18T14:30:00+00:00",
+          "entry": 66.56500244140625,
+          "entry_rr": 1.4398495669217632,
+          "time": "2026-09-18T15:00:00+00:00",
+          "exit": 66.91920759446317,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
-        "EXPIRED": 35,
-        "INVALIDATED": 103,
+        "INVALIDATED": 104,
         "POOR ENTRY": 45,
+        "EXPIRED": 33,
         "MISSED": 12,
         "UNAVAILABLE": 2,
-        "OVERLAP": 2
+        "OVERLAP": 2,
+        "TRIGGERED": 4
       }
     },
     "Strict": {
@@ -1249,14 +1250,11 @@
         },
         "PIN_REJECTION": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
+            "stops": 0,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -1444,23 +1442,6 @@
         }
       },
       "records": [
-        {
-          "id": "5ad9ff04c6ddf0b8fe2095ab",
-          "kind": "PIN_REJECTION",
-          "direction": 1,
-          "origin": "2026-07-22T05:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-22T05:15:00+00:00",
-          "entry_bar_close": "2026-07-22T05:30:00+00:00",
-          "confirmation_time": "2026-07-22T05:15:00+00:00",
-          "entry": 59.959999084472656,
-          "entry_rr": 2.879910437809359,
-          "time": "2026-07-22T05:30:00+00:00",
-          "exit": 59.84193980452973,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
         {
           "id": "6ec9c9a1664108829855778d",
           "kind": "EMA_PULLBACK",
