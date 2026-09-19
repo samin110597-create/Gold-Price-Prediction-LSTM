@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-08T17:15:00+00:00",
+  "cutoff": "2026-09-08T17:45:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -227,14 +227,14 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 2,
+            "n": 3,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.6576280471103807
+              0.5615060804490177
             ],
             "mean_gross_r": -1.0,
-            "stops": 2,
+            "stops": 3,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -350,6 +350,23 @@
         }
       },
       "records": [
+        {
+          "id": "d517d9c0cbe4cdb1b27f6970",
+          "kind": "STRUCTURE_BREAK",
+          "direction": -1,
+          "origin": "2026-07-27T13:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-07-27T13:30:00+00:00",
+          "entry_bar_close": "2026-07-27T13:45:00+00:00",
+          "confirmation_time": "2026-07-27T13:30:00+00:00",
+          "entry": 4078.0,
+          "entry_rr": 1.727714560933946,
+          "time": "2026-07-27T14:00:00+00:00",
+          "exit": 4091.7754518982924,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
         {
           "id": "1df4d4388d48117acb632570",
           "kind": "RSI_RECLAIM",
@@ -888,10 +905,10 @@
         }
       ],
       "excluded": {
-        "MISSED": 5,
-        "POOR ENTRY": 76,
         "EXPIRED": 37,
-        "INVALIDATED": 88,
+        "INVALIDATED": 90,
+        "POOR ENTRY": 78,
+        "MISSED": 4,
         "OVERLAP": 1,
         "UNAVAILABLE": 1
       }
