@@ -7,7 +7,7 @@ function forecastCards(a,stale){
   const ref=a.timeframes[h==='4H'?'1h':'1d'].chart.at(-1);
   const selected=r?.selection;
   return `<article class="forecast" data-forecast="${h}">
-   <div class="panel-head"><h3>${h}</h3>${badge(stale?'STALE ESTIMATE':expired?'TARGET ELAPSED':verified?'VALIDATED':'RESEARCH · UNVALIDATED',verified?'up':'wait')}</div>
+   <div class="panel-head"><h3>${h}</h3>${badge(stale?'STALE · RESEARCH UNVALIDATED':expired?'ELAPSED · RESEARCH UNVALIDATED':verified?'VALIDATED':'RESEARCH · UNVALIDATED',verified?'up':'wait')}</div>
    <div class="forecast-direction ${o.direction==='UPWARD'?'uptext':o.direction==='DOWNWARD'?'downtext':''}">${escape(o.direction||'PENDING')} BIAS</div>
    <div class="forecast-label">${verified?'Validated expected price':'Model price estimate · not a market quote'}</div>
    <div class="headline" data-estimate="${h}">${r?'$'+n(r.price,asset==='silver'?3:2):'Insufficient complete data'}</div>
