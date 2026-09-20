@@ -52,10 +52,31 @@ The technical workbench adds 17 causal playbooks with fixed triggers, stops and 
 
 The page displays actual observed reference prices separately from model estimates, estimated 80% ranges, sample counts, error rates, interval coverage and failed validation gates. Recipe 2.0 scales returns and calibration residuals by volatility known at each origin. Monthly calibration starts with 1,260 daily bars and extends backward based on available complete sample counts, never based on performance. Monthly recent evaluation uses 630 daily bars. Missing target windows remain excluded; a small sample does not become validated just because an estimate exists.
 
-The previous recipe is evaluated on the same source history. Paired comparisons use only identical origin, target and partition tuples. The revised model improves recent interval coverage in the release audit, but point errors and direction do not consistently beat the baseline. The interface exposes that limitation. Neither model is selected or tuned using the displayed comparison.
+The previous recipe is evaluated on the same source history. Paired comparisons use only identical origin, target and partition tuples. The revised model improves recent interval coverage in the release audit, but point errors and direction do not consistently beat the baseline. The interface exposes that limitation. Recipe 2.0 remains the default. The 3.0 challenger described below can replace a research estimate only under explicit promotion criteria; a research promotion never bypasses the trading-validation gates.
 
 Data comes from Yahoo Finance GC=F and SI=F continuous futures. It is **real provider data delivered as delayed snapshots**, not a streaming exchange feed. The observed quote timestamp can lag the build; the page displays quote age, snapshot age and last successful page check. Builds are scheduled at minutes 12, 27, 42 and 57 of each hour. GitHub scheduling may delay publication. The visible page polls the manifest every 60 seconds, fetches changed bundles, verifies the dashboard SHA-256 and matching run metadata, and preserves the last verified snapshot if a refresh fails. Snapshots older than 30 minutes pause current-watch eligibility. Reloading cannot eliminate provider delay.
 
 Background: [Yahoo exchange data policies](https://help.yahoo.com/kb/SLN2310.html), [GitHub scheduled workflow behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule), [chronological evaluation and gaps](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html).
 
 Delayed intraday candles are excluded using the provider quote timestamp, even when their nominal end is already behind the wall clock. A completed session is accepted after a conservative 30-minute finalization allowance. The quality report records the provider cutoff and excluded pending bars.
+
+
+## Dated outlook and additional providers
+
+Each forecast now gives a target exchange date/time, upward/downward/flat bias, estimated future price, residual range, current reference and recent mean error. Targets follow exchange sessions and exclude weekends and session breaks. An elapsed target or stale source prevents a current validated label. Bull/base/bear paths use only confirmed 4H structure zones, with a completed close and retest/reclaim rule. Missing objectives remain unavailable.
+
+Five server-side adapters use repository Actions secrets; keys never enter browser code, JSON, logs or artifacts. Canonical names are `FINNHUB_API_KEY`, `FMP_API_KEY`, `FRED_API_KEY`, `POLYGON_API_KEY`, `ALPHA_VANTAGE_API_KEY`; common aliases are accepted in the workflow. Access is tested rather than assumed. The initial repository audit on September 16 returned **KEY NOT CONFIGURED** for all five bindings. The integrations are ready, but their live access cannot be certified until credentials are available to this repository workflow. Keys in another repository or an unselected GitHub Environment are not automatically available here.
+
+| Provider | Requested data | Minimum refresh | Instrument / limitation |
+| --- | --- | --- | --- |
+| Finnhub | GLD, SLV quotes | 15 minutes | ETF shares, separate from metals futures |
+| FMP | GCUSD, SIUSD commodity quotes | 15 minutes | Contract basis must remain distinct; free-plan entitlement tested |
+| FRED | DFII10, DGS10, T10YIE, DTWEXBGS initial-release history | 24 hours | Daily macro, never a live metals quote |
+| Polygon / Massive | C:XAUUSD, C:XAGUSD previous-day bars | 24 hours | Spot previous-day close; period start is not a live timestamp |
+| Alpha Vantage | GOLD, SILVER spot quotes | 6 hours | At most eight scheduled requests/day here; 25/day free budget may be shared with other usage |
+
+Finnhub/FMP use at most 192 scheduled calls/day each in this workflow. Failures are cached too, preventing retry storms. Access denials and rate limits remain explicit. Previous observations retained during outages keep their original timestamps. Primary chart, technicals and forecasts remain GC=F/SI=F; snapshots of spot and ETF prices are never spliced into historical futures bars. FRED features use initial releases and a two-UTC-day availability delay; stale macro observations are excluded. No latest revised macro series is backfilled into historical model features.
+
+Recipe 3.0 is a predeclared challenger: no-change, historical median, 25%, 50%, or 100% of the volatility-scaled Ridge prediction. Each historical block selects its candidate by absolute error on the first half of already completed calibration labels. The second half calibrates intervals and probabilities. Neutral point forecasts count as directional abstentions, not correct bearish predictions. Promotion requires at least 5% lower exact-matched MAE in both historical partitions, 100 earlier and 12 recent samples, no worse Brier score, and 68–90% interval coverage. Failed candidates remain visible in the evaluation and are not promoted. Historical research performance still requires prospective confirmation.
+
+API references: [Finnhub](https://finnhub.io/docs/api/quote), [FMP](https://site.financialmodelingprep.com/developer/docs/stable/commodities-quote), [FRED initial releases](https://fred.stlouisfed.org/docs/api/fred/series_observations.html), [Polygon/Massive previous-day bars](https://massive.com/docs/rest/forex/aggregates/previous-day-bar), [Alpha Vantage](https://www.alphavantage.co/documentation/).
