@@ -93,3 +93,17 @@ def test_adaptive_selector_never_sees_future_labels():
     assert a and a==b
     assert all(r['selection']['interval_n']>=10 for r in before['records'])
     assert before['research']['selection']['selection_end']<before['research']['origin']
+
+def test_overlapping_zones_cannot_produce_wrong_side_objectives():
+    zones=[[103,108],[105,110],[112,117],[93,98],[91,96],[84,89]]
+    detail={'last_completed':'2026-09-18T21:00Z','structure':{'levels':[{'zone':z} for z in zones]}}
+    out=paths(detail,{'price':100})
+    assert out['bull']['trigger']==108 and out['bull']['objective']==112
+    assert out['bear']['trigger']==93 and out['bear']['objective']==89
+    detail['structure']['levels']=[{'zone':z} for z in zones if z not in ([112,117],[84,89])]
+    out=paths(detail,{'price':100})
+    assert out['bull']['objective'] is None and out['bear']['objective'] is None
+
+def test_negligible_predicted_move_is_flat_relative_to_measured_error():
+    result={'horizon_bars':1,'research':{'origin':'2026-09-18T21:00Z','reference_price':4424.9,'price':4424.76,'return':-.14/4424.9,'interval80':[4345,4520]},'holdout':{'mae_percent':1.3}}
+    assert describe(result,'gold',False,'2026-09-20T15:00Z')['direction']=='FLAT'

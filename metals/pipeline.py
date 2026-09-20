@@ -58,6 +58,10 @@ def validate(payload):
     for asset,a in payload["assets"].items():
         assert a["run_id"]==payload["run_id"] and a["asof"]==payload["asof"]
         assert a["quote"]["price"]>0
+        for side,direction in [('bull',1),('bear',-1)]:
+            case=a.get('price_paths',{}).get(side,{})
+            if case.get('objective') is not None:
+                assert case['trigger'] is not None and direction*(case['objective']-case['trigger'])>0
         assert pd.Timestamp(a["quote"]["time"])<=pd.Timestamp(payload["asof"])
         if "source_lag_seconds" in a["quote"]:
             assert abs(a["quote"]["source_lag_seconds"]-(pd.Timestamp(payload["asof"])-pd.Timestamp(a["quote"]["time"])).total_seconds())<.01

@@ -15,7 +15,7 @@ function forecastCards(a,stale){
    <small>${r?'Model 80% range $'+n(r.interval80[0])+' – $'+n(r.interval80[1]):'Waiting for sufficient complete calibration cases.'}</small>
    ${r?`<p class="forecast-strength">${escape(o.strength||'DIRECTION UNVALIDATED')}<br><small>${o.range_contains_no_change?'The range includes both gains and losses.':''}</small></p>`:''}
    <p class="observed-price">Observed reference <strong>$${n(ref.close,asset==='silver'?3:2)}</strong><br>${time(ref.time)}</p>
-   ${r?`<p class="footnote">Expected change ${pct(r.return)} (${o.expected_change>=0?'+':''}$${n(o.expected_change)}). Recent average error ≈ $${n(o.recent_mean_absolute_error_dollars)}. This is an error scale, not an additional confidence interval.</p>`:''}
+   ${r?`<p class="footnote">Expected change ${n(r.return*100,2)}% (${o.expected_change>=0?'+':'−'}$${n(Math.abs(o.expected_change))}). Recent average error ≈ $${n(o.recent_mean_absolute_error_dollars)}. This is an error scale, not an additional confidence interval.</p>`:''}
    <div class="forecast-evidence"><span>Earlier / recent tests</span><strong>${n(m.n,0)} / ${n(ho.n,0)}</strong><span>Recent direction hit rate</span><strong>${pct(ho.directional_accuracy)}</strong><span>Recent price error</span><strong>${pct(Number.isFinite(ho.mae_percent)?ho.mae_percent/100:null)}</strong><span>Recent 80% range coverage</span><strong>${pct(ho.coverage80)}</strong></div>
    <details><summary>Accuracy, model & decision rules</summary>
     <p>${escape(o.interpretation)} ${expired?'This forecast target has elapsed; wait for an updated run.':''}</p>
