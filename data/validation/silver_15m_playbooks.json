@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-08T23:15:00+00:00",
+  "cutoff": "2026-09-09T01:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -38,9 +38,9 @@
               0.0614903152761605,
               0.7923450448735121
             ],
-            "mean_gross_r": 0.10200298274378931,
-            "stops": 2,
-            "timeouts": 0
+            "mean_gross_r": 0.7283215355200028,
+            "stops": 1,
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 3,
@@ -254,15 +254,15 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 2,
-            "tp1_first": 1.0,
+            "n": 3,
+            "tp1_first": 0.6666666666666666,
             "wilson95": [
-              0.34237195288961925,
-              1
+              0.2076549551264879,
+              0.9385096847238394
             ],
-            "mean_gross_r": 2.6147177482316373,
+            "mean_gross_r": 2.036130384930638,
             "stops": 0,
-            "timeouts": 0
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 3,
@@ -296,15 +296,15 @@
         },
         "FLOW_TURN": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": 0.13506645134291437,
+            "mean_gross_r": 0.32103875308934593,
             "stops": 1,
-            "timeouts": 1
+            "timeouts": 2
           },
           "recent_holdout": {
             "n": 2,
@@ -397,9 +397,9 @@
           "entry_bar_close": "2026-07-27T06:15:00+00:00",
           "confirmation_time": "2026-07-27T06:00:00+00:00",
           "entry": 59.709999084472656,
-          "entry_rr": 1.2163104725666085,
+          "entry_rr": 1.2163009691031703,
           "time": "2026-07-27T08:15:00+00:00",
-          "exit": 59.38113442787323,
+          "exit": 59.3811318583174,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -414,28 +414,56 @@
           "entry_bar_close": "2026-07-27T06:30:00+00:00",
           "confirmation_time": "2026-07-27T06:15:00+00:00",
           "entry": 59.720001220703125,
-          "entry_rr": 1.6311679876910277,
+          "entry_rr": 1.6311517096367294,
           "time": "2026-07-27T08:15:00+00:00",
-          "exit": 59.480909114561136,
+          "exit": 59.48090672854501,
           "gross_r": -1.0,
           "ambiguous": false
         },
         {
-          "id": "244df3889150c1c6602ace0a",
+          "id": "d23a368c36de5503d368dd52",
           "kind": "RANGE_BREAKOUT",
           "direction": 1,
-          "origin": "2026-07-29T06:45:00+00:00",
+          "origin": "2026-07-29T01:45:00+00:00",
           "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-07-29T07:00:00+00:00",
-          "entry_bar_close": "2026-07-29T07:15:00+00:00",
-          "confirmation_time": "2026-07-29T07:00:00+00:00",
-          "entry": 58.36000061035156,
-          "entry_rr": 1.4841996665528858,
-          "time": "2026-07-29T08:15:00+00:00",
-          "exit": 58.12081477152111,
-          "gross_r": -1.0,
-          "ambiguous": false
+          "state": "TIMEOUT",
+          "entry_time": "2026-07-29T02:30:00+00:00",
+          "entry_bar_close": "2026-07-29T02:45:00+00:00",
+          "confirmation_time": "2026-07-29T02:30:00+00:00",
+          "entry": 57.939998626708984,
+          "entry_rr": 1.3488921497274065,
+          "time": "2026-07-29T07:30:00+00:00",
+          "gross_r": 0.8789556583286405
+        },
+        {
+          "id": "7ea89f39a65dfe7dbb0e5abd",
+          "kind": "FLOW_TURN",
+          "direction": 1,
+          "origin": "2026-07-29T01:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-07-29T02:30:00+00:00",
+          "entry_bar_close": "2026-07-29T02:45:00+00:00",
+          "confirmation_time": "2026-07-29T02:30:00+00:00",
+          "entry": 57.939998626708984,
+          "entry_rr": 1.3488921497274065,
+          "time": "2026-07-29T07:30:00+00:00",
+          "gross_r": 0.8789556583286405
+        },
+        {
+          "id": "4769ba1ac6ded7b86ca8de18",
+          "kind": "STRUCTURE_BREAK",
+          "direction": 1,
+          "origin": "2026-07-29T01:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-07-29T02:30:00+00:00",
+          "entry_bar_close": "2026-07-29T02:45:00+00:00",
+          "confirmation_time": "2026-07-29T02:30:00+00:00",
+          "entry": 57.939998626708984,
+          "entry_rr": 1.3488921497274065,
+          "time": "2026-07-29T07:30:00+00:00",
+          "gross_r": 0.8789556583286405
         },
         {
           "id": "77c99d6200f3ee4d158f02b1",
@@ -448,9 +476,9 @@
           "entry_bar_close": "2026-07-29T07:15:00+00:00",
           "confirmation_time": "2026-07-29T07:00:00+00:00",
           "entry": 58.36000061035156,
-          "entry_rr": 1.4841996665528858,
+          "entry_rr": 1.4841996665386887,
           "time": "2026-07-29T08:15:00+00:00",
-          "exit": 58.12081477152111,
+          "exit": 58.12081477151882,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1241,12 +1269,12 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 101,
         "EXPIRED": 30,
+        "INVALIDATED": 100,
         "POOR ENTRY": 42,
-        "UNAVAILABLE": 2,
-        "OVERLAP": 4,
-        "MISSED": 8
+        "OVERLAP": 6,
+        "MISSED": 9,
+        "UNAVAILABLE": 2
       }
     },
     "Strict": {
@@ -1594,9 +1622,9 @@
           "entry_bar_close": "2026-07-27T06:30:00+00:00",
           "confirmation_time": "2026-07-27T06:15:00+00:00",
           "entry": 59.720001220703125,
-          "entry_rr": 1.6311679876910277,
+          "entry_rr": 1.6311517096367294,
           "time": "2026-07-27T08:15:00+00:00",
-          "exit": 59.480909114561136,
+          "exit": 59.48090672854501,
           "gross_r": -1.0,
           "ambiguous": false
         },
