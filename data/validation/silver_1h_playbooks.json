@@ -2,20 +2,20 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-04-29T00:00:00+00:00",
+  "cutoff": "2026-04-29T05:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 20,
-            "tp1_first": 0.45,
+            "n": 21,
+            "tp1_first": 0.42857142857142855,
             "wilson95": [
-              0.25819502085709295,
-              0.6579179916924003
+              0.24469699486521043,
+              0.6345378370296754
             ],
-            "mean_gross_r": 0.06887331307476964,
-            "stops": 11,
+            "mean_gross_r": 0.01797458388073299,
+            "stops": 12,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -146,14 +146,14 @@
         },
         "ENGULFING_REJECTION": {
           "earlier_history": {
-            "n": 5,
-            "tp1_first": 0.4,
+            "n": 6,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.1176182311592533,
-              0.769280067791163
+              0.09676933255921683,
+              0.7000116786584712
             ],
-            "mean_gross_r": 0.09594667998668611,
-            "stops": 3,
+            "mean_gross_r": -0.0867111000110949,
+            "stops": 4,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -2245,6 +2245,40 @@
           "ambiguous": false
         },
         {
+          "id": "1b234b833e514f38029ce671",
+          "kind": "EMA_PULLBACK",
+          "direction": -1,
+          "origin": "2026-04-28T19:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-04-28T22:00:00+00:00",
+          "entry_bar_close": "2026-04-28T23:00:00+00:00",
+          "confirmation_time": "2026-04-28T21:00:00+00:00",
+          "entry": 73.50499725341797,
+          "entry_rr": 1.232514682957336,
+          "time": "2026-04-29T01:00:00+00:00",
+          "exit": 73.97557517811133,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "2c4bead28fd5e0d038f08d6f",
+          "kind": "ENGULFING_REJECTION",
+          "direction": -1,
+          "origin": "2026-04-28T19:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-04-28T22:00:00+00:00",
+          "entry_bar_close": "2026-04-28T23:00:00+00:00",
+          "confirmation_time": "2026-04-28T21:00:00+00:00",
+          "entry": 73.50499725341797,
+          "entry_rr": 1.232514682957336,
+          "time": "2026-04-29T01:00:00+00:00",
+          "exit": 73.97557517811133,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
           "id": "4749aae6f29b379d47a0f6ba",
           "kind": "RANGE_BREAKOUT",
           "direction": 1,
@@ -2540,7 +2574,6 @@
         "POOR ENTRY": 112,
         "MISSED": 30,
         "OVERLAP": 9,
-        "PARTITION_BOUNDARY": 2,
         "UNAVAILABLE": 4
       }
     },
