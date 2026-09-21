@@ -13,7 +13,7 @@ function refreshFeedLabels(){
  if($('#quote-age'))$('#quote-age').textContent=ageLabel(a.quote.time);
  if($('#snapshot-age'))$('#snapshot-age').textContent=ageLabel(data.asof);
  if($('#page-check'))$('#page-check').textContent=lastFeedCheck?time(lastFeedCheck):'Checking…';
- if($('#feed-status'))$('#feed-status').textContent=feedBusy?'Checking published data…':feedError?'Refresh failed: '+feedError+'. Showing the last verified snapshot.':snapshotIsStale()?'Snapshot is over 30 minutes old; current-watch eligibility is paused.':quoteIsStale()?'Open-market quote is over 30 minutes old; current-watch eligibility is paused.':'Latest published snapshot loaded. Source quote '+time(a.quote.time)+'.';
+ if($('#feed-status'))$('#feed-status').textContent=feedBusy?'Checking published data…':feedError?'Refresh failed: '+feedError+'. Showing the last verified snapshot.':snapshotIsStale()?'Snapshot is over 30 minutes old; current-watch eligibility is paused.':quoteIsStale()?'Quote freshness or completed-bar checks failed; current-watch eligibility is paused.':'Latest published snapshot loaded. Source quote '+time(a.quote.time)+'.';
  if($('#refresh-market')){$('#refresh-market').disabled=feedBusy;$('#refresh-market').onclick=()=>loadMarketSnapshot();}
 }
 function validateSnapshot(d,manifest){
