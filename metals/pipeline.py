@@ -108,7 +108,7 @@ def run(raw_folder,stage,history):
     write(stage/'provider_cache.json',provider_cache)
     provider_summary=public_summary(provider_cache)
     for name,item in provider_summary['providers'].items():
-        print('PROVIDER',name,item['status'],'observations',len(item['observations']),flush=True)
+        print('PROVIDER',name,item['status'],'observations',len(item['observations']),'symbols',[v['symbol'] for v in item['observations']],'errors',item['errors'],flush=True)
     commit=os.environ.get("GITHUB_SHA","local")
     channel="production" if os.environ.get("GITHUB_REF")=="refs/heads/master" and os.environ.get("GITHUB_EVENT_NAME")!="pull_request" else "research"
     run_id=asof.strftime("%Y%m%dT%H%M%SZ")+"-"+os.environ.get("GITHUB_RUN_ID","local")
@@ -164,6 +164,7 @@ def run(raw_folder,stage,history):
                 previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
                 challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="recent_technical")
                 comparison=paired_comparison(challenger,previous)
+                print('FORECAST COMPARISON',asset,h,json.dumps(comparison),flush=True)
                 promotion={}
                 for partition in ('walk_forward','holdout'):
                     m=comparison[partition]

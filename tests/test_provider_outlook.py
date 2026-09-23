@@ -19,7 +19,7 @@ def test_secrets_and_raw_error_text_never_leave_adapter(monkeypatch):
     monkeypatch.setattr(providers.requests,'get',lambda *a,**kw:Response())
     data=providers.collect(now='2026-09-16T13:00Z',environ={spec[0]:key for spec in providers.SPECS.values()})
     assert key not in json.dumps(data)
-    assert all(v['status']=='ACCESS RESTRICTED' for v in data['providers'].values())
+    assert all('ACCESS RESTRICTED' in v['status'] for v in data['providers'].values())
     def failed(*args,**kwargs):
         raise requests.ConnectionError('https://example.invalid/?key='+key)
     monkeypatch.setattr(providers.requests,'get',failed)
@@ -113,6 +113,8 @@ def test_negligible_predicted_move_is_flat_relative_to_measured_error():
 def test_fred_requests_split_vintages_and_keep_earliest_release(monkeypatch):
     calls=[]
     def fetch(url,params):
+        if url.endswith('vintagedates'):
+            return {'vintage_dates':['2003-01-01']}
         calls.append(params)
         assert (pd.Timestamp(params['realtime_end'])-pd.Timestamp(params['realtime_start'])).days<2000
         return {'observations':[{'date':'2020-01-01','realtime_start':'2020-01-03','value':'1.5'},

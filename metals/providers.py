@@ -116,7 +116,12 @@ def collect_provider(name, key, now):
                 # FRED permits at most 2000 vintage dates per JSON request.
                 # Five calendar years contain fewer than 2000 daily release dates.
                 items=[]
-                start=pd.Timestamp('2003-01-01',tz='UTC')
+                vintage=request('https://api.stlouisfed.org/fred/series/vintagedates',
+                    {'series_id':series,'api_key':key,'file_type':'json','sort_order':'asc','limit':1})
+                first=vintage.get('vintage_dates',[])
+                if not first:
+                    raise ProviderError('NO VINTAGE DATES')
+                start=max(pd.Timestamp('2003-01-01',tz='UTC'),pd.Timestamp(first[0],tz='UTC'))
                 while start<=now:
                     end=min(start+pd.DateOffset(years=5)-pd.Timedelta(days=1),now)
                     r=request('https://api.stlouisfed.org/fred/series/observations',{
@@ -149,7 +154,10 @@ def collect_provider(name, key, now):
                 observations.append({'symbol':series,'basis':title,'value':last['value'],'source_time':last['date'],
                     'available_at':last['available_at'],'retrieved_at':now.isoformat(),'units':'index' if series=='DTWEXBGS' else 'percent',
                     'initial_release_only':True})
+            before=len(failures)
             attempt(fetch_fred)
+            if len(failures)>before:
+                failures[-1]=series+': '+failures[-1]
     status='CONNECTED' if observations and not failures else 'PARTIAL' if observations else (failures[0] if failures else 'NO OBSERVATIONS')
     return {'status':status,'observations':observations,'histories':histories,'errors':sorted(set(failures))}
 
