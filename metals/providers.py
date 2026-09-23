@@ -7,6 +7,7 @@ import argparse
 import json
 import math
 import os
+import time
 from pathlib import Path
 import pandas as pd
 import requests
@@ -102,6 +103,9 @@ def collect_provider(name, key, now):
                 # t is the START of a previous-day aggregate, never a live quote timestamp.
                 observations.append(quote(asset,forex,'Spot USD/oz · previous-day close',r.get('c'),None,now,period_start=timestamp(r.get('t'),unit='ms')))
             elif name == 'alpha_vantage':
+                # Space sequential requests for free-tier per-minute limits.
+                if asset == 'silver':
+                    time.sleep(15)
                 r=request('https://www.alphavantage.co/query',{'function':'GOLD_SILVER_SPOT','symbol':metal,'apikey':key})
                 observations.append(quote(asset,metal,'Spot USD/oz',r.get('price'),r.get('timestamp'),now))
         if name != 'fred':
@@ -109,11 +113,20 @@ def collect_provider(name, key, now):
     if name == 'fred':
         for series, title in FRED_SERIES.items():
             def fetch_fred():
-                r=request('https://api.stlouisfed.org/fred/series/observations',{
-                    'series_id':series,'api_key':key,'file_type':'json','observation_start':'2003-01-01',
-                    'realtime_start':'1776-07-04','realtime_end':now.date().isoformat(),'output_type':4,'limit':100000})
+                # FRED permits at most 2000 vintage dates per JSON request.
+                # Five calendar years contain fewer than 2000 daily release dates.
+                items=[]
+                start=pd.Timestamp('2003-01-01',tz='UTC')
+                while start<=now:
+                    end=min(start+pd.DateOffset(years=5)-pd.Timedelta(days=1),now)
+                    r=request('https://api.stlouisfed.org/fred/series/observations',{
+                        'series_id':series,'api_key':key,'file_type':'json','observation_start':'2003-01-01',
+                        'realtime_start':start.date().isoformat(),'realtime_end':end.date().isoformat(),
+                        'output_type':4,'limit':100000})
+                    items.extend(r.get('observations',[]))
+                    start=end.normalize()+pd.Timedelta(days=1)
                 rows=[]
-                for item in r.get('observations',[]):
+                for item in items:
                     value=number(item.get('value'))
                     date=timestamp(item.get('date'))
                     released=timestamp(item.get('realtime_start'))
@@ -125,7 +138,12 @@ def collect_provider(name, key, now):
                         rows.append({'date':date,'initial_release':released,'available_at':available.isoformat(),'value':value})
                 if not rows:
                     raise ProviderError('NO VINTAGE-SAFE OBSERVATIONS')
-                rows.sort(key=lambda x:(x['available_at'],x['date']))
+                # Keep the earliest returned release for each observation across chunks.
+                rows=sorted(rows,key=lambda x:x['initial_release'])
+                unique={}
+                for row in rows:
+                    unique.setdefault(row['date'],row)
+                rows=sorted(unique.values(),key=lambda x:(x['available_at'],x['date']))
                 histories[series]=rows
                 last=max(rows,key=lambda x:x['date'])
                 observations.append({'symbol':series,'basis':title,'value':last['value'],'source_time':last['date'],
@@ -139,14 +157,14 @@ def collect(previous=None, now=None, environ=None):
     now=pd.Timestamp(now or pd.Timestamp.now(tz='UTC'))
     environ=os.environ if environ is None else environ
     previous=previous or {}
-    result={'schema_version':1,'asof':now.isoformat(),'providers':{}}
+    result={'schema_version':2,'asof':now.isoformat(),'providers':{}}
     for name,(env,ttl,docs) in SPECS.items():
         prior=previous.get('providers',{}).get(name,{})
         fetched=timestamp(prior.get('checked_at'))
         key=environ.get(env,'').strip()
         if not key:
             entry={'status':'KEY NOT CONFIGURED','observations':[],'histories':{},'errors':[], 'checked_at':now.isoformat()}
-        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED':
+        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED' and (name!='fred' or prior.get('adapter_version')==2):
             entry=dict(prior)
         else:
             entry=collect_provider(name,key,now)
@@ -156,7 +174,7 @@ def collect(previous=None, now=None, environ=None):
                 entry['observations']=prior['observations']
                 entry['histories']=prior.get('histories',{})
                 entry['retained_previous']=True
-        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env)
+        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env,adapter_version=2)
         result['providers'][name]=entry
     return result
 

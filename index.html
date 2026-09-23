@@ -11,7 +11,7 @@
 <footer><a href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM">Code & methodology</a><a href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM/blob/master/VALIDATION_BASELINE.md">Frozen validation baseline</a><a href="data/run_manifest.json">Snapshot manifest</a><span>Futures prices in USD per troy ounce · Research only</span></footer>
 </main>
 <script src="assets/signals.js?v=2"></script>
-<script src="assets/evidence.js?v=3"></script>
+<script src="assets/evidence.js?v=4"></script>
 <script src="assets/feed.js?v=3"></script>
 <script>
 'use strict';
@@ -37,7 +37,7 @@ $('#app').innerHTML=
 '<div class="topline"><div><div class="eyebrow">'+a.name+' / '+a.symbol+'</div><div class="price" data-testid="price">$'+n(a.quote.price)+'</div><div class="symbol">'+escape(a.quote.basis)+' · '+time(a.quote.time)+'</div></div><div>'+badge(a.fresh&&!snapshotStale?'LATEST COMPLETED BARS':'DATA GAP / WAIT',a.fresh&&!snapshotStale?'up':'wait')+'<div class="symbol">Quote and completed-bar analysis have separate timestamps</div></div></div>'+
 feedPanel()+
 ((!a.fresh||snapshotStale)?'<div class="notice">'+(snapshotIsStale()?'Snapshot is over 30 minutes old. ':quoteIsStale()?'Quote or intraday bars are stale. ':'')+'Missing latest completed bars: '+escape(Object.entries(a.timeframes).filter(([t,d])=>!d.quality.latest_expected_bar_present).map(([t])=>t.toUpperCase()).join(', ')||'none')+'. Strict setups require all timeframes; check the selected mode and signal status.</div>':'')+
-'<div class="grid">'+
+'<div class="grid">'+technicalBrief(a,snapshotStale)+
 '<section class="panel span12"><div class="panel-head"><h2>Price estimates & measured evidence</h2><span class="muted">4H = 4 trading hourly bars · 1D / 1W / 1M = 1 / 5 / 21 sessions</span></div><div class="forecast-grid">'+fcards+'</div></section>'+
 pricePaths(a,snapshotStale)+
 '<section class="panel span4"><div class="panel-head"><h2>Decision map</h2><div class="controls"><button data-mode="Strict" aria-pressed="'+(mode==='Strict')+'">Strict</button><button data-mode="Adaptive" aria-pressed="'+(mode==='Adaptive')+'">Adaptive</button></div></div><div class="setup-state" data-testid="setup-state">'+escape(s.action)+'</div><div class="muted">'+direction(s.direction)+' structure · '+escape(mode)+' criteria</div><div class="metrics"><div class="metric wide"><span>Conditional entry zone</span><strong>'+(s.entry_zone?'$'+n(s.entry_zone[0])+' – $'+n(s.entry_zone[1]):'Unavailable')+'</strong></div><div class="metric"><span>Fixed invalidation</span><strong>'+n(s.stop)+'</strong></div><div class="metric"><span>Target-before-stop probability</span><strong>Unvalidated</strong></div><div class="metric wide"><span>Observed swing objectives / reward : risk</span><strong>'+(s.targets.length?s.targets.map((t,i)=>n(t)+' / '+n(s.risk_reward[i])+'R').join(' · '):'Unavailable')+'</strong></div></div><p class="footnote">'+escape(s.trigger||'No confirmed structural entry map')+'</p><ul class="reasons">'+s.reasons.map(r=>'<li>'+escape(r)+'</li>').join('')+'</ul>'+(s.issued_at?'<p class="footnote" style="margin-top:14px">Levels frozen '+time(s.issued_at)+' · '+escape(s.id)+'</p>':'')+'</section>'+

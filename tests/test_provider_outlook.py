@@ -10,6 +10,7 @@ from metals.indicators import compute
 from test_canonical import frame
 
 def test_secrets_and_raw_error_text_never_leave_adapter(monkeypatch):
+    monkeypatch.setattr(providers.time,'sleep',lambda _:None)
     key='TEST-CREDENTIAL-DO-NOT-PUBLISH'
     class Response:
         status_code=200
@@ -107,3 +108,51 @@ def test_overlapping_zones_cannot_produce_wrong_side_objectives():
 def test_negligible_predicted_move_is_flat_relative_to_measured_error():
     result={'horizon_bars':1,'research':{'origin':'2026-09-18T21:00Z','reference_price':4424.9,'price':4424.76,'return':-.14/4424.9,'interval80':[4345,4520]},'holdout':{'mae_percent':1.3}}
     assert describe(result,'gold',False,'2026-09-20T15:00Z')['direction']=='FLAT'
+
+
+def test_fred_requests_split_vintages_and_keep_earliest_release(monkeypatch):
+    calls=[]
+    def fetch(url,params):
+        calls.append(params)
+        assert (pd.Timestamp(params['realtime_end'])-pd.Timestamp(params['realtime_start'])).days<2000
+        return {'observations':[{'date':'2020-01-01','realtime_start':'2020-01-03','value':'1.5'},
+                                {'date':'2020-01-01','realtime_start':'2021-01-03','value':'9.9'}]}
+    monkeypatch.setattr(providers,'request',fetch)
+    r=providers.collect_provider('fred','test',pd.Timestamp('2026-09-23T12:00Z'))
+    assert r['status']=='CONNECTED' and len(r['observations'])==4 and len(calls)==20
+    assert all(v['value']==1.5 for v in r['observations'])
+
+
+def test_recent_technical_forecasts_are_causal():
+    f=compute(frame(2300)); before=evaluate(f,1,recipe='recent_technical')
+    changed=f.copy(); changed.iloc[-100:,changed.columns.get_loc('close')]*=1.7
+    after=evaluate(changed,1,recipe='recent_technical')
+    cutoff=f.index[-100].isoformat()
+    a=[r for r in before['records'] if r['target_time']<cutoff]
+    b=[r for r in after['records'] if r['target_time']<cutoff]
+    assert a and a==b
+    assert before['recipe_version']=='4.0'
+    assert before['integrity']['recency_half_life_bars']==252
+    assert before['research']['selection']['selection_end']<before['research']['origin']
+
+
+def test_forward_summary_excludes_other_models_and_neutral_hits():
+    from metals.ledger import forward_summary
+    r={'asset':'gold','horizon':'1D','model_id':'current','forward_eligible':True,'channel':'production','price':100,'reference_price':100}
+    o={'actual_price':99,'inside_interval80':True}
+    ledger={'issued':{'a':r,'b':{**r,'model_id':'old'}},'outcomes':{'a':o,'b':o}}
+    s=forward_summary(ledger,'gold','1D','current')
+    assert s['issued']==s['resolved']==1
+    assert s['directional_accuracy']==0 and s['mae_skill']==0
+
+def test_technical_brief_requires_structure_and_ema_agreement():
+    from metals.outlook import technical_brief
+    indicators={'close':110,'ema20':105,'ema50':100,'rsi':60,'macd_hist':1,'atr':2,'adx':28}
+    detail={'indicators':indicators,'last_completed':'2026-09-23T10:00Z','quality':{'latest_expected_bar_present':True},
+            'structure':{'direction':1,'levels':[{'zone':[99,101]},{'zone':[115,117]}]}}
+    analyses={tf:detail for tf in ('1h','4h','1d')}
+    b=technical_brief(analyses)
+    assert b['alignment']=='BULLISH' and b['rows'][0]['extension_warning']
+    assert b['rows'][0]['support']==101 and b['rows'][0]['resistance']==115
+    analyses['1d']={**detail,'structure':{'direction':-1,'levels':[]}}
+    assert technical_brief(analyses)['alignment']=='MIXED'

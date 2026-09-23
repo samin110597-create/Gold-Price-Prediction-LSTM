@@ -30,3 +30,21 @@ def resolve(ledger,frames):
             continue
         actual=float(frame.close.iloc[j])
         outcomes[key]={"target_time":target_time.isoformat(),"actual_price":actual,"direction_correct":bool((record["price"]>record["reference_price"])==(actual>record["reference_price"])),"absolute_error_percent":100*abs(record["price"]-actual)/record["reference_price"],"inside_interval80":bool(record["interval80"][0]<=actual<=record["interval80"][1])}
+
+def forward_summary(ledger,asset,horizon,model_id):
+    """Evaluate the exact deployed lineage, not a pool of changing model versions."""
+    import numpy as np
+    entries={k:r for k,r in ledger['issued'].items() if r['asset']==asset and r['horizon']==horizon
+             and r.get('model_id')==model_id and r.get('forward_eligible') and r.get('channel')=='production'}
+    resolved=[(r,ledger['outcomes'][k]) for k,r in entries.items() if k in ledger['outcomes']]
+    result={'issued':len(entries),'resolved':len(resolved),'model_id':model_id,
+            'note':'Exact model lineage, issued within 30 minutes of origin; original estimates remain fixed. Small samples are descriptive, not proof of skill.'}
+    if resolved:
+        actual=np.array([o['actual_price']/r['reference_price']-1 for r,o in resolved])
+        predicted=np.array([r['price']/r['reference_price']-1 for r,o in resolved])
+        error=np.mean(abs(actual-predicted)); baseline=np.mean(abs(actual))
+        result.update(mae_percent=float(error*100),no_change_mae_percent=float(baseline*100),
+            mae_skill=float(1-error/baseline) if baseline else None,
+            directional_accuracy=float(np.mean(((predicted>0)==(actual>0))&(abs(predicted)>1e-6))),
+            coverage80=float(np.mean([o['inside_interval80'] for r,o in resolved])))
+    return result
