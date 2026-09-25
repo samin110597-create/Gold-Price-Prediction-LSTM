@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-14T14:30:00+00:00",
+  "cutoff": "2026-09-14T16:45:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -173,13 +173,13 @@
         },
         "PIN_REJECTION": {
           "earlier_history": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.6666666666666666,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.2076549551264879,
+              0.9385096847238394
             ],
-            "mean_gross_r": 0.19858948071379257,
+            "mean_gross_r": 0.4737019646797265,
             "stops": 1,
             "timeouts": 0
           },
@@ -257,7 +257,7 @@
               0.23071993220883708,
               0.8823817688407467
             ],
-            "mean_gross_r": 1.059904406765789,
+            "mean_gross_r": 1.059904406767993,
             "stops": 1,
             "timeouts": 1
           },
@@ -381,6 +381,23 @@
       },
       "records": [
         {
+          "id": "39ebf640c04d3baa75bc2e43",
+          "kind": "PIN_REJECTION",
+          "direction": -1,
+          "origin": "2026-07-28T19:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-07-28T20:00:00+00:00",
+          "entry_bar_close": "2026-07-28T20:15:00+00:00",
+          "confirmation_time": "2026-07-28T20:00:00+00:00",
+          "entry": 57.400001525878906,
+          "entry_rr": 1.0239269326005738,
+          "time": "2026-07-28T22:30:00+00:00",
+          "exit": 57.25,
+          "gross_r": 1.0239269326005738,
+          "ambiguous": false
+        },
+        {
           "id": "c35dcc43e11bf3b027b934e8",
           "kind": "EMA_PULLBACK",
           "direction": 1,
@@ -391,9 +408,9 @@
           "entry_bar_close": "2026-07-30T22:30:00+00:00",
           "confirmation_time": "2026-07-30T22:15:00+00:00",
           "entry": 59.33000183105469,
-          "entry_rr": 1.0498103171739606,
+          "entry_rr": 1.0498103173299453,
           "time": "2026-07-31T00:45:00+00:00",
-          "exit": 59.129966566552845,
+          "exit": 59.12996656658257,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -408,9 +425,9 @@
           "entry_bar_close": "2026-07-31T03:15:00+00:00",
           "confirmation_time": "2026-07-31T03:00:00+00:00",
           "entry": 58.73500061035156,
-          "entry_rr": 3.081672287743411,
+          "entry_rr": 3.081672287837973,
           "time": "2026-07-31T05:15:00+00:00",
-          "exit": 58.97188483231758,
+          "exit": 58.97188483231031,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -425,10 +442,10 @@
           "entry_bar_close": "2026-07-31T07:30:00+00:00",
           "confirmation_time": "2026-07-31T07:15:00+00:00",
           "entry": 58.369998931884766,
-          "entry_rr": 1.3971789614275851,
+          "entry_rr": 1.3971789614386056,
           "time": "2026-07-31T11:15:00+00:00",
           "exit": 58.005001068115234,
-          "gross_r": 1.3971789614275851,
+          "gross_r": 1.3971789614386056,
           "ambiguous": false
         },
         {
@@ -442,10 +459,10 @@
           "entry_bar_close": "2026-07-31T07:30:00+00:00",
           "confirmation_time": "2026-07-31T07:15:00+00:00",
           "entry": 58.369998931884766,
-          "entry_rr": 1.3971789614275851,
+          "entry_rr": 1.3971789614386056,
           "time": "2026-07-31T11:15:00+00:00",
           "exit": 58.005001068115234,
-          "gross_r": 1.3971789614275851,
+          "gross_r": 1.3971789614386056,
           "ambiguous": false
         },
         {
@@ -1252,9 +1269,9 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 98,
         "MISSED": 9,
         "EXPIRED": 29,
+        "INVALIDATED": 97,
         "POOR ENTRY": 41,
         "UNAVAILABLE": 2,
         "OVERLAP": 4
