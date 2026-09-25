@@ -12,9 +12,9 @@ from metals.indicators import compute
 from metals.structure import scan, families
 from metals.models import evaluate, features, paired_comparison
 from metals.providers import collect, public_summary, macro_features
-from metals.outlook import describe, paths
+from metals.outlook import describe, paths, technical_brief
 from metals.setups import build, freeze, geometry
-from metals.ledger import issue, resolve
+from metals.ledger import issue, resolve, forward_summary
 from metals.signal_audit import evaluate_events
 from metals.trading_signals import catalog, detect, historical_audit, workbench
 
@@ -108,7 +108,7 @@ def run(raw_folder,stage,history):
     write(stage/'provider_cache.json',provider_cache)
     provider_summary=public_summary(provider_cache)
     for name,item in provider_summary['providers'].items():
-        print('PROVIDER',name,item['status'],'observations',len(item['observations']),flush=True)
+        print('PROVIDER',name,item['status'],'observations',len(item['observations']),'symbols',[v['symbol'] for v in item['observations']],'errors',item['errors'],flush=True)
     commit=os.environ.get("GITHUB_SHA","local")
     channel="production" if os.environ.get("GITHUB_REF")=="refs/heads/master" and os.environ.get("GITHUB_EVENT_NAME")!="pull_request" else "research"
     run_id=asof.strftime("%Y%m%dT%H%M%SZ")+"-"+os.environ.get("GITHUB_RUN_ID","local")
@@ -162,8 +162,9 @@ def run(raw_folder,stage,history):
                 result=cached
             else:
                 previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
-                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="history_selected")
+                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="recent_technical")
                 comparison=paired_comparison(challenger,previous)
+                print('FORECAST COMPARISON',asset,h,json.dumps(comparison),flush=True)
                 promotion={}
                 for partition in ('walk_forward','holdout'):
                     m=comparison[partition]
@@ -173,7 +174,7 @@ def run(raw_folder,stage,history):
                     promotion[partition+'_coverage']=.68<=m.get('current_coverage80',0)<=.90
                 promoted=all(promotion.values())
                 result=challenger if promoted else previous
-                result['challenger_review']={'recipe':'3.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
+                result['challenger_review']={'recipe':'4.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
                     'research':challenger['research'],'oos':challenger['oos'],'holdout':challenger['holdout'],
                     'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
                 result["previous_recipe_comparison"]=comparison if promoted else paired_comparison(previous,previous)
@@ -217,6 +218,7 @@ def run(raw_folder,stage,history):
         setups={mode:freeze(setup_ledger,build(asset,mode,frames,analyses,forecasts,fresh if mode=="Strict" else (not quote["stale"] and all(reports[k]["latest_expected_bar_present"] for k in ("15m","1h","4h","1d")))),asset,asof.isoformat(),frames["15m"]) for mode in ("Strict","Adaptive")}
         payload["assets"][asset]={"symbol":symbol,"name":asset.title(),"run_id":run_id,"asof":asof.isoformat(),"quote":quote,"fresh":fresh,"timeframes":analyses,"setups":setups,"forecasts":forecasts,"session":session,"signal_audit":signal_audit["summary"],"macro_forecast":{"status":"UNAVAILABLE","reason":"No corrected, vintage-safe long-horizon model has passed validation"}}
         payload['assets'][asset]['price_paths']=paths(analyses['4h'],quote)
+        payload['assets'][asset]['technical_brief']=technical_brief(analyses)
     for name in CONTEXT:
         raw=read(raw_folder/(name+"_1d.json"),None)
         item={"status":"UNAVAILABLE"}
@@ -233,6 +235,8 @@ def run(raw_folder,stage,history):
     payload["context"]["event_calendar"]={"status":"UNAVAILABLE","note":"No verified scheduled-release feed connected"}
     resolve(forecast_ledger,all_frames)
     for asset,a in payload["assets"].items():
+        for h,f in a["forecasts"].items():
+            f["forward_evidence"]=forward_summary(forecast_ledger,asset,h,f["model_id"])
         ids=[key for key,r in forecast_ledger["issued"].items() if r["asset"]==asset and r.get("channel")=="production" and r.get("forward_eligible")]
         resolved=[forecast_ledger["outcomes"][key] for key in ids if key in forecast_ledger["outcomes"]]
         a["forward"]={"issued":len(ids),"resolved":len(resolved),"directional_accuracy":sum(r["direction_correct"] for r in resolved)/len(resolved) if resolved else None,"note":"Corrected immutable ledger only. Legacy results are not mixed in."}
