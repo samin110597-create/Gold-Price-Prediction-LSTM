@@ -11,7 +11,7 @@ from metals.data import SYMBOLS, CONTEXT, snapshot, clean, aggregate, session_co
 from metals.indicators import compute
 from metals.structure import scan, families
 from metals.models import evaluate, features, paired_comparison
-from metals.providers import collect, public_summary, macro_features
+from metals.providers import collect, public_summary, macro_features, merge_caches
 from metals.outlook import describe, paths, technical_brief
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve, forward_summary
@@ -104,7 +104,7 @@ def run(raw_folder,stage,history):
     if manifest is None:
         manifest=snapshot(raw_folder)
     asof=pd.Timestamp(manifest["asof"])
-    provider_cache=collect(read(history/'provider_cache.json',{}), now=asof)
+    provider_cache=collect(merge_caches(read(history/'provider_cache.json',{}), read(history/'live.json',{}).get('external_data',{}), now=asof), now=asof)
     write(stage/'provider_cache.json',provider_cache)
     provider_summary=public_summary(provider_cache)
     for name,item in provider_summary['providers'].items():

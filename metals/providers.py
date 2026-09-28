@@ -186,12 +186,26 @@ def collect_provider(name, key, now):
     status='CONNECTED' if observations and not failures else 'PARTIAL' if observations else (failures[0] if failures else 'NO OBSERVATIONS')
     return {'status':status,'observations':observations,'histories':histories,'errors':sorted(set(failures))}
 
-def collect(previous=None, now=None, environ=None):
+def merge_caches(*caches, now=None):
+    """Share request budgets across publishers without advancing observation times."""
+    now=pd.Timestamp(now or pd.Timestamp.now(tz='UTC'))
+    result={'schema_version':2,'asof':now.isoformat(),'providers':{}}
+    for cache in caches:
+        for name, entry in cache.get('providers',{}).items():
+            checked=timestamp(entry.get('checked_at'))
+            old=result['providers'].get(name,{})
+            if checked and pd.Timestamp(checked)<=now and (not old or checked>old['checked_at']):
+                result['providers'][name]=entry
+    return result
+
+def collect(previous=None, now=None, environ=None, names=None):
     now=pd.Timestamp(now or pd.Timestamp.now(tz='UTC'))
     environ=os.environ if environ is None else environ
     previous=previous or {}
     result={'schema_version':2,'asof':now.isoformat(),'providers':{}}
     for name,(env,ttl,docs) in SPECS.items():
+        if names is not None and name not in names:
+            continue
         prior=previous.get('providers',{}).get(name,{})
         fetched=timestamp(prior.get('checked_at'))
         key=environ.get(env,'').strip()

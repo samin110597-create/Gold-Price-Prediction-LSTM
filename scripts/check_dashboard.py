@@ -41,6 +41,9 @@ with sync_playwright() as p:
         assert all('UTC' in x.inner_text() for x in page.locator('[data-target-date]').all())
         assert page.locator('[data-provider]').count()==5
         assert page.locator('#price-paths').is_visible()
+        assert page.locator('#current-market').is_visible()
+        assert 'Forecast versus the current futures price' in page.locator('#current-market').inner_text()
+        assert page.locator('#current-quote-age').inner_text() not in ('—','unknown')
         assert page.locator('[data-technical-frame]').count()==3
         assert 'Completed' in page.locator('#technical-brief').inner_text()
         assert 'UNVALIDATED' in page.locator('.forecast-grid').inner_text() or 'VALIDATED' in page.locator('.forecast-grid').inner_text()
