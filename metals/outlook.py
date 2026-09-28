@@ -23,7 +23,17 @@ def describe(result, asset, hourly, asof):
     flat_threshold=max(1e-6,(error or 0)/100*.1)
     direction='UPWARD' if movement>flat_threshold else 'DOWNWARD' if movement< -flat_threshold else 'FLAT'
     crosses=r['interval80'][0]<=r['reference_price']<=r['interval80'][1]
-    return {'target_time':target,'direction':direction,'expired':pd.Timestamp(target)<=pd.Timestamp(asof),
+    checks=result.get('checks',{})
+    reasons=[]
+    if not checks.get('oos_sample',False) or not checks.get('holdout_sample',False):
+        reasons.append('Too few independent test cases')
+    if not checks.get('oos_vs_no_change',False) or not checks.get('holdout_vs_no_change',False):
+        reasons.append('Price error does not consistently beat an unchanged-price forecast')
+    if not checks.get('oos_edge',False) or not checks.get('edge_confidence',False) or not checks.get('holdout_edge',False):
+        reasons.append('Directional advantage is not established')
+    if not checks.get('interval_coverage',False):
+        reasons.append('Forecast range misses its coverage standard')
+    return {'accuracy_reasons':reasons,'target_time':target,'direction':direction,'expired':pd.Timestamp(target)<=pd.Timestamp(asof),
             'reference_price':r['reference_price'],'expected_change':r['price']-r['reference_price'],
             'recent_mean_absolute_error_dollars':r['reference_price']*error/100 if error is not None else None,
             'move_to_error_ratio':abs(movement)/(error/100) if error else None,

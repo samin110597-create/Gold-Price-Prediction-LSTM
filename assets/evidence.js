@@ -8,17 +8,19 @@ function forecastCards(a,stale){
   const selected=r?.selection;
   return `<article class="forecast" data-forecast="${h}">
    <div class="panel-head"><h3>${h}</h3>${badge(stale?'STALE · RESEARCH UNVALIDATED':expired?'ELAPSED · RESEARCH UNVALIDATED':verified?'VALIDATED':'RESEARCH · UNVALIDATED',verified?'up':'wait')}</div>
-   <div class="forecast-direction ${o.direction==='UPWARD'?'uptext':o.direction==='DOWNWARD'?'downtext':''}">${escape(o.direction||'PENDING')} BIAS</div>
-   <div class="forecast-label">${verified?'Validated expected price':'Model price estimate · not a market quote'}</div>
-   <div class="headline" data-estimate="${h}">${r?'$'+n(r.price,asset==='silver'?3:2):'Insufficient complete data'}</div>
+   <div class="forecast-direction ${verified?(o.direction==='UPWARD'?'uptext':o.direction==='DOWNWARD'?'downtext':''):''}">${verified?escape(o.direction)+' BIAS':'DIRECTION NOT ESTABLISHED'}</div>
+   <div class="forecast-label">${verified?'Validated expected price':'Accuracy checks not passed'}</div>
+   <div class="headline" data-estimate="${h}">${verified&&r?'$'+n(r.price,asset==='silver'?3:2):'Target withheld'}</div>
    <p class="forecast-date" data-target-date="${h}">For <strong>${time(o.target_time)}</strong></p>
    <small>${r?'Model 80% range $'+n(r.interval80[0])+' – $'+n(r.interval80[1]):'Waiting for sufficient complete calibration cases.'}</small>
    ${r?`<p class="forecast-strength">${escape(o.strength||'DIRECTION UNVALIDATED')}<br><small>${o.range_contains_no_change?'The range includes both gains and losses.':''}</small></p>`:''}
    <p class="observed-price">Observed reference <strong>$${n(ref.close,asset==='silver'?3:2)}</strong><br>${time(ref.time)}</p>
-   ${r?`<p class="footnote">Expected change ${n(r.return*100,2)}% (${o.expected_change>=0?'+':'−'}$${n(Math.abs(o.expected_change))}). Recent average error ≈ $${n(o.recent_mean_absolute_error_dollars)}. This is an error scale, not an additional confidence interval.</p>`:''}
+   ${r?`<p class="footnote">Experimental change ${n(r.return*100,2)}% (${o.expected_change>=0?'+':'−'}$${n(Math.abs(o.expected_change))}). Recent average error ≈ $${n(o.recent_mean_absolute_error_dollars)}. This is an error scale, not an additional confidence interval.</p>`:''}
    <div class="forecast-evidence"><span>Earlier / recent tests</span><strong>${n(m.n,0)} / ${n(ho.n,0)}</strong><span>Recent direction hit rate</span><strong>${pct(ho.directional_accuracy)}</strong><span>Recent price error</span><strong>${pct(Number.isFinite(ho.mae_percent)?ho.mae_percent/100:null)}</strong><span>Recent 80% range coverage</span><strong>${pct(ho.coverage80)}</strong></div>
    <p class="footnote">This exact model: ${n(f.forward_evidence?.resolved||0,0)} resolved live forecasts. ${f.forward_evidence?.resolved?'Live error '+pct(f.forward_evidence.mae_percent/100)+' versus no-change '+pct(f.forward_evidence.no_change_mae_percent/100)+'.':'Prospective accuracy is not established.'}</p>
+   <p class="footnote">${(o.accuracy_reasons||[]).map(escape).join('. ')}.</p>
    <details><summary>Accuracy, model & decision rules</summary>
+    ${r?`<p>Experimental estimate: $${n(r.price)} · ${escape(o.direction)}. This failed model is shown for audit, not as an expected trading target.</p>`:''}
     <p>${escape(o.interpretation)} ${expired?'This forecast target has elapsed; wait for an updated run.':''}</p>
     <p>Recipe ${escape(f.recipe_version)}: ${escape(f.model)}. ${selected?'Past-only selection: '+escape(selected.candidates[selected.candidate_mae_percent.indexOf(Math.min(...selected.candidate_mae_percent))])+'.':''}</p>
     <p>Earlier baseline-relative directional edge ${pp(m.edge)}; price error ${pct((m.mae_percent??NaN)/100)} versus baseline ${pct((m.baseline_mae_percent??NaN)/100)} and no-change ${pct((m.zero_change_mae_percent??NaN)/100)}. Recent no-change error ${pct((ho.zero_change_mae_percent??NaN)/100)}.</p>

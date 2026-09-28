@@ -35,6 +35,7 @@ with sync_playwright() as p:
         assert page.locator("#app").get_attribute("data-asset")==asset
         assert page.locator('[data-testid="price"]').inner_text().startswith("$")
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
+        page.locator('#forecast-review > summary').click()
         assert page.locator('[data-forecast]').count()==4
         assert page.locator('[data-target-date]').count()==4
         assert all('UTC' in x.inner_text() for x in page.locator('[data-target-date]').all())
@@ -78,6 +79,8 @@ with sync_playwright() as p:
         page.locator('#signal-markers').check()
         page.locator('[data-tf="1d"]').click()
         page.locator('[data-mode="Strict"]').click()
+        if page.locator("#forecast-review").get_attribute("open") is not None:
+            page.locator("#forecast-review > summary").click()
         page.screenshot(path="screenshots/"+asset+"-desktop.png",full_page=True)
         report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True,"forecast_cards":4,"checksum_verified":True,"manual_refresh_verified":True,"quote_age":page.locator('#quote-age').inner_text(),"snapshot_age":page.locator('#snapshot-age').inner_text()}
         page.set_viewport_size({"width":390,"height":844})
