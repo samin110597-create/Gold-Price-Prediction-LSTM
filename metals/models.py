@@ -132,6 +132,9 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     calspan = max(504 if hourly else 252,(60 if scaled else 30)*horizon)
     holdspan = max(60*23 if hourly else 252,30*horizon) if scaled else (60*23 if hourly else 252)
     blockspan = 504 if hourly else 126
+    if robust:
+        calspan=max(252 if hourly else 126,30*horizon)
+        blockspan=252 if hourly else 63
     hold_start = n-holdspan-horizon
     start = minfit+calspan+2*horizon
     records=[]
@@ -147,10 +150,11 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         fit = pos[(pos<cal_start-horizon)&valid.to_numpy()]
         cal = pos[(pos>=cal_start)&(pos<start_test-horizon)&(pos%horizon==0)&valid.to_numpy()]
         return fit,cal
-    for test_start in list(range(start,max(start,hold_start),blockspan))+[max(start,hold_start)]:
+    hold_starts=list(range(max(start,hold_start),n-horizon,blockspan)) if robust else [max(start,hold_start)]
+    for test_start in list(range(start,max(start,hold_start),blockspan))+hold_starts:
         if test_start>=n-horizon:
             continue
-        end = min(test_start+blockspan,hold_start) if test_start<hold_start else n-horizon
+        end = min(test_start+blockspan,hold_start) if test_start<hold_start else min(test_start+blockspan,n-horizon) if robust else n-horizon
         test = pos[(pos>=test_start)&(pos<end)&(pos%horizon==0)&valid.to_numpy()]
         if scaled and test_start<hold_start:
             test=test[test+horizon<hold_start]
@@ -202,6 +206,9 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         result['integrity']['macro_timing']='Macro data displayed separately; this fixed technical recipe does not require incomplete macro histories.'
     if robust:
         result.update(model="Recency-weighted Huber return + sample-shrunk calibrated direction; past-only candidate selection",recipe_version="5.0")
+        result['integrity']['holdout']=f'Final {holdspan} bars evaluated sequentially; earlier matured outcomes may enter later fits and calibration. No future labels or evaluation scores tune hyperparameters.'
+        result['integrity']['evaluation_refresh']='Prequential refits every 252 hourly / 63 daily bars, including final evaluation; only labels matured before each fit are used. This is rolling evaluation, not an untouched holdout.'
+        result['integrity']['calibration_window_bars']=calspan
         result['integrity']['robust_loss']='Huber epsilon 1.35, alpha 20; reduces influence of extreme residuals without deleting observations.'
         result['integrity']['probability_shrinkage']='Calibrated probability weight n/(n+100), using only the independent past probability-calibration count; remainder is fit-period class prior.'
     return result

@@ -72,6 +72,7 @@ def test_robust_model_is_causal_and_shrinks_small_sample_probabilities():
     f=compute(frame(1800))
     before=evaluate(f,1,recipe='robust_recent')
     assert before['recipe_version']=='5.0'
+    assert len({r['fit_end'] for r in before['records'] if r['partition']=='holdout'})>1
     assert all(before['integrity'][k] for k in ('training_before_calibration','calibration_before_test','unique_origins'))
     assert all(0<r['selection']['probability_weight']<1 for r in before['records'])
     changed=f.copy()
