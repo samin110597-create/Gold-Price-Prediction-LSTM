@@ -158,3 +158,15 @@ def test_technical_brief_requires_structure_and_ema_agreement():
     assert b['rows'][0]['support']==101 and b['rows'][0]['resistance']==115
     analyses['1d']={**detail,'structure':{'direction':-1,'levels':[]}}
     assert technical_brief(analyses)['alignment']=='MIXED'
+
+
+def test_fred_fallback_never_inserts_revised_context_into_history(monkeypatch):
+    def fetch(url,params):
+        if url.endswith('vintagedates'):
+            raise providers.ProviderError('VINTAGE REQUEST REJECTED')
+        return {'observations':[{'date':'2026-09-25','value':'2.1'}]}
+    monkeypatch.setattr(providers,'request',fetch)
+    r=providers.collect_provider('fred','test',pd.Timestamp('2026-09-28T00:00Z'))
+    assert r['status']=='PARTIAL' and len(r['observations'])==4
+    assert r['histories']=={}
+    assert all(not o['initial_release_only'] for o in r['observations'])

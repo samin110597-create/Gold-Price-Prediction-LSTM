@@ -229,7 +229,7 @@ def run(raw_folder,stage,history):
                 item={"status":"CONTEXT ONLY","value":c,"source_time":pd.Timestamp(t,unit="s",tz="UTC").isoformat(),"available_after":(pd.Timestamp(t,unit="s",tz="UTC")+pd.Timedelta(hours=24)).isoformat(),"note":"Conservative daily lag; no vintage proof; not a model feature"}
         payload["context"][name]=item
     for item in provider_cache['providers'].get('fred',{}).get('observations',[]):
-        payload['context']['fred_'+item['symbol']]={**item,'status':'FRED INITIAL RELEASE · LAGGED'}
+        payload['context']['fred_'+item['symbol']]={**item,'status':'FRED INITIAL RELEASE · LAGGED' if item.get('initial_release_only') else 'FRED LATEST VINTAGE · CONTEXT ONLY'}
     aligned=pd.concat([all_frames["gold"]["1d"].close,all_frames["silver"]["1d"].close],axis=1,join="inner").dropna()
     payload["context"]["gold_silver_ratio"]={"value":float(aligned.iloc[-1,0]/aligned.iloc[-1,1]),"source_time":aligned.index[-1].isoformat(),"status":"CONTEXT ONLY"}
     payload["context"]["event_calendar"]={"status":"UNAVAILABLE","note":"No verified scheduled-release feed connected"}
