@@ -66,3 +66,18 @@ def test_delayed_provider_candle_is_not_completed_by_wall_clock_alone():
     assert report['provider_pending_bars_excluded']==1
     assert not report['latest_expected_bar_present']
     assert pd.Timestamp(report['provider_available_through'])==quote_time
+
+
+def test_robust_model_is_causal_and_shrinks_small_sample_probabilities():
+    f=compute(frame(1800))
+    before=evaluate(f,1,recipe='robust_recent')
+    assert before['recipe_version']=='5.0'
+    assert len({r['fit_end'] for r in before['records'] if r['partition']=='holdout'})>1
+    assert all(before['integrity'][k] for k in ('training_before_calibration','calibration_before_test','unique_origins'))
+    assert all(0<r['selection']['probability_weight']<1 for r in before['records'])
+    changed=f.copy()
+    changed.iloc[-60:,changed.columns.get_loc('close')]*=2
+    after=evaluate(changed,1,recipe='robust_recent')
+    cutoff=f.index[-60].isoformat()
+    assert [r for r in before['records'] if r['target_time']<cutoff]==[r for r in after['records'] if r['target_time']<cutoff]
+    assert before['primary'] is None or all(before['checks'].values())
