@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-05-06T06:00:00+00:00",
+  "cutoff": "2026-05-06T11:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -32,24 +32,24 @@
         },
         "RANGE_BREAKOUT": {
           "earlier_history": {
-            "n": 15,
-            "tp1_first": 0.4666666666666667,
+            "n": 16,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.24809225259746442,
-              0.6988336984894921
+              0.2799923761135083,
+              0.7200076238864916
             ],
-            "mean_gross_r": 0.42639271443615495,
+            "mean_gross_r": 0.48808403278532425,
             "stops": 6,
             "timeouts": 2
           },
           "recent_holdout": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 1,
+            "tp1_first": 0.0,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0,
+              0.7934567085261071
             ],
-            "mean_gross_r": 0.20672690401143168,
+            "mean_gross_r": -1.0,
             "stops": 1,
             "timeouts": 0
           }
@@ -2119,7 +2119,7 @@
           "kind": "RANGE_BREAKOUT",
           "direction": 1,
           "origin": "2026-05-06T06:00:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "OBJECTIVE TOUCHED",
           "entry_time": "2026-05-06T07:00:00+00:00",
           "entry_bar_close": "2026-05-06T08:00:00+00:00",
@@ -2422,7 +2422,7 @@
         }
       ],
       "excluded": {
-        "POOR ENTRY": 129,
+        "POOR ENTRY": 130,
         "INVALIDATED": 242,
         "MISSED": 20,
         "EXPIRED": 98,
