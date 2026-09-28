@@ -18,8 +18,8 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: canonical-metals-${{ github.head_ref || github.ref_name }}
-  cancel-in-progress: true
+  group: metals-publish-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
 jobs:
   verify-build:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
       - name: Regression and causal timing tests
         run: |
           python -m pytest tests -q --junitxml=test-results.xml
-          node --test tests/test_feed.mjs
+          node --test tests/test_*.mjs
       - name: Fetch one snapshot and evaluate both metals
         env:
           OPENBLAS_NUM_THREADS: "1"
@@ -53,6 +53,16 @@ jobs:
           POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY || secrets.POLYGON_KEY || secrets.MASSIVE_API_KEY || secrets.POLYGON }}
           ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY || secrets.ALPHAVANTAGE_API_KEY || secrets.ALPHA_VANTAGE_KEY || secrets.ALPHAVANTAGE_KEY || secrets.ALPHA_VANTAGE }}
         run: python -m metals.pipeline --raw .snapshot --stage .stage --history data
+      - name: Refresh current quotes and technicals
+        run: python -m metals.live --history .stage --output .stage/live.json
+        env:
+          OPENBLAS_NUM_THREADS: "1"
+          OMP_NUM_THREADS: "1"
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY || secrets.FINNHUB_KEY || secrets.FINHUB_API_KEY || secrets.FINNHUB_TOKEN || secrets.FINNHUB }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY || secrets.FMP_KEY || secrets.FINANCIAL_MODELING_PREP_API_KEY || secrets.FMP }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY || secrets.FRED_KEY || secrets.FRED }}
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY || secrets.POLYGON_KEY || secrets.MASSIVE_API_KEY || secrets.POLYGON }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY || secrets.ALPHAVANTAGE_API_KEY || secrets.ALPHA_VANTAGE_KEY || secrets.ALPHAVANTAGE_KEY || secrets.ALPHA_VANTAGE }}
       - name: Build isolated site
         run: |
           mkdir -p site/data
@@ -75,7 +85,7 @@ jobs:
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/provider_cache.json data/dashboard.json data/validation data/setup_ledger.json data/signal_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
+          git add data/live.json data/provider_cache.json data/dashboard.json data/validation data/setup_ledger.json data/signal_ledger.json data/forward_ledger_v2.json data/run_manifest.json .nojekyll
           if ! git diff --cached --quiet; then
             git commit -m "Publish coherent causal metals snapshot"
             git push origin "HEAD:$METALS_BRANCH"
