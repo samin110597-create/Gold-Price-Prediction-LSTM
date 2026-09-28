@@ -48,6 +48,16 @@ def request(url, params=None, headers=None):
             raise ProviderError('ACCESS RESTRICTED')
         if r.status_code == 429:
             raise ProviderError('RATE LIMITED')
+        if r.status_code == 400:
+            # Classify fixed error categories without exposing server text or credentials.
+            try:
+                words=str(r.json().get('error_message','')).lower()
+            except (ValueError,TypeError,AttributeError):
+                words=''
+            if 'api_key' in words and any(w in words for w in ('invalid','not registered','32 character','32-character')):
+                raise ProviderError('INVALID API KEY CONFIGURATION')
+            if 'vintage' in words:
+                raise ProviderError('VINTAGE REQUEST REJECTED')
         if r.status_code != 200:
             raise ProviderError('HTTP '+str(r.status_code))
         value = r.json()
@@ -157,7 +167,22 @@ def collect_provider(name, key, now):
             before=len(failures)
             attempt(fetch_fred)
             if len(failures)>before:
-                failures[-1]=series+': '+failures[-1]
+                reason=failures[-1]
+                failures[-1]=series+': '+reason
+                if reason not in ('INVALID API KEY CONFIGURATION','ACCESS RESTRICTED','RATE LIMITED'):
+                    def latest_context():
+                        r=request('https://api.stlouisfed.org/fred/series/observations',{
+                            'series_id':series,'api_key':key,'file_type':'json','sort_order':'desc','limit':10})
+                        for item in r.get('observations',[]):
+                            value=number(item.get('value')); date=timestamp(item.get('date'))
+                            if value is not None and date and pd.Timestamp(date)<=now:
+                                observations.append({'symbol':series,'basis':title+' · latest vintage, context only',
+                                    'value':value,'source_time':date,'available_at':now.isoformat(),
+                                    'retrieved_at':now.isoformat(),'units':'index' if series=='DTWEXBGS' else 'percent',
+                                    'initial_release_only':False})
+                                return
+                        raise ProviderError('NO CURRENT CONTEXT')
+                    attempt(latest_context)
     status='CONNECTED' if observations and not failures else 'PARTIAL' if observations else (failures[0] if failures else 'NO OBSERVATIONS')
     return {'status':status,'observations':observations,'histories':histories,'errors':sorted(set(failures))}
 
@@ -172,7 +197,7 @@ def collect(previous=None, now=None, environ=None):
         key=environ.get(env,'').strip()
         if not key:
             entry={'status':'KEY NOT CONFIGURED','observations':[],'histories':{},'errors':[], 'checked_at':now.isoformat()}
-        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED' and (name!='fred' or prior.get('adapter_version')==2):
+        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED' and (name!='fred' or prior.get('adapter_version')==3):
             entry=dict(prior)
         else:
             entry=collect_provider(name,key,now)
@@ -182,7 +207,7 @@ def collect(previous=None, now=None, environ=None):
                 entry['observations']=prior['observations']
                 entry['histories']=prior.get('histories',{})
                 entry['retained_previous']=True
-        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env,adapter_version=2)
+        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env,adapter_version=3)
         result['providers'][name]=entry
     return result
 
