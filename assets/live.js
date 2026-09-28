@@ -57,6 +57,7 @@ async function loadCurrentMarket(){
   const next=validateCurrentMarket(await response.json()),changed=next.asof!==currentMarket?.asof;
   currentMarket=next;currentError='';
   if(data&&changed)render();
+  else if(data){const panel=document.querySelector('#current-market');if(panel)panel.outerHTML=currentPanel();}
  }catch(error){currentError=error.name==='AbortError'?'Current refresh timed out':error.message;
   const el=document.querySelector('#current-refresh-status');if(el)el.textContent=currentError+'; original timestamps preserved.';
  }finally{clearTimeout(deadline);currentBusy=false;}
