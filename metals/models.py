@@ -48,12 +48,13 @@ def metrics(records):
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
     return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def train(x,y,fit,cal,scale=None,adaptive=False):
+def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None):
     reg = make_pipeline(StandardScaler(),Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
     target=y if scale is None else y/scale
-    reg.fit(x.iloc[fit],target.iloc[fit])
-    clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int))
+    weights=np.exp2((fit-fit[-1])/half_life) if half_life else np.ones(len(fit))
+    reg.fit(x.iloc[fit],target.iloc[fit],ridge__sample_weight=weights)
+    clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int),logisticregression__sample_weight=weights)
     selector=None
     if adaptive:
         # Fixed candidate set. Select only on the FIRST half of past calibration labels.
@@ -86,12 +87,20 @@ def predict(reg,clf,calibrator,x,scale,selector,prior):
     return p,prob
 
 def evaluate(frame, horizon, hourly=False, recipe="legacy"):
-    if recipe not in ("legacy","volatility_scaled","history_selected"):
+    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical"):
         raise ValueError("Unknown fixed recipe")
     scaled=recipe!="legacy"
-    adaptive=recipe=="history_selected"
+    adaptive=recipe in ("history_selected","recent_technical")
+    recent=recipe=="recent_technical"
+    half_life=(1500 if hourly else 252) if recent else None
     x = features(frame)
-    if adaptive:
+    if recent:
+        x["adx"]=frame.adx/100
+        x["di_spread"]=(frame.plus_di-frame.minus_di)/100
+        x["macd_atr"]=frame.macd_hist/frame.atr
+        x["volatility_rank"]=frame.atr_percentile
+        x["bandwidth"]=frame.bb_width
+    if recipe=="history_selected":
         for key in sorted(k for k in frame if k.startswith('macro_')):
             x[key]=frame[key]
             x[key+'_change20']=frame[key].diff(20)
@@ -141,7 +150,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         fit,cal = indices(test_start)
         if len(fit)<minfit//2 or len(cal)<20 or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life)
         predictions,probabilities = predict(reg,clf,calibrator,x.iloc[test],scale.iloc[test].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
@@ -153,7 +162,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     ood = True
     fit,cal = indices(n-1)
     if len(cal)>=20 and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life)
         ps,probs=predict(reg,clf,calibrator,x.iloc[[-1]],scale.iloc[[-1]].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         p,probability=float(ps[0]),float(probs[0])
         scaler=reg[0]
@@ -180,6 +189,10 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         result['integrity']['macro_timing']='FRED initial-release values only; available no earlier than release date + 2 UTC days; no current snapshots inserted into history.'
         if live and live.get('selection'):
             live['selection']['selection_end']=frame.index[live['selection']['selection_end_position']+horizon].isoformat()
+    if recent:
+        result.update(model="Recency-weighted technical Ridge + calibrated direction; past-only damped candidate selection",recipe_version="4.0")
+        result['integrity']['recency_half_life_bars']=half_life
+        result['integrity']['macro_timing']='Macro data displayed separately; this fixed technical recipe does not require incomplete macro histories.'
     return result
 
 

@@ -80,3 +80,23 @@ Finnhub/FMP use at most 192 scheduled calls/day each in this workflow. Failures 
 Recipe 3.0 is a predeclared challenger: no-change, historical median, 25%, 50%, or 100% of the volatility-scaled Ridge prediction. Each historical block selects its candidate by absolute error on the first half of already completed calibration labels. The second half calibrates intervals and probabilities. Neutral point forecasts count as directional abstentions, not correct bearish predictions. Promotion requires at least 5% lower exact-matched MAE in both historical partitions, 100 earlier and 12 recent samples, no worse Brier score, and 68–90% interval coverage. Failed candidates remain visible in the evaluation and are not promoted. Historical research performance still requires prospective confirmation.
 
 API references: [Finnhub](https://finnhub.io/docs/api/quote), [FMP](https://site.financialmodelingprep.com/developer/docs/stable/commodities-quote), [FRED initial releases](https://fred.stlouisfed.org/docs/api/fred/series_observations.html), [Polygon/Massive previous-day bars](https://massive.com/docs/rest/forex/aggregates/previous-day-bar), [Alpha Vantage](https://www.alphavantage.co/documentation/).
+
+### September 23 accuracy and technical update
+
+- Recipe 4.0 is a fixed recency-weighted technical challenger: ATR-scaled Ridge,
+  calibrated logistic direction, ADX/DI, MACD/ATR, volatility rank and band width.
+  Training weights halve every 252 daily / 1500 hourly bars. Damping is selected
+  only from past calibration observations; subsequent observations calibrate ranges.
+- Research promotion still requires at least 5% lower matched-origin error in both
+  historical partitions, sufficient cases, no worse Brier score and acceptable range
+  coverage. Failed challengers do not replace the deployed recipe. These historical
+  comparisons are research selection, not independent proof of a trading edge.
+- Forecast cards report prospective results for their exact model lineage, keeping
+  historical versions and neutral predictions from inflating current-model accuracy.
+- The current technical brief summarizes completed 1H/4H/daily bars with explicit
+  timestamps, structure/EMA agreement, momentum, ATR extension and known levels.
+  Conditional 4H scenarios show known TP1/TP2 zones and failed-break invalidation;
+  these are not automatically triggered trades or guaranteed price forecasts.
+- FRED initial-release history is requested in five-year real-time windows to remain
+  within its 2000-vintage JSON limit. The earliest release per observation is retained.
+  Alpha Vantage metal requests are spaced 15 seconds apart; daily quotas still apply.
