@@ -38,7 +38,7 @@ with sync_playwright() as p:
         page.locator('#forecast-review > summary').click()
         assert page.locator('[data-forecast]').count()==4
         assert page.locator('[data-target-date]').count()==4
-        assert all('UTC' in x.inner_text() for x in page.locator('[data-target-date]').all())
+        assert all(('EST' in x.inner_text() or 'EDT' in x.inner_text()) for x in page.locator('[data-target-date]').all())
         assert page.locator('[data-provider]').count()==5
         assert page.locator('#price-paths').is_visible()
         assert page.locator('#current-market').is_visible()

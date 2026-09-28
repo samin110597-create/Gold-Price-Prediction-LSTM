@@ -3,7 +3,7 @@ import hashlib
 import json
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import Ridge, LogisticRegression
+from sklearn.linear_model import Ridge, LogisticRegression, HuberRegressor
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, log_loss
@@ -48,12 +48,12 @@ def metrics(records):
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
     return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None):
-    reg = make_pipeline(StandardScaler(),Ridge(alpha=20))
+def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False):
+    reg = make_pipeline(StandardScaler(),HuberRegressor(epsilon=1.35,alpha=20,max_iter=500) if robust else Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
     target=y if scale is None else y/scale
     weights=np.exp2((fit-fit[-1])/half_life) if half_life else np.ones(len(fit))
-    reg.fit(x.iloc[fit],target.iloc[fit],ridge__sample_weight=weights)
+    reg.fit(x.iloc[fit],target.iloc[fit],**{('huberregressor' if robust else 'ridge')+'__sample_weight':weights})
     clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int),logisticregression__sample_weight=weights)
     selector=None
     if adaptive:
@@ -70,6 +70,9 @@ def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None):
                   'selection_end_position':int(selection[-1]),'interval_n':len(cal),
                   'candidate_mae_percent':[v*100 for v in losses],
                   'candidates':['no change','past median return','25% Ridge','50% Ridge','Ridge']}
+    if robust and selector:
+        selector['candidates']=[name.replace('Ridge','Huber') for name in selector['candidates']]
+        selector['probability_weight']=len(cal)/(len(cal)+100)
     raw = clf.decision_function(x.iloc[cal]).reshape(-1,1)
     calibration = LogisticRegression(C=1,max_iter=300).fit(raw,(y.iloc[cal]>0).astype(int)) if y.iloc[cal].gt(0).nunique()==2 else None
     predicted=reg.predict(x.iloc[cal])
@@ -84,14 +87,18 @@ def predict(reg,clf,calibrator,x,scale,selector,prior):
     if selector:
         p=selector['ridge_weight']*p+selector['return_offset']
     prob=calibrator.predict_proba(clf.decision_function(x).reshape(-1,1))[:,1] if calibrator is not None else np.repeat(prior,len(x))
+    if selector and 'probability_weight' in selector:
+        w=selector['probability_weight']
+        prob=w*prob+(1-w)*prior
     return p,prob
 
 def evaluate(frame, horizon, hourly=False, recipe="legacy"):
-    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical"):
+    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical","robust_recent"):
         raise ValueError("Unknown fixed recipe")
     scaled=recipe!="legacy"
-    adaptive=recipe in ("history_selected","recent_technical")
-    recent=recipe=="recent_technical"
+    adaptive=recipe in ("history_selected","recent_technical","robust_recent")
+    recent=recipe in ("recent_technical","robust_recent")
+    robust=recipe=="robust_recent"
     half_life=(1500 if hourly else 252) if recent else None
     x = features(frame)
     if recent:
@@ -150,7 +157,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         fit,cal = indices(test_start)
         if len(fit)<minfit//2 or len(cal)<20 or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust)
         predictions,probabilities = predict(reg,clf,calibrator,x.iloc[test],scale.iloc[test].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
@@ -162,7 +169,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     ood = True
     fit,cal = indices(n-1)
     if len(cal)>=20 and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust)
         ps,probs=predict(reg,clf,calibrator,x.iloc[[-1]],scale.iloc[[-1]].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         p,probability=float(ps[0]),float(probs[0])
         scaler=reg[0]
@@ -193,6 +200,10 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         result.update(model="Recency-weighted technical Ridge + calibrated direction; past-only damped candidate selection",recipe_version="4.0")
         result['integrity']['recency_half_life_bars']=half_life
         result['integrity']['macro_timing']='Macro data displayed separately; this fixed technical recipe does not require incomplete macro histories.'
+    if robust:
+        result.update(model="Recency-weighted Huber return + sample-shrunk calibrated direction; past-only candidate selection",recipe_version="5.0")
+        result['integrity']['robust_loss']='Huber epsilon 1.35, alpha 20; reduces influence of extreme residuals without deleting observations.'
+        result['integrity']['probability_shrinkage']='Calibrated probability weight n/(n+100), using only the independent past probability-calibration count; remainder is fit-period class prior.'
     return result
 
 

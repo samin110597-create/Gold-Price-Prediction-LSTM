@@ -162,7 +162,7 @@ def run(raw_folder,stage,history):
                 result=cached
             else:
                 previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
-                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="recent_technical")
+                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="robust_recent")
                 comparison=paired_comparison(challenger,previous)
                 print('FORECAST COMPARISON',asset,h,json.dumps(comparison),flush=True)
                 promotion={}
@@ -174,7 +174,7 @@ def run(raw_folder,stage,history):
                     promotion[partition+'_coverage']=.68<=m.get('current_coverage80',0)<=.90
                 promoted=all(promotion.values())
                 result=challenger if promoted else previous
-                result['challenger_review']={'recipe':'4.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
+                result['challenger_review']={'recipe':'5.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
                     'research':challenger['research'],'oos':challenger['oos'],'holdout':challenger['holdout'],
                     'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
                 result["previous_recipe_comparison"]=comparison if promoted else paired_comparison(previous,previous)

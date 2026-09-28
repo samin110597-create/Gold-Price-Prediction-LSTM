@@ -10,8 +10,9 @@
 <div id="loading" class="loading" role="status">Loading the latest coherent market snapshot…</div><div id="app" class="hidden" data-asset="gold"></div>
 <footer><a href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM">Code & methodology</a><a href="https://github.com/samin110597-create/Gold-Price-Prediction-LSTM/blob/master/VALIDATION_BASELINE.md">Frozen validation baseline</a><a href="data/run_manifest.json">Snapshot manifest</a><span>Futures prices in USD per troy ounce · Research only</span></footer>
 </main>
+<script src="assets/time.js?v=1"></script>
 <script src="assets/signals.js?v=2"></script>
-<script src="assets/evidence.js?v=6"></script>
+<script src="assets/evidence.js?v=7"></script>
 <script src="assets/feed.js?v=4"></script>
 <script src="assets/live.js?v=1"></script>
 <script>
@@ -22,7 +23,7 @@ const escape=s=>String(s??'—').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 const n=(x,d=2)=>Number.isFinite(x)?x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
 const pct=x=>Number.isFinite(x)?n(x*100,1)+'%':'—';
 const pp=x=>Number.isFinite(x)?(x>0?'+':'')+n(x*100,1)+' pp':'—';
-const time=x=>x?new Date(x).toLocaleString('en-GB',{timeZone:'UTC',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'})+' UTC':'—';
+const time=easternTime;
 const direction=d=>d>0?'Bullish':d<0?'Bearish':'Neutral';
 const badge=(text,kind='wait')=>'<span class="badge '+kind+'">'+escape(text)+'</span>';
 function render(){
@@ -78,7 +79,7 @@ for(const [key,color] of [['bb_upper','#445573'],['bb_lower','#445573'],['ema20'
 bars.forEach((b,i)=>{const color=b.close>=b.open?'#6ed4b8':'#f18c94';ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x(i),y(b.high));ctx.lineTo(x(i),y(b.low));ctx.stroke();ctx.fillRect(x(i)-Math.max(1,dx*.3),Math.min(y(b.open),y(b.close)),Math.max(1,dx*.6),Math.max(1,Math.abs(y(b.close)-y(b.open))))});
 for(const ev of data.assets[asset].timeframes[tf].structure.events){if(ev.scope!=='major'||!['BOS','CHoCH'].includes(ev.kind))continue;const i=bars.findIndex(b=>b.time===ev.time);if(i<0)continue;const yy=ev.direction>0?y(bars[i].low)+9:y(bars[i].high)-9;ctx.fillStyle=ev.direction>0?'#6ed4b8':'#f18c94';ctx.beginPath();ctx.moveTo(x(i),yy-ev.direction*4);ctx.lineTo(x(i)-4,yy+ev.direction*3);ctx.lineTo(x(i)+4,yy+ev.direction*3);ctx.closePath();ctx.fill()}
 drawSignalMarkers(ctx,data.assets[asset].timeframes[tf],bars,x,y);
-ctx.fillStyle='#9eafc3';for(let i=0;i<bars.length;i+=Math.max(1,Math.floor(bars.length/4)))ctx.fillText(new Date(bars[i].time).toLocaleDateString('en-GB',{month:'short',day:'2-digit',timeZone:'UTC'}),x(i),h-5);
+ctx.fillStyle='#9eafc3';for(let i=0;i<bars.length;i+=Math.max(1,Math.floor(bars.length/4)))ctx.fillText(easternDate(bars[i].time),x(i),h-5);
 canvas.onpointermove=ev=>{let i=Math.max(0,Math.min(bars.length-1,Math.floor((ev.clientX-canvas.getBoundingClientRect().left-pad.l)/dx)));const b=bars[i];$('#chart-tip').textContent=time(b.time)+' · O '+n(b.open)+' H '+n(b.high)+' L '+n(b.low)+' C '+n(b.close)+signalTooltip(data.assets[asset].timeframes[tf],b.time);$('#chart-tip').style.display='block'};
 canvas.onclick=ev=>{const i=Math.max(0,Math.min(bars.length-1,Math.floor((ev.clientX-canvas.getBoundingClientRect().left-pad.l)/dx)));selectSignalAt(data.assets[asset].timeframes[tf],bars[i].time)};
 canvas.onpointerleave=()=>{$('#chart-tip').style.display='none'};

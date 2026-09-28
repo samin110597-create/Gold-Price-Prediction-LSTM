@@ -25,7 +25,7 @@ function forecastCards(a,stale){
     <p>Recipe ${escape(f.recipe_version)}: ${escape(f.model)}. ${selected?'Past-only selection: '+escape(selected.candidates[selected.candidate_mae_percent.indexOf(Math.min(...selected.candidate_mae_percent))])+'.':''}</p>
     <p>Earlier baseline-relative directional edge ${pp(m.edge)}; price error ${pct((m.mae_percent??NaN)/100)} versus baseline ${pct((m.baseline_mae_percent??NaN)/100)} and no-change ${pct((m.zero_change_mae_percent??NaN)/100)}. Recent no-change error ${pct((ho.zero_change_mae_percent??NaN)/100)}.</p>
     ${r?`<p>Direction score ${pct(r.probability_up)} P(up), ${verified?'validated under this recipe':'not a validated trade probability'}. ${n(d.completed_bars,0)} completed bars; ${n(r.calibration_n,0)} pre-origin calibration cases.</p>`:''}
-    ${review?`<p>Recency-weighted technical challenger: ${review.promoted?'passed research promotion criteria':'not promoted; current recipe retained'}. Matched recent price-error change ${pct(review.comparison.holdout.mae_improvement)}; positive means improvement. ${escape(review.note)}</p>`:''}
+    ${review?`<p>Robust technical challenger (Huber + conservative probabilities): ${review.promoted?'passed research promotion criteria':'not promoted; current recipe retained'}. Matched recent price-error change ${pct(review.comparison.holdout.mae_improvement)}; positive means improvement. ${escape(review.note)}</p>`:''}
     <p>Failed gates: ${escape(f.failed_gates.join(', ')||'none')}. Estimates update with new data; issued trade stops and targets remain fixed.</p>
     <a href="${escape(f.evidence_file)}">Full timestamped evaluation</a>
    </details></article>`;
