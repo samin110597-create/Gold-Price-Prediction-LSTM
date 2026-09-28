@@ -71412,16 +71412,16 @@
     "last_completed": "2026-09-25T21:00:00+00:00"
   },
   "challenger_review": {
-    "recipe": "4.0",
+    "recipe": "5.0",
     "promoted": false,
     "criteria": {
       "walk_forward_sample": true,
       "walk_forward_price_improvement": false,
-      "walk_forward_brier": false,
+      "walk_forward_brier": true,
       "walk_forward_coverage": true,
       "holdout_sample": true,
       "holdout_price_improvement": false,
-      "holdout_brier": true,
+      "holdout_brier": false,
       "holdout_coverage": true
     },
     "comparison": {
@@ -71430,172 +71430,152 @@
       "selection": "Neither recipe is selected or tuned using this comparison",
       "walk_forward": {
         "n": 3719,
-        "current_mae_percent": 0.7263181322879304,
+        "current_mae_percent": 0.7221620289081836,
         "previous_mae_percent": 0.7267189396927703,
-        "mae_improvement": 0.0005515301486560542,
-        "current_coverage80": 0.7932239849421887,
+        "mae_improvement": 0.00627052707132314,
+        "current_coverage80": 0.7746706103791342,
         "previous_coverage80": 0.7956439903199785,
-        "current_brier": 0.25121528913184993,
+        "current_brier": 0.24905654373031327,
         "previous_brier": 0.2494715686750887
       },
       "holdout": {
         "n": 238,
-        "current_mae_percent": 1.2973955828935098,
+        "current_mae_percent": 1.2763747404397294,
         "previous_mae_percent": 1.2996313131086048,
-        "mae_improvement": 0.0017202803537776923,
-        "current_coverage80": 0.8235294117647058,
+        "mae_improvement": 0.017894746328670497,
+        "current_coverage80": 0.7689075630252101,
         "previous_coverage80": 0.8235294117647058,
-        "current_brier": 0.24772599626032174,
+        "current_brier": 0.24906817839681578,
         "previous_brier": 0.247960658929832
       }
     },
     "research": {
       "origin": "2026-09-25T21:00:00+00:00",
       "reference_price": 4321.2001953125,
-      "price": 4323.198232730293,
-      "return": 0.0004623802016765488,
-      "probability_up": 0.508206994573624,
+      "price": 4333.499517521664,
+      "return": 0.002846274565687766,
+      "probability_up": 0.5174966023717721,
       "interval80": [
-        4250.447577287062,
-        4387.504541640396
+        4271.884455461409,
+        4410.11451606727
       ],
       "feature_coefficients": {
-        "return1": -0.007532043100689631,
-        "return5": 0.03113517460988166,
-        "return20": -0.033333274920577236,
-        "trend": -0.001747211627752111,
-        "rsi": -0.029925253797922227,
-        "atr": -0.0182884728985919,
-        "range_position": 0.010167653528062667,
-        "flow": -0.01637409418347351,
-        "gap_fraction": -0.007795115609756669,
-        "adx": -0.028838811917720142,
-        "di_spread": 0.05955832355104191,
-        "macd_atr": -0.06603281222137677,
-        "volatility_rank": -0.017625473729955148,
-        "bandwidth": 0.028155676428222563
+        "return1": -0.025405897878633517,
+        "return5": 0.05839520734717064,
+        "return20": -0.0829043579839914,
+        "trend": 0.048032850400031205,
+        "rsi": -0.011065391111020138,
+        "atr": -0.03361060570814527,
+        "range_position": 0.01657946019646658,
+        "flow": 0.06683615656884563,
+        "gap_fraction": 0.01682308684375201,
+        "adx": 0.022071382601030805,
+        "di_spread": 0.06644379493674736,
+        "macd_atr": -0.07932534896483438,
+        "volatility_rank": -0.026334805706158194,
+        "bandwidth": 0.016041609556705846
       },
-      "calibration_n": 238,
-      "calibration_start": "2025-09-23T21:00:00+00:00",
+      "calibration_n": 118,
+      "calibration_start": "2026-03-25T21:00:00+00:00",
       "calibration_end": "2026-09-24T21:00:00+00:00",
-      "ood_distance": 1.935786575058304,
+      "ood_distance": 1.6731672892375593,
       "selection": {
-        "ridge_weight": 0.0,
-        "return_offset": 0.0004623802016765488,
-        "selection_n": 119,
-        "selection_end_position": 5092,
-        "interval_n": 119,
+        "ridge_weight": 1.0,
+        "return_offset": 0.0,
+        "selection_n": 59,
+        "selection_end_position": 5156,
+        "interval_n": 59,
         "candidate_mae_percent": [
-          1.365723015823762,
-          1.3614158130001448,
-          1.3662511111339755,
-          1.366812306563232,
-          1.3697470494531676
+          1.3317115972679145,
+          1.3325287188209682,
+          1.3249543706911944,
+          1.3181971441144742,
+          1.3105413611424228
         ],
         "candidates": [
           "no change",
           "past median return",
-          "25% Ridge",
-          "50% Ridge",
-          "Ridge"
+          "25% Huber",
+          "50% Huber",
+          "Huber"
         ],
-        "selection_end": "2026-03-24T21:00:00+00:00"
+        "probability_weight": 0.3710691823899371,
+        "selection_end": "2026-06-25T21:00:00+00:00"
       }
     },
     "oos": {
-      "n": 3719,
-      "directional_accuracy": 0.41086313525141166,
-      "direction_coverage": 0.8042484538854531,
+      "n": 3833,
+      "directional_accuracy": 0.39055570049569527,
+      "direction_coverage": 0.7367597182363684,
       "neutral_policy": "Predictions within 0.0001% of zero are abstentions and do not count as directional hits",
-      "baseline_accuracy": 0.5267545038988976,
-      "edge": -0.11589136864748588,
+      "baseline_accuracy": 0.5288285937907644,
+      "edge": -0.13827289329506914,
       "edge_ci95": [
-        -0.1470892713094918,
-        -0.08495563323474054
+        -0.16828202452387164,
+        -0.10800939212105401
       ],
-      "balanced_accuracy": 0.5002513167664393,
-      "mcc": 0.0005047686281245083,
-      "mae_percent": 0.7263181322879304,
-      "baseline_mae_percent": 0.7235751674290598,
-      "mae_skill": -0.003790849910751737,
-      "zero_change_mae_percent": 0.7233097607402094,
-      "atr_normalized_mae": 0.5710503579812822,
-      "brier": 0.25121528913184993,
-      "baseline_brier": 0.24996392335814233,
-      "brier_skill": -0.005006185520278761,
-      "log_loss": 0.6957139980332386,
-      "coverage80": 0.7932239849421887,
-      "mean_interval_width_percent": 2.2982989541922456,
+      "balanced_accuracy": 0.5137576548270552,
+      "mcc": 0.02775996486744105,
+      "mae_percent": 0.724857988303578,
+      "baseline_mae_percent": 0.7253725027073122,
+      "mae_skill": 0.0007093105980912062,
+      "zero_change_mae_percent": 0.7259715846206414,
+      "atr_normalized_mae": 0.5692602779037245,
+      "brier": 0.24892590277958315,
+      "baseline_brier": 0.24955520614292254,
+      "brier_skill": 0.002521700000035154,
+      "log_loss": 0.6909982576082587,
+      "coverage80": 0.7722410644403861,
+      "mean_interval_width_percent": 2.2513488685039675,
       "calibration_bins": [
-        {
-          "from": 0.2,
-          "to": 0.4,
-          "n": 153,
-          "mean_probability": 0.3671464306041618,
-          "observed_up": 0.49019607843137253
-        },
         {
           "from": 0.4,
           "to": 0.6000000000000001,
-          "n": 3094,
-          "mean_probability": 0.5203120390327575,
-          "observed_up": 0.5232708468002586
-        },
-        {
-          "from": 0.6,
-          "to": 0.8,
-          "n": 472,
-          "mean_probability": 0.622114124622171,
-          "observed_up": 0.5614406779661016
+          "n": 3833,
+          "mean_probability": 0.5272445885286072,
+          "observed_up": 0.5288285937907644
         }
       ],
-      "selective_n": 357,
-      "selective_coverage": 0.0959935466523259,
-      "selective_accuracy": 0.5350140056022409
+      "selective_n": 0,
+      "selective_coverage": 0.0,
+      "selective_accuracy": null
     },
     "holdout": {
       "n": 238,
-      "directional_accuracy": 0.5378151260504201,
-      "direction_coverage": 1.0,
+      "directional_accuracy": 0.42857142857142855,
+      "direction_coverage": 0.7521008403361344,
       "neutral_policy": "Predictions within 0.0001% of zero are abstentions and do not count as directional hits",
       "baseline_accuracy": 0.5378151260504201,
-      "edge": 0.0,
+      "edge": -0.1092436974789916,
       "edge_ci95": [
-        -0.07563025210084033,
-        0.07983193277310924
+        -0.2017857142857143,
+        -0.029306722689075724
       ],
-      "balanced_accuracy": 0.5428267045454546,
-      "mcc": 0.0860947980324697,
-      "mae_percent": 1.2973955828935098,
-      "baseline_mae_percent": 1.2887469802297826,
-      "mae_skill": -0.006710861632579945,
+      "balanced_accuracy": 0.541690340909091,
+      "mcc": 0.08381035894703102,
+      "mae_percent": 1.2763747404397294,
+      "baseline_mae_percent": 1.2884762877364428,
+      "mae_skill": 0.009392138149451834,
       "zero_change_mae_percent": 1.2914538085371439,
-      "atr_normalized_mae": 0.50127982949566,
-      "brier": 0.24772599626032174,
-      "baseline_brier": 0.24873787298255276,
-      "brier_skill": 0.00406804444412856,
-      "log_loss": 0.688570025043419,
-      "coverage80": 0.8235294117647058,
-      "mean_interval_width_percent": 4.435193836981767,
+      "atr_normalized_mae": 0.4955622957499718,
+      "brier": 0.24906817839681578,
+      "baseline_brier": 0.24871042888065742,
+      "brier_skill": -0.0014384178330133501,
+      "log_loss": 0.6912901947449119,
+      "coverage80": 0.7689075630252101,
+      "mean_interval_width_percent": 4.1034988083436925,
       "calibration_bins": [
         {
           "from": 0.4,
           "to": 0.6000000000000001,
-          "n": 233,
-          "mean_probability": 0.554065100627706,
-          "observed_up": 0.5364806866952789
-        },
-        {
-          "from": 0.6,
-          "to": 0.8,
-          "n": 5,
-          "mean_probability": 0.6099847180146871,
-          "observed_up": 0.6
+          "n": 238,
+          "mean_probability": 0.5320249667006589,
+          "observed_up": 0.5378151260504201
         }
       ],
-      "selective_n": 4,
-      "selective_coverage": 0.01680672268907563,
-      "selective_accuracy": 0.75
+      "selective_n": 0,
+      "selective_coverage": 0.0,
+      "selective_accuracy": null
     },
     "note": "Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score and 68\u201390% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required."
   },
@@ -71775,9 +71755,9 @@
     "strength": "UNCERTAIN DIRECTION",
     "interpretation": "Point estimate is a model scenario, not a promised price or an entry order. Flat means the predicted move is less than one tenth of recent mean error (minimum 0.0001%). The model range is a historical residual band; its measured coverage is shown."
   },
-  "cache_key": "4b7f53dc9c3155213e4291d8b91f6d80335a180de87ea5fac5e65cdb852d4c9a",
-  "model_id": "metals-causal-v1:9d602b91e314:2.0",
+  "cache_key": "d1b28ca4948e365e0032cf73f1087619653a3e3388c5c263f2f2d2e3f05a8826",
+  "model_id": "metals-causal-v1:a47589d65e40:2.0",
   "asset": "gold",
-  "source_hash": "0d86a96a10d907e81e591646533af7e1c1a60ebb8e730b56623eef8ec02e9d3d",
-  "run_id": "20260928T155855Z-36447544805"
+  "source_hash": "52ad7032cdd495cc41584e43b26e044f37f8d8cff5f83ffd6903fbf0af2d8b8f",
+  "run_id": "20260928T202101Z-36478387104"
 }
