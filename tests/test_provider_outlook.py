@@ -32,10 +32,10 @@ def test_quota_cache_does_not_repeat_requests_or_mark_old_data_new(monkeypatch):
         return {'status':'CONNECTED','observations':[{'retrieved_at':now.isoformat()}],'histories':{},'errors':[]}
     monkeypatch.setattr(providers,'collect_provider',fetch)
     first=providers.collect(now='2026-09-16T00:00Z',environ={'ALPHA_VANTAGE_API_KEY':'test'})
-    again=providers.collect(first,now='2026-09-16T05:59Z',environ={'ALPHA_VANTAGE_API_KEY':'test'})
+    again=providers.collect(first,now='2026-09-16T02:59Z',environ={'ALPHA_VANTAGE_API_KEY':'test'})
     assert calls==['alpha_vantage']
     assert again['providers']['alpha_vantage']['checked_at']==first['providers']['alpha_vantage']['checked_at']
-    providers.collect(again,now='2026-09-16T06:00Z',environ={'ALPHA_VANTAGE_API_KEY':'test'})
+    providers.collect(again,now='2026-09-16T03:00Z',environ={'ALPHA_VANTAGE_API_KEY':'test'})
     assert len(calls)==2
 
 def test_fred_values_cannot_enter_before_release_or_after_stale_cutoff():

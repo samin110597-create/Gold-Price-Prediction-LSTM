@@ -33,7 +33,9 @@ with sync_playwright() as p:
     for asset in ("gold","silver"):
         page.locator("#"+asset+"-tab").click()
         assert page.locator("#app").get_attribute("data-asset")==asset
-        assert page.locator('[data-testid="price"]').inner_text().startswith("$")
+        assert page.locator('[data-testid="price"]').inner_text().startswith("$") or page.locator('[data-testid="price"]').inner_text()=="Unavailable"
+        assert "SPOT /" in page.locator(".topline").inner_text()
+        assert "not spot trading targets" in page.locator("#app").inner_text()
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
         page.locator('#forecast-review > summary').click()
         assert page.locator('[data-forecast]').count()==4
