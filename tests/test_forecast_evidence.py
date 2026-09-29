@@ -81,3 +81,60 @@ def test_robust_model_is_causal_and_shrinks_small_sample_probabilities():
     cutoff=f.index[-60].isoformat()
     assert [r for r in before['records'] if r['target_time']<cutoff]==[r for r in after['records'] if r['target_time']<cutoff]
     assert before['primary'] is None or all(before['checks'].values())
+
+
+def test_bias_correction_is_causal_with_three_disjoint_calibration_blocks():
+    f=compute(frame(2200))
+    before=evaluate(f,1,recipe='bias_corrected')
+    assert before['recipe_version']=='6.0'
+    assert before['records'] and before['research']
+    assert all(before['integrity'][k] for k in ('training_before_calibration','calibration_before_test','unique_origins'))
+    selection=before['research']['selection']
+    assert selection['bias_n']>=20 and selection['selection_n']>=20 and selection['interval_n']>=20
+    assert selection['bias_end']<selection['selection_end']<before['research']['calibration_end']<before['research']['origin']
+    changed=f.copy()
+    changed.iloc[-60:,changed.columns.get_loc('close')]*=2
+    after=evaluate(changed,1,recipe='bias_corrected')
+    cutoff=f.index[-60].isoformat()
+    assert [r for r in before['records'] if r['target_time']<cutoff]==[r for r in after['records'] if r['target_time']<cutoff]
+
+
+def test_interval_outcomes_cannot_select_bias_correction():
+    from metals.models import features,train
+    f=compute(frame(1000))
+    x=features(f)
+    y=f.close.shift(-1)/f.close-1
+    scale=f.atr/f.close
+    fit=np.arange(250,700)
+    cal=np.arange(710,890)
+    before=train(x,y,fit,cal,scale,adaptive=True,debiased=True)
+    y2=y.copy()
+    y2.iloc[cal[-60:]]+=.5
+    after=train(x,y2,fit,cal,scale,adaptive=True,debiased=True)
+    assert before[-1]==after[-1]
+    assert after[3]>before[3] and after[4]>before[4]
+
+
+def test_bias_selection_reduces_known_past_bias_and_is_bounded():
+    from metals.models import select_bias_correction
+    raw=np.ones(100)
+    actual=np.full(100,.06)
+    scale=np.full(100,.1)
+    s=select_bias_correction(raw,actual,scale)
+    corrected=(s['ridge_weight']*raw+s['normalized_offset'])*scale
+    assert np.mean(abs(actual-corrected))<np.mean(abs(actual-raw*scale))
+    assert abs(s['normalized_offset'])<=.5*50/(50+50)
+    neutral=select_bias_correction(raw,np.zeros(100),scale)
+    assert neutral['selected_index']==0
+
+
+def test_error_diagnostics_distinguish_bias_and_large_misses():
+    from metals.models import metrics
+    records=[]
+    for actual,predicted in [(0.,.01),(.01,.03),(-.02,.05)]:
+        records.append(dict(actual_return=actual,predicted_return=predicted,probability_up=.5,
+            baseline_return=.001,prior_up=.5,lower_return=-.1,upper_return=.1,atr_fraction=.01))
+    m=metrics(records)
+    assert np.isclose(m['bias_percent'],(1+2+7)/3)
+    assert m['rmse_percent']>m['mae_percent']
+    assert m['p90_absolute_error_percent']>m['mae_percent']

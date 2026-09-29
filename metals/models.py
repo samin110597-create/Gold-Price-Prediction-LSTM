@@ -46,9 +46,30 @@ def metrics(records):
         if mask.any():
             bins.append({"from":left,"to":left+.2,"n":int(mask.sum()),"mean_probability":float(prob[mask].mean()),"observed_up":float(labels[mask].mean())})
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
-    return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
+    return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"bias_percent":float(np.mean(p-y)*100),"rmse_percent":float(np.sqrt(np.mean((p-y)**2))*100),"p90_absolute_error_percent":float(np.quantile(abs(p-y),.9)*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False):
+def select_bias_correction(raw, actual, scale):
+    """Learn bounded corrections, then select on a later, disjoint past sample."""
+    learn, select = np.array_split(np.arange(len(actual)), 2)
+    candidates=[(0.,0.)]
+    names=['no change']
+    for weight in (.25,.5,1.):
+        bias=float(np.clip(np.median(actual[learn]/scale[learn]-weight*raw[learn]),-.5,.5))
+        # Small samples receive less correction; no single extreme return drives the median.
+        bias*=len(learn)/(len(learn)+50)
+        candidates.extend([(weight,0.),(weight,bias)])
+        names.extend([f'{weight:g} Ridge',f'{weight:g} Ridge + bounded past bias'])
+    losses=[float(np.mean(abs(actual[select]-(w*raw[select]+b)*scale[select]))) for w,b in candidates]
+    best=int(np.argmin(losses))
+    if losses[best]>.95*losses[0]:
+        best=0
+    weight,bias=candidates[best]
+    return {'ridge_weight':weight,'return_offset':0.,'normalized_offset':bias,
+            'selected_index':best,'candidates':names,'candidate_mae_percent':[v*100 for v in losses],
+            'bias_n':len(learn),'selection_n':len(select)}
+
+
+def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False,debiased=False):
     reg = make_pipeline(StandardScaler(),HuberRegressor(epsilon=1.35,alpha=20,max_iter=500) if robust else Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
     target=y if scale is None else y/scale
@@ -56,7 +77,14 @@ def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False):
     reg.fit(x.iloc[fit],target.iloc[fit],**{('huberregressor' if robust else 'ridge')+'__sample_weight':weights})
     clf.fit(x.iloc[fit],(y.iloc[fit]>0).astype(int),logisticregression__sample_weight=weights)
     selector=None
-    if adaptive:
+    if debiased:
+        # First two thirds learn/select the correction. Final third is never used for selection.
+        bias,selection,cal=np.array_split(cal,3)
+        past=np.concatenate([bias,selection])
+        selector=select_bias_correction(reg.predict(x.iloc[past]),y.iloc[past].to_numpy(),scale.iloc[past].to_numpy())
+        selector.update(selection_end_position=int(selection[-1]),bias_end_position=int(bias[-1]),interval_n=len(cal),
+                        probability_weight=len(cal)/(len(cal)+100))
+    elif adaptive:
         # Fixed candidate set. Select only on the FIRST half of past calibration labels.
         # The later half remains untouched until probability/interval calibration.
         selection,cal=np.array_split(cal,2)
@@ -77,15 +105,21 @@ def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False):
     calibration = LogisticRegression(C=1,max_iter=300).fit(raw,(y.iloc[cal]>0).astype(int)) if y.iloc[cal].gt(0).nunique()==2 else None
     predicted=reg.predict(x.iloc[cal])
     if selector:
-        predicted=selector['ridge_weight']*predicted+selector['return_offset']/scale.iloc[cal].to_numpy()
+        predicted=selector['ridge_weight']*predicted+selector['return_offset']/scale.iloc[cal].to_numpy()+selector.get('normalized_offset',0.)
     residual = target.iloc[cal].to_numpy()-predicted
-    low,high = np.quantile(residual,[.1,.9])
+    if debiased:
+        # Outward finite-sample order statistics; interpolation understates small-sample tails.
+        ordered=np.sort(residual)
+        low=ordered[max(0,int(np.floor(.1*(len(ordered)+1)))-1)]
+        high=ordered[min(len(ordered)-1,int(np.ceil(.9*(len(ordered)+1)))-1)]
+    else:
+        low,high = np.quantile(residual,[.1,.9])
     return reg,clf,calibration,float(low),float(high),selector
 
 def predict(reg,clf,calibrator,x,scale,selector,prior):
     p=reg.predict(x)*scale
     if selector:
-        p=selector['ridge_weight']*p+selector['return_offset']
+        p=selector['ridge_weight']*p+selector['return_offset']+selector.get('normalized_offset',0.)*scale
     prob=calibrator.predict_proba(clf.decision_function(x).reshape(-1,1))[:,1] if calibrator is not None else np.repeat(prior,len(x))
     if selector and 'probability_weight' in selector:
         w=selector['probability_weight']
@@ -93,10 +127,11 @@ def predict(reg,clf,calibrator,x,scale,selector,prior):
     return p,prob
 
 def evaluate(frame, horizon, hourly=False, recipe="legacy"):
-    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical","robust_recent"):
+    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical","robust_recent","bias_corrected"):
         raise ValueError("Unknown fixed recipe")
     scaled=recipe!="legacy"
-    adaptive=recipe in ("history_selected","recent_technical","robust_recent")
+    adaptive=recipe in ("history_selected","recent_technical","robust_recent","bias_corrected")
+    debiased=recipe=="bias_corrected"
     recent=recipe in ("recent_technical","robust_recent")
     robust=recipe=="robust_recent"
     half_life=(1500 if hourly else 252) if recent else None
@@ -135,6 +170,8 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     if robust:
         calspan=max(252 if hourly else 126,30*horizon)
         blockspan=252 if hourly else 63
+    if debiased:
+        blockspan=252 if hourly else 63
     hold_start = n-holdspan-horizon
     start = minfit+calspan+2*horizon
     records=[]
@@ -144,24 +181,24 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
             # Extend by sample availability only, without inspecting outcomes or scores.
             while cal_start>minfit+horizon:
                 available=pos[(pos>=cal_start)&(pos<start_test-horizon)&(pos%horizon==0)&valid.to_numpy()]
-                if len(available)>=30:
+                if len(available)>=(60 if debiased else 30):
                     break
                 cal_start=max(minfit+horizon,cal_start-max(126,10*horizon))
         fit = pos[(pos<cal_start-horizon)&valid.to_numpy()]
         cal = pos[(pos>=cal_start)&(pos<start_test-horizon)&(pos%horizon==0)&valid.to_numpy()]
         return fit,cal
-    hold_starts=list(range(max(start,hold_start),n-horizon,blockspan)) if robust else [max(start,hold_start)]
+    hold_starts=list(range(max(start,hold_start),n-horizon,blockspan)) if (robust or debiased) else [max(start,hold_start)]
     for test_start in list(range(start,max(start,hold_start),blockspan))+hold_starts:
         if test_start>=n-horizon:
             continue
-        end = min(test_start+blockspan,hold_start) if test_start<hold_start else min(test_start+blockspan,n-horizon) if robust else n-horizon
+        end = min(test_start+blockspan,hold_start) if test_start<hold_start else min(test_start+blockspan,n-horizon) if (robust or debiased) else n-horizon
         test = pos[(pos>=test_start)&(pos<end)&(pos%horizon==0)&valid.to_numpy()]
         if scaled and test_start<hold_start:
             test=test[test+horizon<hold_start]
         fit,cal = indices(test_start)
-        if len(fit)<minfit//2 or len(cal)<20 or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
+        if len(fit)<minfit//2 or len(cal)<(60 if debiased else 20) or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased)
         predictions,probabilities = predict(reg,clf,calibrator,x.iloc[test],scale.iloc[test].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
@@ -172,8 +209,8 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     live = None
     ood = True
     fit,cal = indices(n-1)
-    if len(cal)>=20 and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust)
+    if len(cal)>=(60 if debiased else 20) and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased)
         ps,probs=predict(reg,clf,calibrator,x.iloc[[-1]],scale.iloc[[-1]].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         p,probability=float(ps[0]),float(probs[0])
         scaler=reg[0]
@@ -181,7 +218,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         live_dist=float(np.max(abs(scaler.transform(x.iloc[[-1]]))))
         ood=live_dist>max(4,float(np.quantile(dist,.995)))
         price=float(frame.close.iloc[-1])
-        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(x.columns,map(float,reg[1].coef_))),"calibration_n":len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist,"selection":selector}
+        live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(x.columns,map(float,reg[1].coef_))),"calibration_n":len(cal),"interval_calibration_n":selector["interval_n"] if selector else len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist,"selection":selector}
     checks = {"oos_sample":oos.get("n",0)>=100,"oos_edge":oos.get("edge",-1)>=.03,"edge_confidence":oos.get("edge_ci95",[-1])[0]>0,"oos_mae":(oos.get("mae_skill") or -1)>=.03,"oos_brier":(oos.get("brier_skill") or -1)>0,"holdout_sample":holdout.get("n",0)>=12,"holdout_edge":holdout.get("edge",-1)>0,"holdout_mae":(holdout.get("mae_skill") or -1)>0,"holdout_brier":(holdout.get("brier_skill") or -1)>0,"interval_coverage":.68<=holdout.get("coverage80",0)<=.9,"in_distribution":not ood,"live_available":live is not None,"positive_ordered_prices":live is not None and 0<live["interval80"][0]<live["interval80"][1] and live["price"]>0}
     if scaled:
         checks["oos_vs_no_change"]=oos.get("mae_percent",float("inf"))<.97*oos.get("zero_change_mae_percent",0)
@@ -211,6 +248,14 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         result['integrity']['calibration_window_bars']=calspan
         result['integrity']['robust_loss']='Huber epsilon 1.35, alpha 20; reduces influence of extreme residuals without deleting observations.'
         result['integrity']['probability_shrinkage']='Calibrated probability weight n/(n+100), using only the independent past probability-calibration count; remainder is fit-period class prior.'
+    if debiased:
+        result.update(model="Volatility-scaled Ridge with bounded past bias correction, conservative selection and sequential refits",recipe_version="6.0")
+        result['integrity']['selection']='Three disjoint past calibration blocks: learn bounded median residual bias; select only if >=5% lower MAE than no change; independent final block calibrates intervals and probabilities.'
+        result['integrity']['holdout']='Rolling final evaluation with refits; only previously matured labels enter later training. This is not an untouched holdout.'
+        result['integrity']['macro_timing']='Fixed technical recipe; current macro observations are context only, never inserted into historical training.'
+        result['integrity']['intervals']='Outward finite-sample residual order statistics; empirical coverage is measured, not guaranteed under market drift.'
+        if live and live.get('selection'):
+            live['selection']['bias_end']=frame.index[live['selection']['bias_end_position']+horizon].isoformat()
     return result
 
 
@@ -225,5 +270,5 @@ def paired_comparison(current,previous):
             continue
         a,b=map(list,zip(*pairs))
         ma,mb=metrics(a),metrics(b)
-        result[partition]={"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"]}
+        result[partition]={"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"],"current_rmse_percent":ma["rmse_percent"],"previous_rmse_percent":mb["rmse_percent"],"current_p90_error_percent":ma["p90_absolute_error_percent"],"previous_p90_error_percent":mb["p90_absolute_error_percent"],"current_bias_percent":ma["bias_percent"],"previous_bias_percent":mb["bias_percent"]}
     return result
