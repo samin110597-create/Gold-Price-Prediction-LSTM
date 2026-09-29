@@ -10,7 +10,7 @@ from metals import VERSION
 from metals.data import SYMBOLS, CONTEXT, snapshot, clean, aggregate, session_context, digest
 from metals.indicators import compute
 from metals.structure import scan, families
-from metals.models import evaluate, features, paired_comparison
+from metals.models import evaluate, features, paired_comparison, promotion_checks
 from metals.providers import collect, public_summary, macro_features, merge_caches
 from metals.outlook import describe, paths, technical_brief
 from metals.setups import build, freeze, geometry
@@ -162,21 +162,15 @@ def run(raw_folder,stage,history):
                 result=cached
             else:
                 previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
-                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="robust_recent")
+                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="bias_corrected")
                 comparison=paired_comparison(challenger,previous)
                 print('FORECAST COMPARISON',asset,h,json.dumps(comparison),flush=True)
-                promotion={}
-                for partition in ('walk_forward','holdout'):
-                    m=comparison[partition]
-                    promotion[partition+'_sample']=m.get('n',0)>=(100 if partition=='walk_forward' else 12)
-                    promotion[partition+'_price_improvement']=(m.get('mae_improvement') or 0)>=.05
-                    promotion[partition+'_brier']=m.get('current_brier',1)<=m.get('previous_brier',0)
-                    promotion[partition+'_coverage']=.68<=m.get('current_coverage80',0)<=.90
+                promotion=promotion_checks(comparison)
                 promoted=all(promotion.values())
                 result=challenger if promoted else previous
-                result['challenger_review']={'recipe':'5.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
+                result['challenger_review']={'recipe':'6.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
                     'research':challenger['research'],'oos':challenger['oos'],'holdout':challenger['holdout'],
-                    'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
+                    'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score, RMSE or 90th-percentile error, and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
                 result["previous_recipe_comparison"]=comparison if promoted else paired_comparison(previous,previous)
                 result["previous_recipe_summary"]={k:previous[k] for k in ("status","research","oos","holdout","failed_gates")}
                 challenger['run_id']=run_id
