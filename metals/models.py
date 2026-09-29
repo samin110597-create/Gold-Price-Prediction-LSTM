@@ -262,7 +262,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
 def paired_comparison(current,previous):
     """Compare errors only where both fixed recipes made a forecast for the same target."""
     old={(r["origin"],r["target_time"]):r for r in previous["records"]}
-    result={"reference_recipe":previous["recipe_version"],"reference_model":previous["model"],"selection":"Neither recipe is selected or tuned using this comparison"}
+    result={"reference_recipe":previous["recipe_version"],"reference_model":previous["model"],"selection":"Paired historical research comparison for explicit promotion gates; not independent prospective evidence"}
     for partition in ("walk_forward","holdout"):
         pairs=[(r,old[(r["origin"],r["target_time"])]) for r in current["records"] if r["partition"]==partition and (r["origin"],r["target_time"]) in old and old[(r["origin"],r["target_time"])]["partition"]==partition]
         if not pairs:
@@ -272,3 +272,16 @@ def paired_comparison(current,previous):
         ma,mb=metrics(a),metrics(b)
         result[partition]={"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"],"current_rmse_percent":ma["rmse_percent"],"previous_rmse_percent":mb["rmse_percent"],"current_p90_error_percent":ma["p90_absolute_error_percent"],"previous_p90_error_percent":mb["p90_absolute_error_percent"],"current_bias_percent":ma["bias_percent"],"previous_bias_percent":mb["bias_percent"]}
     return result
+
+
+def promotion_checks(comparison):
+    checks={}
+    for partition in ('walk_forward','holdout'):
+        m=comparison[partition]
+        checks[partition+'_sample']=m.get('n',0)>=(100 if partition=='walk_forward' else 12)
+        checks[partition+'_price_improvement']=(m.get('mae_improvement') or 0)>=.05
+        checks[partition+'_tail_error']=m.get('current_p90_error_percent',float('inf'))<=m.get('previous_p90_error_percent',0)
+        checks[partition+'_rmse']=m.get('current_rmse_percent',float('inf'))<=m.get('previous_rmse_percent',0)
+        checks[partition+'_brier']=m.get('current_brier',1)<=m.get('previous_brier',0)
+        checks[partition+'_coverage']=.68<=m.get('current_coverage80',0)<=.90
+    return checks

@@ -138,3 +138,17 @@ def test_error_diagnostics_distinguish_bias_and_large_misses():
     assert np.isclose(m['bias_percent'],(1+2+7)/3)
     assert m['rmse_percent']>m['mae_percent']
     assert m['p90_absolute_error_percent']>m['mae_percent']
+
+
+def test_lower_average_error_cannot_hide_worse_severe_errors():
+    from metals.models import promotion_checks
+    good=dict(n=120,mae_improvement=.1,current_p90_error_percent=3.,previous_p90_error_percent=4.,
+              current_rmse_percent=2.,previous_rmse_percent=2.5,current_brier=.24,previous_brier=.25,
+              current_coverage80=.8)
+    pair={p:dict(good) for p in ('walk_forward','holdout')}
+    assert all(promotion_checks(pair).values())
+    pair['holdout']['current_p90_error_percent']=4.1
+    assert not promotion_checks(pair)['holdout_tail_error']
+    pair['holdout']['current_rmse_percent']=2.6
+    assert not promotion_checks(pair)['holdout_rmse']
+    assert not any(promotion_checks({p:{'n':0} for p in pair}).values())
