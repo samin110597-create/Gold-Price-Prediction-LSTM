@@ -20,3 +20,15 @@ test('current-market publication rejects wrong instrument and future bars',()=>{
  p.assets.gold.quote.symbol='GLD';assert.throws(()=>c.validateCurrentMarket(p),/Invalid/);
  p.assets.gold.quote.symbol='GC=F';p.assets.gold.technical_brief.rows[0].known_at=iso(now+1000);assert.throws(()=>c.validateCurrentMarket(p),/Invalid/);
 });
+
+test('spot headline uses only documented spot quotes and preserves old source time',()=>{
+ const quote={asset:'gold',symbol:'GOLD',basis:'Spot USD/oz',price:4155.6,source_time:iso(now-7200000)};
+ const providers={alpha_vantage:{observations:[quote]},fmp:{observations:[{...quote,price:4205}]},finnhub:{observations:[{...quote,price:382}]}};
+ const q=c.selectSpotQuote(providers,'gold',now);
+ assert.equal(q.price,4155.6);assert.equal(q.time,quote.source_time);assert.equal(q.stale,true);
+ assert.equal(c.selectSpotQuote({fmp:providers.fmp},'gold',now),null);
+ assert.equal(c.selectSpotQuote(providers,'silver',now),null);
+ providers.alpha_vantage.observations=[{...quote,source_time:iso(now+1)}];assert.equal(c.selectSpotQuote(providers,'gold',now),null);
+ providers.alpha_vantage.observations=[{...quote,basis:'ETF proxy · USD/share'}];assert.equal(c.selectSpotQuote(providers,'gold',now),null);
+ providers.alpha_vantage.observations=[{...quote,price:NaN}];assert.equal(c.selectSpotQuote(providers,'gold',now),null);
+});

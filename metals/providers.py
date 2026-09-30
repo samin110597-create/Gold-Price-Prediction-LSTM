@@ -17,7 +17,7 @@ SPECS = {
     'fmp': ('FMP_API_KEY', 900, 'https://site.financialmodelingprep.com/developer/docs/stable/commodities-quote'),
     'fred': ('FRED_API_KEY', 86400, 'https://fred.stlouisfed.org/docs/api/fred/series_observations.html'),
     'polygon': ('POLYGON_API_KEY', 86400, 'https://massive.com/docs/rest/forex/aggregates/previous-day-bar'),
-    'alpha_vantage': ('ALPHA_VANTAGE_API_KEY', 21600, 'https://www.alphavantage.co/documentation/'),
+    'alpha_vantage': ('ALPHA_VANTAGE_API_KEY', 10800, 'https://www.alphavantage.co/documentation/'),
 }
 FRED_SERIES = {'DFII10': '10-year real Treasury yield', 'DGS10': '10-year Treasury yield',
                'T10YIE': '10-year inflation breakeven', 'DTWEXBGS': 'Broad trade-weighted US dollar'}
