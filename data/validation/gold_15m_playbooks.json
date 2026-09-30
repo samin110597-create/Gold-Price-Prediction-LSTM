@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-17T21:00:00+00:00",
+  "cutoff": "2026-09-18T03:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -19,14 +19,14 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 3,
-            "tp1_first": 0.6666666666666666,
+            "n": 4,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.2076549551264879,
-              0.9385096847238394
+              0.15003570882017148,
+              0.8499642911798285
             ],
-            "mean_gross_r": 0.44879190723286344,
-            "stops": 1,
+            "mean_gross_r": 0.08659393042464758,
+            "stops": 2,
             "timeouts": 0
           }
         },
@@ -106,14 +106,14 @@
             "timeouts": 1
           },
           "recent_holdout": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.0614903152761605,
+              0.7923450448735121
             ],
-            "mean_gross_r": 0.15862432867527987,
-            "stops": 1,
+            "mean_gross_r": -0.22758378088314676,
+            "stops": 2,
             "timeouts": 0
           }
         },
@@ -358,14 +358,14 @@
             "timeouts": 1
           },
           "recent_holdout": {
-            "n": 2,
-            "tp1_first": 1.0,
+            "n": 3,
+            "tp1_first": 0.6666666666666666,
             "wilson95": [
-              0.34237195288961925,
-              1
+              0.2076549551264879,
+              0.9385096847238394
             ],
-            "mean_gross_r": 1.4917189102437463,
-            "stops": 0,
+            "mean_gross_r": 0.6611459401624975,
+            "stops": 1,
             "timeouts": 0
           }
         }
@@ -1212,16 +1212,66 @@
           "exit": 4193.0,
           "gross_r": 1.0273328482559958,
           "ambiguous": false
+        },
+        {
+          "id": "22944a2b1282c2bf92fe239e",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-09-30T02:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-30T02:45:00+00:00",
+          "entry_bar_close": "2026-09-30T03:00:00+00:00",
+          "confirmation_time": "2026-09-30T02:45:00+00:00",
+          "entry": 4210.2001953125,
+          "entry_rr": 1.0385020253575787,
+          "time": "2026-09-30T05:30:00+00:00",
+          "exit": 4202.593178522109,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "1c3f43379e284fd5f35e64c1",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2026-09-30T02:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-30T02:45:00+00:00",
+          "entry_bar_close": "2026-09-30T03:00:00+00:00",
+          "confirmation_time": "2026-09-30T02:45:00+00:00",
+          "entry": 4210.2001953125,
+          "entry_rr": 1.0385020253575787,
+          "time": "2026-09-30T05:30:00+00:00",
+          "exit": 4202.593178522109,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "5b6555ea34d8a6b10fc4dec3",
+          "kind": "INSIDE_BREAKOUT",
+          "direction": 1,
+          "origin": "2026-09-30T02:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-30T02:45:00+00:00",
+          "entry_bar_close": "2026-09-30T03:00:00+00:00",
+          "confirmation_time": "2026-09-30T02:45:00+00:00",
+          "entry": 4210.2001953125,
+          "entry_rr": 1.0385020253575787,
+          "time": "2026-09-30T05:30:00+00:00",
+          "exit": 4202.593178522109,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
         "EXPIRED": 33,
-        "INVALIDATED": 87,
+        "INVALIDATED": 90,
         "POOR ENTRY": 60,
         "MISSED": 3,
         "OVERLAP": 1,
-        "UNAVAILABLE": 1,
-        "WATCH": 3
+        "UNAVAILABLE": 1
       }
     },
     "Strict": {
