@@ -14,7 +14,7 @@ function refreshFeedLabels(){
  if($('#snapshot-age'))$('#snapshot-age').textContent=ageLabel(data.asof);
  if($('#page-check'))$('#page-check').textContent=lastFeedCheck?time(lastFeedCheck):'Checking…';
  if($('#feed-status'))$('#feed-status').textContent=feedBusy?'Checking published data…':feedError?'Refresh failed: '+feedError+'. Showing the last verified snapshot.':snapshotIsStale()?'Snapshot is over 30 minutes old; current-watch eligibility is paused.':quoteIsStale()?'Quote freshness or completed-bar checks failed; current-watch eligibility is paused.':'Latest published snapshot loaded. Source quote '+time(a.quote.time)+'.';
- if($('#refresh-market')){$('#refresh-market').disabled=feedBusy;$('#refresh-market').onclick=()=>{loadMarketSnapshot();if(typeof loadCurrentMarket==='function')loadCurrentMarket();};}
+ if($('#refresh-market')){$('#refresh-market').disabled=feedBusy;$('#refresh-market').onclick=()=>{loadMarketSnapshot();if(typeof loadCurrentMarket==='function')loadCurrentMarket();if(typeof loadSpotQuotes==='function')loadSpotQuotes();};}
 }
 function validateSnapshot(d,manifest){
  if(d.schema_version!==1||!d.run_id||d.run_id!==manifest.run_id||d.asof!==manifest.asof||!Number.isFinite(Date.parse(d.asof)))throw Error('Inconsistent snapshot metadata');
