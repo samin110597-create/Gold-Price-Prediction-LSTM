@@ -33,6 +33,7 @@ function refreshSpotDisplay(){
  if(price)price.textContent=q?'$'+n(q.price):'Unavailable';
  if(basis)basis.textContent=q?q.basis+' · Last reported '+time(q.time):'No timestamped spot quote available';
  const panel=document.querySelector('#current-market');if(panel)panel.outerHTML=currentPanel();
+ const health=document.querySelector('#provider-health');if(health)health.outerHTML=providerPanel();
  refreshSpotLabels();
 }
 function refreshSpotLabels(){
@@ -81,7 +82,7 @@ function currentProviders(){
  for(const [key,p] of Object.entries(currentMarket?.external_data?.providers||{})){
   if(!providers[key]||Date.parse(p.checked_at)>Date.parse(providers[key].checked_at))providers[key]=p;
  }
- if(directSpot.observations.length)providers.gold_api=directSpot;
+ providers.gold_api={...directSpot,status:Object.keys(spotErrors).length?(directSpot.observations.length?'PARTIAL':'UNAVAILABLE'):(directSpot.observations.length?'CONNECTED':'CONNECTING'),errors:Object.values(spotErrors),refresh_seconds:30,documentation:'https://gold-api.com/docs'};
  return providers;
 }
 function selectSpotQuote(providers,key,now=Date.now()){
@@ -104,7 +105,7 @@ function spotStatus(q){return !q?'SPOT QUOTE UNAVAILABLE':q.stale?'STALE SPOT �
 function currentPanel(){
  const item=currentAsset(),q=newestFuturesQuote();
  const providers=currentProviders(),spot=selectSpotQuote(providers,asset);
- const quotes=Object.entries(providers).flatMap(([name,p])=>(p.observations||[]).filter(v=>v.asset===asset).map(v=>({...v,provider:name,checked:p.checked_at}))).sort((a,b)=>(Date.parse(b.source_time)||0)-(Date.parse(a.source_time)||0));
+ const quotes=Object.entries(providers).flatMap(([name,p])=>(p.observations||[]).filter(v=>v.asset===asset).map(v=>({...v,provider:name,checked:v.retrieved_at||p.checked_at}))).sort((a,b)=>(Date.parse(b.source_time)||0)-(Date.parse(a.source_time)||0));
  return `<section class="panel" id="current-market"><div class="panel-head"><h2>Spot price and separate futures research</h2><span class="badge wait" id="spot-panel-status">${escape(spotStatus(spot))}</span></div><p><strong id="spot-detail-status">${escape(spotStatus(spot))}</strong>${spot?` · ${escape(spot.source)} ${time(spot.time)} · age <span id="spot-quote-age">${ageLabel(spot.time)}</span>`:" · No substitute price is displayed."}.</p><p>Spot prices are requested directly every 30 seconds while this page is visible, independently of GitHub builds. <button id="refresh-spot" type="button">Refresh spot prices</button></p><p class="footnote">Indicative USD per troy ounce, not an executable broker bid/ask. Source timestamps determine freshness; quotes over two minutes old are flagged. Alpha Vantage remains a timestamped backup on its existing quota budget. Last direct attempt: ${spotLastAttempt?time(new Date(spotLastAttempt).toISOString()):'Connecting…'}. ${escape(spotErrors[asset]||'')}</p><p><strong>Separate Yahoo futures quote: $${n(q.price)}</strong>. This is not the spot headline and is not independently verified against a matching futures contract. Futures source ${time(q.time)} · age <strong id="current-quote-age">${ageLabel(q.time)}</strong>. Technical refresh ${time(item?.asof||data.asof)}. Full model evaluation ${time(data.asof)}.</p><p class="footnote">Fast refresh requested every 5 minutes; this page checks every 30 seconds. GitHub schedules can run late. Refresh checks published data; it does not bypass provider delays.</p><div class="table-wrap"><table><thead><tr><th>API / instrument</th><th>Price</th><th>Source observation</th><th>API checked</th><th>Basis</th></tr></thead><tbody>${quotes.map(v=>`<tr><td>${escape(v.provider)} / ${escape(v.symbol)}</td><td>$${n(v.price)}</td><td>${v.source_time?time(v.source_time):'No quote timestamp; context only'}</td><td>${time(v.checked)}</td><td>${escape(v.basis)}</td></tr>`).join('')}</tbody></table></div><p class="footnote">Sorted by source timestamp. Spot, ETF and unverified commodity contracts are comparisons; they never replace futures prices in model calculations.</p><h3>Forecast versus the current futures price</h3><div class="table-wrap"><table><thead><tr><th>Horizon</th><th>Applicability now</th><th>Since model origin</th><th>Move / recent model error</th></tr></thead><tbody>${Object.entries(data.assets[asset].forecasts).map(([h,f])=>{const a=forecastApplicability(f,q);return `<tr><td>${escape(h)}</td><td>${escape(a.status)}</td><td>${a.move===undefined?'—':pct(a.move)}</td><td>${a.errorRatio===undefined?'—':n(a.errorRatio,2)+'×'}</td></tr>`;}).join('')}</tbody></table></div><p class="footnote">Checks the original issued forecast against new observations. Being inside its range does not validate accuracy. Targets and probabilities are never shifted to follow the market. ${escape(item?.history_note||'')}</p><p id="current-refresh-status" class="footnote">${escape(currentError||currentMarket?.errors?.[asset]||'')}</p></section>`;
 }
 async function loadCurrentMarket(){
