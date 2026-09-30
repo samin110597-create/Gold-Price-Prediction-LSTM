@@ -2,20 +2,20 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-17T18:30:00+00:00",
+  "cutoff": "2026-09-17T21:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 4,
-            "tp1_first": 0.5,
+            "n": 5,
+            "tp1_first": 0.4,
             "wilson95": [
-              0.15003570882017148,
-              0.8499642911798285
+              0.1176182311592533,
+              0.769280067791163
             ],
-            "mean_gross_r": 0.502572049255327,
-            "stops": 1,
+            "mean_gross_r": 0.20205763940426155,
+            "stops": 2,
             "timeouts": 1
           },
           "recent_holdout": {
@@ -1019,6 +1019,23 @@
           "ambiguous": false
         },
         {
+          "id": "93f578898a9b2df134aa624c",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-09-17T17:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-17T18:15:00+00:00",
+          "entry_bar_close": "2026-09-17T18:30:00+00:00",
+          "confirmation_time": "2026-09-17T18:15:00+00:00",
+          "entry": 66.16999816894531,
+          "entry_rr": 2.087413044663686,
+          "time": "2026-09-17T18:30:00+00:00",
+          "exit": 66.03106978758413,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
           "id": "67fd8e05fde8b9c64de3275f",
           "kind": "RANGE_BREAKOUT",
           "direction": -1,
@@ -1290,22 +1307,21 @@
         "POOR ENTRY": 43,
         "EXPIRED": 28,
         "OVERLAP": 4,
-        "MISSED": 8,
-        "PARTITION_BOUNDARY": 1
+        "MISSED": 8
       }
     },
     "Strict": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 1,
+            "n": 2,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.7934567085261071
+              0.6576280471103807
             ],
-            "mean_gross_r": 0.3814502320407027,
-            "stops": 0,
+            "mean_gross_r": -0.30927488397964864,
+            "stops": 1,
             "timeouts": 1
           },
           "recent_holdout": {
@@ -1775,6 +1791,23 @@
           "ambiguous": false
         },
         {
+          "id": "93f578898a9b2df134aa624c",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-09-17T17:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-17T18:15:00+00:00",
+          "entry_bar_close": "2026-09-17T18:30:00+00:00",
+          "confirmation_time": "2026-09-17T18:15:00+00:00",
+          "entry": 66.16999816894531,
+          "entry_rr": 2.087413044663686,
+          "time": "2026-09-17T18:30:00+00:00",
+          "exit": 66.03106978758413,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
           "id": "c934138d3df3f85b30db6def",
           "kind": "EMA_PULLBACK",
           "direction": -1,
@@ -1797,8 +1830,7 @@
         "POOR ENTRY": 10,
         "EXPIRED": 1,
         "OVERLAP": 1,
-        "MISSED": 3,
-        "PARTITION_BOUNDARY": 1
+        "MISSED": 3
       }
     }
   }
