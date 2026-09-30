@@ -13,8 +13,8 @@
 <script src="assets/time.js?v=1"></script>
 <script src="assets/signals.js?v=2"></script>
 <script src="assets/evidence.js?v=7"></script>
-<script src="assets/feed.js?v=4"></script>
-<script src="assets/live.js?v=1"></script>
+<script src="assets/feed.js?v=5"></script>
+<script src="assets/live.js?v=2"></script>
 <script>
 'use strict';
 let data,asset='gold',mode='Strict',tf='1d';
@@ -38,9 +38,9 @@ const levels=detail.structure.levels;
 const fcards=forecastCards(a,snapshotStale);
 const indicators=['rsi','adx','plus_di','minus_di','macd','macd_signal','macd_hist','atr','stoch_k','stoch_d','mfi','cmf','relative_volume','rolling_vwap20','ema9','ema20','ema50','ema100','ema200','sma50','sma200','bb_upper','bb_lower','donchian_high','donchian_low'];
 $('#app').innerHTML=
-'<div class="topline"><div><div class="eyebrow">'+a.name+' SPOT / '+(asset==='gold'?'XAU/USD':'XAG/USD')+'</div><div class="price" data-testid="price">'+(displayQuote?'$'+n(displayQuote.price):'Unavailable')+'</div><div class="symbol">'+(displayQuote?escape(displayQuote.basis)+' · Last reported '+time(displayQuote.time):'No timestamped spot quote available')+'</div></div><div>'+'<span class="badge wait" id="spot-price-status">'+escape(spotStatus(displayQuote))+'</span>'+'<div class="symbol">Spot headline · futures research below</div></div></div>'+
+'<div class="topline"><div><div class="eyebrow">'+a.name+' SPOT / '+(asset==='gold'?'XAU/USD':'XAG/USD')+'</div><div class="price" data-testid="price">'+(displayQuote?'$'+n(displayQuote.price):'Unavailable')+'</div><div class="symbol" id="spot-price-basis">'+(displayQuote?escape(displayQuote.basis)+' · Last reported '+time(displayQuote.time):'No timestamped spot quote available')+'</div></div><div>'+'<span class="badge wait" id="spot-price-status">'+escape(spotStatus(displayQuote))+'</span>'+'<div class="symbol">Spot headline · futures research below</div></div></div>'+
 currentPanel()+feedPanel()+
-'<div class="notice"><strong>Instrument mismatch:</strong> The headline is spot gold/silver from Alpha Vantage. Charts, technical levels, entry zones and experimental forecasts below use Yahoo continuous futures '+escape(a.symbol)+'. They are not spot trading targets. No offset or conversion is applied; the reported Yahoo quote has not been independently verified for a matching contract.</div>'+
+'<div class="notice"><strong>Instrument mismatch:</strong> The headline uses the newest timestamped spot quote from Gold API or Alpha Vantage. Charts, technical levels, entry zones and experimental forecasts below use Yahoo continuous futures '+escape(a.symbol)+'. They are not spot trading targets. No offset or conversion is applied; the reported Yahoo quote has not been independently verified for a matching contract.</div>'+
 ((!a.fresh||snapshotStale)?'<div class="notice">'+(snapshotIsStale()?'Snapshot is over 30 minutes old. ':quoteIsStale()?'Quote or intraday bars are stale. ':'')+'Missing latest completed bars: '+escape(Object.entries(a.timeframes).filter(([t,d])=>!d.quality.latest_expected_bar_present).map(([t])=>t.toUpperCase()).join(', ')||'none')+'. Strict setups require all timeframes; check the selected mode and signal status.</div>':'')+
 '<div class="grid">'+technicalBrief(technical,technicalStale)+
 pricePaths(technical,technicalStale||!technical.technical_brief.rows.find(r=>r.timeframe==='4H')?.fresh)+
@@ -62,6 +62,7 @@ document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.datase
 document.querySelectorAll('[data-tf]').forEach(b=>b.onclick=()=>{tf=b.dataset.tf;render()});
 bindSignalControls();
 refreshFeedLabels();
+refreshSpotLabels();
 draw();
 }
 function draw(){
