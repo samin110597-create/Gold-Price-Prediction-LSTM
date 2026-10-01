@@ -27,9 +27,9 @@ test('mismatched publication and network outage preserve the last verified snaps
  const h=harness();await h.run('loadMarketSnapshot()');h.set(bundle('changed'));h.corrupt();await h.run('loadMarketSnapshot()');assert.equal(h.context.data.run_id,'one');assert.match(h.run('feedError'),/checksum mismatch/);
  h.fail();await h.run('loadMarketSnapshot()');assert.equal(h.context.data.run_id,'one');assert.match(h.run('feedError'),/offline/);
 });
-test('polling runs each minute and unchanged runs avoid another large download',async()=>{
+test('polling runs every fifteen minutes and unchanged runs avoid another large download',async()=>{
  const h=harness();await h.run('loadMarketSnapshot()');const before=h.requests.length;await h.run('loadMarketSnapshot()');assert.equal(h.requests.length-before,1);
- h.run('startMarketFeed()');assert.ok(h.intervals.some(i=>i.ms===60000));assert.ok(h.intervals.some(i=>i.ms===1000));
+ h.run('startMarketFeed()');assert.ok(h.intervals.some(i=>i.ms===900000));assert.ok(h.intervals.some(i=>i.ms===1000));
 });
 test('old snapshots pause current eligibility and invalid quote timestamps are rejected',async()=>{
  const h=harness();h.set(bundle('stale','2020-01-01T00:00:00Z'));await h.run('loadMarketSnapshot()');assert.equal(h.run('snapshotIsStale()'),true);

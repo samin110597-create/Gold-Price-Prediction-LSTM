@@ -62,8 +62,8 @@ def run(history, output):
     # FRED initial-vintage history and Polygon previous-day context stay in full build.
     cache=collect(previous,now=asof,names={'finnhub','fmp','alpha_vantage'})
     payload={'schema_version':1,'asof':asof.isoformat(),'assets':{},'external_data':public_summary(cache),
-        'requested_refresh_seconds':300,'errors':{},
-        'note':'Best-effort five-minute publication; provider delays and GitHub scheduling can add latency. No guaranteed real-time feed.'}
+        'requested_refresh_seconds':900,'errors':{},
+        'note':'Best-effort fifteen-minute publication; provider delays and GitHub scheduling can add latency. No guaranteed real-time feed.'}
     for asset in SYMBOLS:
         try:
             item=build_asset(asset,asof)
