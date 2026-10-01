@@ -53,12 +53,12 @@ async function loadMarketSnapshot(){
 }
 function startMarketFeed(){
  loadMarketSnapshot();
- setInterval(()=>{if(!document.hidden)loadMarketSnapshot();},60000);
+ setInterval(()=>{if(!document.hidden)loadMarketSnapshot();},900000);
  setInterval(()=>{
   if(!data||document.hidden)return;
   const state=String(snapshotIsStale())+':'+String(quoteIsStale());
   if(lastFreshnessState&&state!==lastFreshnessState)render();
   lastFreshnessState=state;refreshFeedLabels();
  },1000);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadMarketSnapshot();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&(!lastFeedCheck||Date.now()-Date.parse(lastFeedCheck)>=900000))loadMarketSnapshot();});
 }

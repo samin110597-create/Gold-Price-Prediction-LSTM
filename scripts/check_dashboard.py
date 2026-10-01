@@ -41,10 +41,11 @@ with sync_playwright() as p:
         assert page.locator('[data-forecast]').count()==4
         assert page.locator('[data-target-date]').count()==4
         assert all(('EST' in x.inner_text() or 'EDT' in x.inner_text()) for x in page.locator('[data-target-date]').all())
-        assert page.locator('[data-provider]').count()==6
+        assert page.locator('[data-provider]').count()==7
         assert page.locator('[data-provider="gold_api"]').count()==1
         assert page.locator('#refresh-spot').is_visible()
-        assert 'every 30 seconds' in page.locator('#current-market').inner_text()
+        assert page.locator('#spot-technicals').is_visible()
+        assert 'every 15 minutes' in page.locator('#current-market').inner_text()
         assert page.locator('#price-paths').is_visible()
         assert page.locator('#current-market').is_visible()
         assert 'Forecast versus the current futures price' in page.locator('#current-market').inner_text()

@@ -18,8 +18,8 @@ test('freshest spot wins; futures cannot displace it; it ages without new reques
  const old={...gold,symbol:'GOLD',source_time:iso(now-3600000)};
  const p={gold_api:{observations:[gold]},alpha_vantage:{observations:[old]},fmp:{observations:[{...gold,price:4200}]}};
  assert.equal(c.selectSpotQuote(p,'gold',now).source,'Gold API');
- assert.equal(c.selectSpotQuote(p,'gold',now+120000).stale,false);
- assert.equal(c.selectSpotQuote(p,'gold',now+120001).stale,true);
+ assert.equal(c.selectSpotQuote(p,'gold',now+1200000).stale,false);
+ assert.equal(c.selectSpotQuote(p,'gold',now+1200001).stale,true);
  p.alpha_vantage.observations=[{...old,source_time:iso(now+1)}];
  assert.equal(c.selectSpotQuote(p,'gold',now+1).source,'Alpha Vantage');
 });
@@ -31,10 +31,10 @@ test('independent metal failures retain source time and request budget throttles
  await ctx.loadSpotQuotes();assert.equal(calls,2);
  await ctx.loadSpotQuotes();assert.equal(calls,2);
  const first=vm.runInContext('JSON.stringify(directSpot.observations)',ctx);
- clock+=30000;fail=true;await ctx.loadSpotQuotes();assert.equal(calls,4);
+ clock+=900000;fail=true;await ctx.loadSpotQuotes();assert.equal(calls,4);
  assert.equal(vm.runInContext('JSON.stringify(directSpot.observations)',ctx),first);
  assert.equal(vm.runInContext('Object.keys(spotErrors).length',ctx),2);
- clock+=30000;fail=false;await ctx.loadSpotQuotes();assert.equal(calls,6);
+ clock+=900000;fail=false;await ctx.loadSpotQuotes();assert.equal(calls,6);
  assert.equal(vm.runInContext('Object.keys(spotErrors).length',ctx),0);
 });
 test('one invalid metal response does not discard the other metal',async()=>{
