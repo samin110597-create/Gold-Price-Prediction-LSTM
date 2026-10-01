@@ -45,6 +45,13 @@ with sync_playwright() as p:
         assert page.locator('[data-provider="gold_api"]').count()==1
         assert page.locator('#refresh-spot').is_visible()
         assert page.locator('#spot-technicals').is_visible()
+        page.locator('[data-live-technical-frame="1h"]').wait_for(timeout=30000)
+        assert page.locator('[data-live-technical-frame]').count()==4
+        assert 'SAME REFRESH' in page.locator('#technical-status').inner_text()
+        for live_tf in ('15m','1h','4h','1d'):
+            page.locator('[data-spot-tf="'+live_tf+'"]').click()
+            assert page.locator('[data-spot-tf="'+live_tf+'"]').get_attribute('aria-pressed')=='true'
+            assert page.locator('#spot-chart').evaluate('(c)=>c.width>0 && c.height>0')
         assert 'every 15 minutes' in page.locator('#current-market').inner_text()
         assert page.locator('#price-paths').is_visible()
         assert page.locator('#current-market').is_visible()
