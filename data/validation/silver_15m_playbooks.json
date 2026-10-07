@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-09-25T03:15:00+00:00",
+  "cutoff": "2026-09-25T09:15:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -67,11 +67,14 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           }
         },
@@ -1153,12 +1156,29 @@
           "exit": 61.254766283103926,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "10e922d64ef8b4b9ef9bfa99",
+          "kind": "BREAKOUT_RETEST",
+          "direction": -1,
+          "origin": "2026-10-07T13:30:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-10-07T13:45:00+00:00",
+          "entry_bar_close": "2026-10-07T14:00:00+00:00",
+          "confirmation_time": "2026-10-07T13:45:00+00:00",
+          "entry": 59.75,
+          "entry_rr": 1.0900594069812402,
+          "time": "2026-10-07T15:45:00+00:00",
+          "exit": 60.22703864067715,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
         "POOR ENTRY": 36,
-        "INVALIDATED": 89,
-        "EXPIRED": 19,
+        "INVALIDATED": 90,
+        "EXPIRED": 20,
         "MISSED": 11,
         "OVERLAP": 3
       }
@@ -1575,9 +1595,10 @@
         }
       ],
       "excluded": {
-        "POOR ENTRY": 10,
-        "INVALIDATED": 16,
-        "MISSED": 3
+        "POOR ENTRY": 11,
+        "INVALIDATED": 17,
+        "MISSED": 3,
+        "EXPIRED": 1
       }
     }
   }
