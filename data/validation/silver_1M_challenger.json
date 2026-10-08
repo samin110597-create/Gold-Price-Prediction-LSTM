@@ -5,12 +5,107 @@
   "model": "Volatility-scaled Ridge with bounded past bias correction, conservative selection and sequential refits",
   "recipe_version": "6.0",
   "primary": null,
-  "research": null,
+  "research": {
+    "origin": "2026-10-06T21:00:00+00:00",
+    "reference_price": 61.167999267578125,
+    "price": 61.167999267578125,
+    "return": 0.0,
+    "probability_up": 0.5292809448046416,
+    "interval80": [
+      55.10635434674851,
+      72.0188216467876
+    ],
+    "feature_coefficients": {
+      "return1": -0.1233304211805867,
+      "return5": -0.12196524161359155,
+      "return20": -0.27221153008449617,
+      "trend": 0.06823434915732193,
+      "rsi": 0.33701929859142277,
+      "atr": 0.022809958508750075,
+      "range_position": 0.2323268877983097,
+      "flow": -0.13290666040504584,
+      "gap_fraction": 0.09923649326284387
+    },
+    "calibration_n": 61,
+    "interval_calibration_n": 20,
+    "calibration_start": "2014-03-20T21:00:00+00:00",
+    "calibration_end": "2026-08-31T21:00:00+00:00",
+    "ood_distance": 1.163748892925488,
+    "selection": {
+      "ridge_weight": 0.0,
+      "return_offset": 0.0,
+      "normalized_offset": 0.0,
+      "selected_index": 0,
+      "candidates": [
+        "no change",
+        "0.25 Ridge",
+        "0.25 Ridge + bounded past bias",
+        "0.5 Ridge",
+        "0.5 Ridge + bounded past bias",
+        "1 Ridge",
+        "1 Ridge + bounded past bias"
+      ],
+      "candidate_mae_percent": [
+        5.235963116780161,
+        5.307838721055935,
+        5.279788753644125,
+        5.491101064568067,
+        5.4686472657444405,
+        6.059261215459621,
+        6.058716779735299
+      ],
+      "bias_n": 21,
+      "selection_n": 20,
+      "selection_end_position": 4305,
+      "bias_end_position": 3171,
+      "interval_n": 20,
+      "probability_weight": 0.16666666666666666,
+      "selection_end": "2022-11-23T22:00:00+00:00",
+      "bias_end": "2018-05-24T21:00:00+00:00"
+    }
+  },
   "oos": {
     "n": 0
   },
   "holdout": {
-    "n": 0
+    "n": 2,
+    "directional_accuracy": 0.0,
+    "direction_coverage": 0.0,
+    "neutral_policy": "Predictions within 0.0001% of zero are abstentions and do not count as directional hits",
+    "baseline_accuracy": 1.0,
+    "edge": -1.0,
+    "edge_ci95": [
+      -1.0,
+      -1.0
+    ],
+    "balanced_accuracy": 0.5,
+    "mcc": 0.0,
+    "mae_percent": 8.266360332086741,
+    "bias_percent": -6.718621917856704,
+    "rmse_percent": 10.65235155329572,
+    "p90_absolute_error_percent": 13.641257866372106,
+    "baseline_mae_percent": 8.036842254400984,
+    "mae_skill": -0.028558240963367787,
+    "zero_change_mae_percent": 8.266360332086741,
+    "atr_normalized_mae": 2.6121344129746213,
+    "brier": 0.27411690809990197,
+    "baseline_brier": 0.24281685171568984,
+    "brier_skill": -0.1289039708860933,
+    "log_loss": 0.7418868267741114,
+    "coverage80": 1.0,
+    "mean_interval_width_percent": 57.32214084436894,
+    "calibration_bins": [
+      {
+        "from": 0.4,
+        "to": 0.6000000000000001,
+        "n": 2,
+        "mean_probability": 0.5498824393990542,
+        "observed_up": 0.5
+      }
+    ],
+    "selective_n": 0,
+    "selective_coverage": 0.0,
+    "selective_accuracy": null
   },
   "checks": {
     "oos_sample": false,
@@ -23,9 +118,9 @@
     "holdout_mae": false,
     "holdout_brier": false,
     "interval_coverage": false,
-    "in_distribution": false,
-    "live_available": false,
-    "positive_ordered_prices": false,
+    "in_distribution": true,
+    "live_available": true,
+    "positive_ordered_prices": true,
     "oos_vs_no_change": false,
     "holdout_vs_no_change": false
   },
@@ -40,9 +135,6 @@
     "holdout_mae",
     "holdout_brier",
     "interval_coverage",
-    "in_distribution",
-    "live_available",
-    "positive_ordered_prices",
     "oos_vs_no_change",
     "holdout_vs_no_change"
   ],
@@ -54,7 +146,102 @@
     "confidence_lower": 0,
     "brier_skill": 0
   },
-  "records": [],
+  "records": [
+    {
+      "origin": "2026-03-31T21:00:00+00:00",
+      "target_time": "2026-04-30T21:00:00+00:00",
+      "partition": "holdout",
+      "fit_end": "2013-07-03T21:00:00+00:00",
+      "calibration_start": "2013-09-18T21:00:00+00:00",
+      "calibration_end": "2025-11-26T22:00:00+00:00",
+      "test_start": "2026-03-31T21:00:00+00:00",
+      "selection": {
+        "ridge_weight": 0.0,
+        "return_offset": 0.0,
+        "normalized_offset": 0.0,
+        "selected_index": 0,
+        "candidates": [
+          "no change",
+          "0.25 Ridge",
+          "0.25 Ridge + bounded past bias",
+          "0.5 Ridge",
+          "0.5 Ridge + bounded past bias",
+          "1 Ridge",
+          "1 Ridge + bounded past bias"
+        ],
+        "candidate_mae_percent": [
+          4.386358685689666,
+          4.381497469247337,
+          4.395532957913232,
+          4.476491480085635,
+          4.479570827603134,
+          4.809448795569655,
+          4.7436815224491555
+        ],
+        "bias_n": 21,
+        "selection_n": 21,
+        "selection_end_position": 4179,
+        "bias_end_position": 2919,
+        "interval_n": 20,
+        "probability_weight": 0.16666666666666666
+      },
+      "actual_return": -0.015477384142300377,
+      "predicted_return": 0.0,
+      "probability_up": 0.5710624949839755,
+      "baseline_return": -0.0001324758266362247,
+      "prior_up": 0.4961439588688946,
+      "lower_return": -0.2831379695541058,
+      "upper_return": 0.5068392914082377,
+      "atr_fraction": 0.06652901074877066
+    },
+    {
+      "origin": "2026-07-31T21:00:00+00:00",
+      "target_time": "2026-08-31T21:00:00+00:00",
+      "partition": "holdout",
+      "fit_end": "2013-10-23T21:00:00+00:00",
+      "calibration_start": "2013-12-17T22:00:00+00:00",
+      "calibration_end": "2026-04-30T21:00:00+00:00",
+      "test_start": "2026-07-31T21:00:00+00:00",
+      "selection": {
+        "ridge_weight": 0.0,
+        "return_offset": 0.0,
+        "normalized_offset": 0.0,
+        "selected_index": 0,
+        "candidates": [
+          "no change",
+          "0.25 Ridge",
+          "0.25 Ridge + bounded past bias",
+          "0.5 Ridge",
+          "0.5 Ridge + bounded past bias",
+          "1 Ridge",
+          "1 Ridge + bounded past bias"
+        ],
+        "candidate_mae_percent": [
+          4.583278312519791,
+          4.613996802855737,
+          4.600534897683962,
+          4.7507979019882125,
+          4.746523604235267,
+          5.245407838157113,
+          5.230745355353203
+        ],
+        "bias_n": 21,
+        "selection_n": 21,
+        "selection_end_position": 4284,
+        "bias_end_position": 3024,
+        "interval_n": 20,
+        "probability_weight": 0.16666666666666666
+      },
+      "actual_return": 0.14984982249943446,
+      "predicted_return": 0.0,
+      "probability_up": 0.528702383814133,
+      "baseline_return": 0.004457885727078947,
+      "prior_up": 0.5106382978723404,
+      "lower_return": -0.12776182139425038,
+      "upper_return": 0.22870373453078496,
+      "atr_fraction": 0.030020232193536063
+    }
+  ],
   "integrity": {
     "training_before_calibration": true,
     "calibration_before_test": true,
@@ -70,14 +257,14 @@
     "intervals": "Outward finite-sample residual order statistics; empirical coverage is measured, not guaranteed under market drift."
   },
   "data_evidence": {
-    "completed_bars": 5298,
-    "eligible_nonoverlapping_targets": 82,
-    "feature_complete_origins": 4473,
+    "completed_bars": 5297,
+    "eligible_nonoverlapping_targets": 83,
+    "feature_complete_origins": 4472,
     "excluded_target_or_feature_origins": 3562,
-    "live_fit_n": 363,
-    "live_calibration_n": 63,
+    "live_fit_n": 460,
+    "live_calibration_n": 61,
     "holdout_start": "2024-03-06T22:00:00+00:00",
     "last_completed": "2026-10-06T21:00:00+00:00"
   },
-  "run_id": "20261007T022445Z-37561752655"
+  "run_id": "20261008T011936Z-37712275731"
 }
