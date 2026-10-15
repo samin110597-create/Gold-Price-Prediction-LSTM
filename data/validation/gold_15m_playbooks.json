@@ -2,20 +2,20 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-02T11:15:00+00:00",
+  "cutoff": "2026-10-02T15:45:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 8,
-            "tp1_first": 0.375,
+            "n": 9,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.13684175946152105,
-              0.6942621454161981
+              0.12058159868274293,
+              0.6458026525009102
             ],
-            "mean_gross_r": -0.06696667108494175,
-            "stops": 5,
+            "mean_gross_r": -0.1706370409643927,
+            "stops": 6,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -247,11 +247,14 @@
             "timeouts": 1
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           }
         },
@@ -357,6 +360,23 @@
       },
       "records": [
         {
+          "id": "d9951a1e47927b50dcf67d37",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-08-17T20:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-08-17T22:00:00+00:00",
+          "entry_bar_close": "2026-08-17T22:15:00+00:00",
+          "confirmation_time": "2026-08-17T21:00:00+00:00",
+          "entry": 4474.89990234375,
+          "entry_rr": 2.230071764761608,
+          "time": "2026-08-17T22:30:00+00:00",
+          "exit": 4470.415741718063,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
           "id": "48abf9827403c355a4d57fdf",
           "kind": "EMA_PULLBACK",
           "direction": -1,
@@ -367,9 +387,9 @@
           "entry_bar_close": "2026-08-19T05:00:00+00:00",
           "confirmation_time": "2026-08-19T04:45:00+00:00",
           "entry": 4399.39990234375,
-          "entry_rr": 1.7301900364400113,
+          "entry_rr": 1.730190023597756,
           "time": "2026-08-19T07:30:00+00:00",
-          "exit": 4408.705294998407,
+          "exit": 4408.705295067476,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -384,9 +404,9 @@
           "entry_bar_close": "2026-08-19T05:00:00+00:00",
           "confirmation_time": "2026-08-19T04:45:00+00:00",
           "entry": 4399.39990234375,
-          "entry_rr": 1.7301900364400113,
+          "entry_rr": 1.730190023597756,
           "time": "2026-08-19T07:30:00+00:00",
-          "exit": 4408.705294998407,
+          "exit": 4408.705295067476,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -401,9 +421,9 @@
           "entry_bar_close": "2026-08-20T12:15:00+00:00",
           "confirmation_time": "2026-08-20T12:00:00+00:00",
           "entry": 4523.2998046875,
-          "entry_rr": 2.773793887098502,
+          "entry_rr": 2.773793887097281,
           "time": "2026-08-20T14:00:00+00:00",
-          "exit": 4543.957361456232,
+          "exit": 4543.957361456241,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -418,9 +438,9 @@
           "entry_bar_close": "2026-08-20T12:15:00+00:00",
           "confirmation_time": "2026-08-20T12:00:00+00:00",
           "entry": 4523.2998046875,
-          "entry_rr": 2.773793887098502,
+          "entry_rr": 2.773793887097281,
           "time": "2026-08-20T14:00:00+00:00",
-          "exit": 4543.957361456232,
+          "exit": 4543.957361456241,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -435,9 +455,9 @@
           "entry_bar_close": "2026-08-20T12:15:00+00:00",
           "confirmation_time": "2026-08-20T12:00:00+00:00",
           "entry": 4523.2998046875,
-          "entry_rr": 2.773793887098502,
+          "entry_rr": 2.773793887097281,
           "time": "2026-08-20T14:00:00+00:00",
-          "exit": 4543.957361456232,
+          "exit": 4543.957361456241,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1029,11 +1049,28 @@
           "exit": 4196.581028216193,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "41a5539bfb990bdba6b8f55e",
+          "kind": "STRUCTURE_BREAK",
+          "direction": 1,
+          "origin": "2026-10-14T22:30:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-10-14T22:45:00+00:00",
+          "entry_bar_close": "2026-10-14T23:00:00+00:00",
+          "confirmation_time": "2026-10-14T22:45:00+00:00",
+          "entry": 4130.89990234375,
+          "entry_rr": 5.173287309476433,
+          "time": "2026-10-14T23:15:00+00:00",
+          "exit": 4123.573825117317,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
-        "POOR ENTRY": 58,
-        "INVALIDATED": 99,
+        "POOR ENTRY": 59,
+        "INVALIDATED": 103,
         "EXPIRED": 30,
         "MISSED": 1
       }
@@ -1042,14 +1079,14 @@
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.0614903152761605,
+              0.7923450448735121
             ],
-            "mean_gross_r": 0.5589294201792037,
-            "stops": 1,
+            "mean_gross_r": 0.03928628011946911,
+            "stops": 2,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -1370,6 +1407,23 @@
       },
       "records": [
         {
+          "id": "d9951a1e47927b50dcf67d37",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-08-17T20:45:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-08-17T22:00:00+00:00",
+          "entry_bar_close": "2026-08-17T22:15:00+00:00",
+          "confirmation_time": "2026-08-17T21:00:00+00:00",
+          "entry": 4474.89990234375,
+          "entry_rr": 2.230071764761608,
+          "time": "2026-08-17T22:30:00+00:00",
+          "exit": 4470.415741718063,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
           "id": "48abf9827403c355a4d57fdf",
           "kind": "EMA_PULLBACK",
           "direction": -1,
@@ -1380,9 +1434,9 @@
           "entry_bar_close": "2026-08-19T05:00:00+00:00",
           "confirmation_time": "2026-08-19T04:45:00+00:00",
           "entry": 4399.39990234375,
-          "entry_rr": 1.7301900364400113,
+          "entry_rr": 1.730190023597756,
           "time": "2026-08-19T07:30:00+00:00",
-          "exit": 4408.705294998407,
+          "exit": 4408.705295067476,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1397,9 +1451,9 @@
           "entry_bar_close": "2026-08-19T05:00:00+00:00",
           "confirmation_time": "2026-08-19T04:45:00+00:00",
           "entry": 4399.39990234375,
-          "entry_rr": 1.7301900364400113,
+          "entry_rr": 1.730190023597756,
           "time": "2026-08-19T07:30:00+00:00",
-          "exit": 4408.705294998407,
+          "exit": 4408.705295067476,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1524,7 +1578,7 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 17,
+        "INVALIDATED": 18,
         "EXPIRED": 8,
         "POOR ENTRY": 7
       }
