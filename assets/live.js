@@ -129,6 +129,6 @@ async function loadCurrentMarket(){
 function startCurrentMarket(){
  loadCurrentMarket();loadSpotQuotes();
  setInterval(()=>{if(!document.hidden){loadCurrentMarket();loadSpotQuotes();}},900000);
- setInterval(()=>{const el=document.querySelector('#current-quote-age');if(el&&data)el.textContent=ageLabel(newestFuturesQuote().time);refreshSpotLabels();if(typeof spotTechnicalState!=='undefined'&&data){const t=spotTechnicalState[asset],el=document.querySelector('#technical-status');if(el&&t&&(Date.now()-Date.parse(t.asof)>1200000||Date.now()-Date.parse(t.quote.time)>1200000))el.textContent='STALE / UNAVAILABLE — WAIT';}},1000);
+ setInterval(()=>{const el=document.querySelector('#current-quote-age');if(el&&data)el.textContent=ageLabel(newestFuturesQuote().time);refreshSpotLabels();if(typeof spotTechnicalState!=='undefined'&&data){const el=document.querySelector('#technical-status');if(el)el.textContent=technicalStatus(asset);}},1000);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&(spotLastAttempt===null||Date.now()-spotLastAttempt>=900000)){loadCurrentMarket();loadSpotQuotes();}});
 }

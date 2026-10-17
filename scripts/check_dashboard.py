@@ -4,16 +4,20 @@ import json
 from pathlib import Path
 import time
 from playwright.sync_api import sync_playwright
+from dashboard_fixtures import install_spot_fixture, check_spot_panel
 
 parser=argparse.ArgumentParser()
 parser.add_argument("--url",default="http://127.0.0.1:8000")
 parser.add_argument("--expected-run")
 parser.add_argument("--wait",type=int,default=0)
+parser.add_argument("--spot-feed", choices=("live", "fixtures"), default="live")
 args=parser.parse_args()
 Path("screenshots").mkdir(exist_ok=True)
 with sync_playwright() as p:
     browser=p.chromium.launch()
     page=browser.new_page(viewport={"width":1440,"height":1100},device_scale_factor=1)
+    if args.spot_feed == "fixtures":
+        install_spot_fixture(page, "fresh")
     errors=[]
     page.on("pageerror",lambda e:errors.append(str(e)))
     deadline=time.monotonic()+args.wait
@@ -29,7 +33,8 @@ with sync_playwright() as p:
         if time.monotonic()>=deadline:
             raise AssertionError("Expected coherent deployed snapshot did not become available")
         page.wait_for_timeout(10000)
-    report={"url":args.url,"run_id":run_id,"assets":{},"errors":[]}
+    page.wait_for_function("typeof spotBusy !== 'undefined' && !spotBusy && !currentBusy",timeout=45000)
+    report={"spot_feed":args.spot_feed,"url":args.url,"run_id":run_id,"assets":{},"errors":[]}
     for asset in ("gold","silver"):
         page.locator("#"+asset+"-tab").click()
         assert page.locator("#app").get_attribute("data-asset")==asset
@@ -45,13 +50,7 @@ with sync_playwright() as p:
         assert page.locator('[data-provider="gold_api"]').count()==1
         assert page.locator('#refresh-spot').is_visible()
         assert page.locator('#spot-technicals').is_visible()
-        page.locator('[data-live-technical-frame="1h"]').wait_for(timeout=30000)
-        assert page.locator('[data-live-technical-frame]').count()==4
-        assert 'SAME REFRESH' in page.locator('#technical-status').inner_text()
-        for live_tf in ('15m','1h','4h','1d'):
-            page.locator('[data-spot-tf="'+live_tf+'"]').click()
-            assert page.locator('[data-spot-tf="'+live_tf+'"]').get_attribute('aria-pressed')=='true'
-            assert page.locator('#spot-chart').evaluate('(c)=>c.width>0 && c.height>0')
+        spot_check = check_spot_panel(page, "fresh" if args.spot_feed == "fixtures" else None)
         assert 'every 15 minutes' in page.locator('#current-market').inner_text()
         assert page.locator('#price-paths').is_visible()
         assert page.locator('#current-market').is_visible()
@@ -98,11 +97,21 @@ with sync_playwright() as p:
         if page.locator("#forecast-review").get_attribute("open") is not None:
             page.locator("#forecast-review > summary").click()
         page.screenshot(path="screenshots/"+asset+"-desktop.png",full_page=True)
-        report["assets"][asset]={"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True,"forecast_cards":4,"checksum_verified":True,"manual_refresh_verified":True,"quote_age":page.locator('#quote-age').inner_text(),"snapshot_age":page.locator('#snapshot-age').inner_text()}
+        report["assets"][asset]={"spot_technicals":spot_check,"price":page.locator('[data-testid="price"]').inner_text(),"state":page.locator('[data-testid="setup-state"]').inner_text(),"modes_checked":2,"timeframes_checked":5,"signal_lessons":17,"signal_views_checked":3,"signal_filters_checked":True,"forecast_cards":4,"checksum_verified":True,"manual_refresh_verified":True,"quote_age":page.locator('#quote-age').inner_text(),"snapshot_age":page.locator('#snapshot-age').inner_text()}
         page.set_viewport_size({"width":390,"height":844})
         assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth+1"),"Mobile horizontal overflow"
         page.screenshot(path="screenshots/"+asset+"-mobile.png",full_page=True)
         page.set_viewport_size({"width":1440,"height":1100})
+    if args.spot_feed == "fixtures":
+        report["feed_scenarios"] = {}
+        for scenario in ("closed", "stale", "gap", "unavailable"):
+            install_spot_fixture(page, scenario)
+            page.reload(wait_until="networkidle")
+            page.wait_for_function("window.__metalsReady === true && !spotBusy && !currentBusy", timeout=45000)
+            report["feed_scenarios"][scenario] = {}
+            for asset in ("gold", "silver"):
+                page.locator("#"+asset+"-tab").click()
+                report["feed_scenarios"][scenario][asset] = check_spot_panel(page, scenario)
     assert not errors,errors
     report["errors"]=errors
     Path("screenshots/verification.json").write_text(json.dumps(report,indent=2))

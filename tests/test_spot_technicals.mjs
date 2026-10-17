@@ -68,3 +68,29 @@ test('automatic price refresh uses fifteen minutes, not thirty seconds',()=>{
  vm.runInContext('loadCurrentMarket=()=>{};loadSpotQuotes=()=>{};startCurrentMarket()',ctx);
  assert.ok(intervals.includes(900000));assert.ok(!intervals.includes(30000));assert.ok(!intervals.includes(60000));
 });
+
+test('freshness status distinguishes closed, stale, missing bars and unavailable feeds',()=>{
+ const ctx=context(),series=ctx.validateTechnicalBars(candles(),'gold','1h',null,now);
+ const q=ctx.validateTechnicalQuote(quote(),'gold',null,now);
+ ctx.bundle={quote:q,asof:iso(now),frames:{'1h':ctx.buildTechnicalFrame(series,q,now)}};
+ vm.runInContext('spotTechnicalState.gold=bundle',ctx);
+ assert.match(ctx.technicalStatus('gold','1h',now),/SAME REFRESH/);
+ ctx.bundle.quote.marketState='closed';
+ assert.match(ctx.technicalStatus('gold','1h',now),/MARKET CLOSED/);
+ assert.equal(ctx.technicalQuote('gold',now),null);
+ ctx.bundle.quote.marketState='open';
+ assert.match(ctx.technicalStatus('gold','1h',now+1200001),/STALE/);
+ ctx.bundle.frames['1h'].missingLatest=true;
+ assert.match(ctx.technicalStatus('gold','1h',now),/BAR MISSING/);
+ vm.runInContext("spotTechnicalErrors.gold='offline'",ctx);
+ assert.match(ctx.technicalStatus('gold','1h',now),/STALE/);
+ vm.runInContext('spotTechnicalState.gold=null',ctx);
+ assert.equal(ctx.technicalStatus('gold','1h',now),'UNAVAILABLE — WAIT');
+});
+
+test('a closed market quote cannot generate developing indicators',()=>{
+ const raw=candles();raw.bars.push({openTime:'2026-09-30T23:00:00Z',open:200,high:202,low:198,close:200,isOpen:true});
+ const series=c.validateTechnicalBars(raw,'gold','1h',null,now);
+ const q=c.validateTechnicalQuote({...quote(),marketState:'closed'},'gold',null,now);
+ assert.equal(c.buildTechnicalFrame(series,q,now).developing,null);
+});

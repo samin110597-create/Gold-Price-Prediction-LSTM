@@ -59,7 +59,7 @@ function spotIndicators(bars){
 }
 function buildTechnicalFrame(series,q,now=Date.now()){
  const last=series.closed.at(-1),confirmed=spotIndicators(series.closed);
- const canDevelop=series.open&&series.open.at<=Date.parse(q.time)&&Date.parse(q.time)<series.open.end&&now<series.open.end&&!q.providerStale;
+ const canDevelop=series.open&&series.open.at<=Date.parse(q.time)&&Date.parse(q.time)<series.open.end&&now<series.open.end&&!q.providerStale&&q.marketState==='open';
  const forming=canDevelop?{...series.open,close:q.price,high:Math.max(series.open.high,q.price),low:Math.min(series.open.low,q.price)}:null;
  const developing=forming?spotIndicators([...series.closed,forming]):null;
  // A fresh tick cannot certify a missing completed candle.
@@ -98,13 +98,21 @@ async function loadSpotTechnicals(){
 }
 function technicalQuote(key,now=Date.now()){
  const state=spotTechnicalState[key];if(!state||spotTechnicalErrors[key])return null;
- const q=state.quote;if(q.providerStale||now-Date.parse(q.time)>1200000)return null;
+ const q=state.quote;if(q.marketState!=='open'||q.providerStale||now-Date.parse(q.time)>1200000)return null;
  return {...q,stale:false,retained:false};
+}
+function technicalStatus(key,tf=spotTechnicalFrame,now=Date.now()){
+ const state=spotTechnicalState[key],q=state?.quote,frame=state?.frames[tf];
+ if(!state)return spotTechnicalErrors[key]?'UNAVAILABLE — WAIT':'Loading price and candles…';
+ if(spotTechnicalErrors[key])return 'STALE / UNAVAILABLE — WAIT';
+ if(q.marketState==='closed')return 'MARKET CLOSED — LAST REPORTED DATA';
+ if(q.providerStale||now-Date.parse(q.time)>1200000||now-Date.parse(state.asof)>1200000)return 'STALE / UNAVAILABLE — WAIT';
+ return frame.missingLatest?'LATEST COMPLETED BAR MISSING':'PRICE + TECHNICALS · SAME REFRESH';
 }
 function technicalPanel(){
  const state=spotTechnicalState[asset],q=state?.quote,frame=state?.frames[spotTechnicalFrame];
- const bad=!state||spotTechnicalErrors[asset]||q.providerStale||Date.now()-Date.parse(q.time)>1200000||Date.now()-Date.parse(state.asof)>1200000;
- const status=!state?(spotTechnicalErrors[asset]?'UNAVAILABLE — WAIT':'Loading price and candles…'):bad?'STALE / UNAVAILABLE — WAIT':frame.missingLatest?'LATEST COMPLETED BAR MISSING':'PRICE + TECHNICALS · SAME REFRESH';
+ const status=technicalStatus(asset);
+ const bad=status!=='PRICE + TECHNICALS · SAME REFRESH';
  const header=`<section class="panel" id="spot-technicals" style="margin-bottom:16px"><div class="panel-head"><h2>Live metal technicals · refreshed every 15 minutes</h2><span class="badge wait" id="technical-status">${escape(status)}</span></div>`;
  if(!state)return header+`<p>${escape(spotTechnicalErrors[asset]||'Fetching matching XAU/USD or XAG/USD prices and candles…')}</p><p class="footnote">No futures history is substituted into these technicals.</p></section>`;
  const c=frame.confirmed,d=frame.developing,keys=[['RSI (14)','rsi'],['EMA20','ema20'],['EMA50','ema50'],['EMA200','ema200'],['MACD (12,26)','macd'],['MACD signal (9)','signal'],['MACD histogram','hist'],['ATR (14)','atr'],['ADX (14)','adx'],['Bollinger lower (20,2)','bbLower'],['Bollinger upper (20,2)','bbUpper']];

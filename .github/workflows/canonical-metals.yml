@@ -73,7 +73,7 @@ jobs:
       - name: Exercise gold silver modes and timeframes
         run: |
           python -m http.server 8000 --directory site > /tmp/metals-http.log 2>&1 &
-          python scripts/check_dashboard.py
+          python scripts/check_dashboard.py --spot-feed fixtures
       - name: Persist coherent bundle after all checks
         if: github.event_name != 'pull_request'
         env:
