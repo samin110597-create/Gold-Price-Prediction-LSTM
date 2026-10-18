@@ -8,12 +8,12 @@
   "research": {
     "origin": "2026-10-16T21:00:00+00:00",
     "reference_price": 4181.10009765625,
-    "price": 4145.0773066214015,
-    "return": -0.008615625121015649,
-    "probability_up": 0.6441800498379614,
+    "price": 4145.698797208323,
+    "return": -0.008466982282431,
+    "probability_up": 0.6448431666862291,
     "interval80": [
-      3877.7715127634274,
-      4710.270319854868
+      3878.347467921657,
+      4710.988090832049
     ],
     "feature_coefficients": {
       "return1": 0.009334688002407361,
@@ -30,10 +30,18 @@
     "interval_calibration_n": 30,
     "calibration_start": "2021-09-17T21:00:00+00:00",
     "calibration_end": "2026-08-21T21:00:00+00:00",
-    "ood_distance": 1.4264287440797272,
+    "ood_distance": 1.4271195534074141,
     "selection": null
   },
   "oos": {
+    "no_change_evidence": {
+      "n": 27,
+      "mae_gain_percentage_points": -0.614508261283003,
+      "mae_gain_ci95": null,
+      "skill_established": false,
+      "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+    },
+    "interval_score80_percent": 19.83720654125813,
     "n": 27,
     "directional_accuracy": 0.2962962962962963,
     "direction_coverage": 1.0,
@@ -81,6 +89,14 @@
     "selective_accuracy": 0.3333333333333333
   },
   "holdout": {
+    "no_change_evidence": {
+      "n": 16,
+      "mae_gain_percentage_points": 0.22536742992307138,
+      "mae_gain_ci95": null,
+      "skill_established": false,
+      "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+    },
+    "interval_score80_percent": 33.873073940704835,
     "n": 16,
     "directional_accuracy": 0.6875,
     "direction_coverage": 1.0,
@@ -141,6 +157,8 @@
     "in_distribution": true,
     "live_available": true,
     "positive_ordered_prices": true,
+    "oos_error_confidence": false,
+    "recent_error_confidence": false,
     "oos_vs_no_change": false,
     "holdout_vs_no_change": true,
     "latest_completed_bar": true,
@@ -151,6 +169,8 @@
     "oos_edge",
     "edge_confidence",
     "oos_mae",
+    "oos_error_confidence",
+    "recent_error_confidence",
     "oos_vs_no_change"
   ],
   "thresholds": {
@@ -958,15 +978,19 @@
     "last_completed": "2026-10-16T21:00:00+00:00"
   },
   "challenger_review": {
-    "recipe": "6.0",
+    "recipe": "7.0",
     "promoted": false,
     "criteria": {
+      "walk_forward_paired_confidence": false,
+      "walk_forward_interval_score": false,
       "walk_forward_sample": false,
       "walk_forward_price_improvement": false,
       "walk_forward_tail_error": false,
       "walk_forward_rmse": false,
       "walk_forward_brier": false,
       "walk_forward_coverage": false,
+      "holdout_paired_confidence": false,
+      "holdout_interval_score": false,
       "holdout_sample": true,
       "holdout_price_improvement": false,
       "holdout_tail_error": true,
@@ -982,6 +1006,15 @@
         "n": 0
       },
       "holdout": {
+        "paired_error_evidence": {
+          "n": 13,
+          "mae_gain_percentage_points": -0.31441873782582164,
+          "mae_gain_ci95": null,
+          "skill_established": false,
+          "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+        },
+        "current_interval_score80_percent": 36.71897370680875,
+        "previous_interval_score80_percent": 34.59244250632586,
         "n": 13,
         "current_mae_percent": 7.354435460674946,
         "previous_mae_percent": 7.040016722849124,
@@ -1003,10 +1036,10 @@
       "reference_price": 4181.10009765625,
       "price": 4181.10009765625,
       "return": 0.0,
-      "probability_up": 0.5085837618080784,
+      "probability_up": 0.5087017289199186,
       "interval80": [
-        3888.1779671603713,
-        5026.305584902682
+        3888.12806799959,
+        5026.449565299214
       ],
       "feature_coefficients": {
         "return1": 0.0035390509710303292,
@@ -1023,7 +1056,7 @@
       "interval_calibration_n": 21,
       "calibration_start": "2015-12-10T22:00:00+00:00",
       "calibration_end": "2026-08-21T21:00:00+00:00",
-      "ood_distance": 1.31268210990458,
+      "ood_distance": 1.3134061416533398,
       "selection": {
         "ridge_weight": 0.0,
         "return_offset": 0.0,
@@ -1049,6 +1082,26 @@
         ],
         "bias_n": 21,
         "selection_n": 21,
+        "subperiod_mae_percent": [
+          [
+            5.158593893228838,
+            5.341956585213438,
+            5.316035672357436,
+            5.525319277198039,
+            5.515117327414853,
+            5.89204466116724,
+            5.913280637529687
+          ],
+          [
+            3.676481500768948,
+            3.766151460759744,
+            3.732393184254759,
+            3.8558214207505395,
+            3.8425348423192935,
+            4.035161340732132,
+            4.062818158448364
+          ]
+        ],
         "selection_end_position": 4326,
         "bias_end_position": 3444,
         "interval_n": 21,
@@ -1061,6 +1114,14 @@
       "n": 0
     },
     "holdout": {
+      "no_change_evidence": {
+        "n": 13,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 36.71897370680875,
       "n": 13,
       "directional_accuracy": 0.0,
       "direction_coverage": 0.0,
@@ -1100,13 +1161,22 @@
       "selective_coverage": 0.0,
       "selective_accuracy": null
     },
-    "note": "Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score, RMSE or 90th-percentile error, and 68\u201390% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required."
+    "note": "Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, positive paired-error confidence bounds, no worse interval score, Brier score, RMSE or 90th-percentile error, and 68\u201390% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required."
   },
   "previous_recipe_comparison": {
     "reference_recipe": "2.0",
     "reference_model": "Volatility-scaled Ridge return + Logistic/Platt direction; fixed recipe",
     "selection": "Paired historical research comparison for explicit promotion gates; not independent prospective evidence",
     "walk_forward": {
+      "paired_error_evidence": {
+        "n": 27,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "current_interval_score80_percent": 19.83720654125813,
+      "previous_interval_score80_percent": 19.83720654125813,
       "n": 27,
       "current_mae_percent": 4.403275134073427,
       "previous_mae_percent": 4.403275134073427,
@@ -1123,6 +1193,15 @@
       "previous_bias_percent": -1.5783562378692912
     },
     "holdout": {
+      "paired_error_evidence": {
+        "n": 16,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "current_interval_score80_percent": 33.873073940704835,
+      "previous_interval_score80_percent": 33.873073940704835,
       "n": 16,
       "current_mae_percent": 6.952098077701972,
       "previous_mae_percent": 6.952098077701972,
@@ -1144,12 +1223,12 @@
     "research": {
       "origin": "2026-10-16T21:00:00+00:00",
       "reference_price": 4181.10009765625,
-      "price": 4145.0773066214015,
-      "return": -0.008615625121015649,
-      "probability_up": 0.6441800498379614,
+      "price": 4145.698797208323,
+      "return": -0.008466982282431,
+      "probability_up": 0.6448431666862291,
       "interval80": [
-        3877.7715127634274,
-        4710.270319854868
+        3878.347467921657,
+        4710.988090832049
       ],
       "feature_coefficients": {
         "return1": 0.009334688002407361,
@@ -1166,10 +1245,18 @@
       "interval_calibration_n": 30,
       "calibration_start": "2021-09-17T21:00:00+00:00",
       "calibration_end": "2026-08-21T21:00:00+00:00",
-      "ood_distance": 1.4264287440797272,
+      "ood_distance": 1.4271195534074141,
       "selection": null
     },
     "oos": {
+      "no_change_evidence": {
+        "n": 27,
+        "mae_gain_percentage_points": -0.614508261283003,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 19.83720654125813,
       "n": 27,
       "directional_accuracy": 0.2962962962962963,
       "direction_coverage": 1.0,
@@ -1217,6 +1304,14 @@
       "selective_accuracy": 0.3333333333333333
     },
     "holdout": {
+      "no_change_evidence": {
+        "n": 16,
+        "mae_gain_percentage_points": 0.22536742992307138,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 33.873073940704835,
       "n": 16,
       "directional_accuracy": 0.6875,
       "direction_coverage": 1.0,
@@ -1268,6 +1363,8 @@
       "oos_edge",
       "edge_confidence",
       "oos_mae",
+      "oos_error_confidence",
+      "recent_error_confidence",
       "oos_vs_no_change"
     ]
   },
@@ -1275,23 +1372,24 @@
     "accuracy_reasons": [
       "Too few independent test cases",
       "Price error does not consistently beat an unchanged-price forecast",
-      "Directional advantage is not established"
+      "Directional advantage is not established",
+      "Error improvement is not statistically established"
     ],
     "target_time": "2026-11-16T22:00:00+00:00",
     "direction": "DOWNWARD",
     "expired": false,
     "reference_price": 4181.10009765625,
-    "expected_change": -36.022791034848524,
+    "expected_change": -35.40130044792659,
     "recent_mean_absolute_error_dollars": 290.6741795159554,
-    "move_to_error_ratio": 0.12392841736006634,
+    "move_to_error_ratio": 0.121790316934507,
     "flat_threshold_return": 0.006952098077701973,
     "range_contains_no_change": true,
     "strength": "UNCERTAIN DIRECTION",
     "interpretation": "Point estimate is a model scenario, not a promised price or an entry order. Flat means the predicted move is less than one tenth of recent mean error (minimum 0.0001%). The model range is a historical residual band; its measured coverage is shown."
   },
-  "cache_key": "cccbe46f767fc3db3d8a3f99d6529625e26ec43bdb16a841dec9e1db28c1c229",
-  "model_id": "metals-causal-v1:f6542cd98615:2.0",
+  "cache_key": "adf1d0f2cb63195cd57db6e5a15adf61ba3602afa05b7a507a1b5b7c440cfc0f",
+  "model_id": "metals-causal-v1:50216a73b5f1:2.0",
   "asset": "gold",
-  "source_hash": "1318b292e2b8dc8d2178fc53ce7d2314a543128403210ec19fd98ec677b371e6",
-  "run_id": "20261018T145242Z-39137852169"
+  "source_hash": "12fd473a62a6a40214e071437f0dfe0394a28a48eac7c3bb412161db865b6a9d",
+  "run_id": "20261018T174151Z-39150674471"
 }

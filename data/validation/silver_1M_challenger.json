@@ -2,8 +2,8 @@
   "status": "WAIT",
   "horizon_bars": 21,
   "unit": "completed trading sessions",
-  "model": "Volatility-scaled Ridge with bounded past bias correction, conservative selection and sequential refits",
-  "recipe_version": "6.0",
+  "model": "Volatility-scaled Ridge with stable past-only shrinkage and independent calibration",
+  "recipe_version": "7.0",
   "primary": null,
   "research": {
     "origin": "2026-10-16T21:00:00+00:00",
@@ -56,6 +56,26 @@
       ],
       "bias_n": 21,
       "selection_n": 21,
+      "subperiod_mae_percent": [
+        [
+          9.302965181767998,
+          9.107619908897922,
+          9.240155416497485,
+          8.961065841855746,
+          9.136835127023394,
+          8.741599832507596,
+          8.837621626501294
+        ],
+        [
+          8.52447247260873,
+          8.93106680925228,
+          8.326405974086063,
+          9.337661145895831,
+          8.50688942179069,
+          10.150849819182934,
+          9.268682326605408
+        ]
+      ],
       "selection_end_position": 4410,
       "bias_end_position": 3255,
       "interval_n": 20,
@@ -68,6 +88,14 @@
     "n": 0
   },
   "holdout": {
+    "no_change_evidence": {
+      "n": 3,
+      "mae_gain_percentage_points": 0.0,
+      "mae_gain_ci95": null,
+      "skill_established": false,
+      "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+    },
+    "interval_score80_percent": 63.04831557694609,
     "n": 3,
     "directional_accuracy": 0.0,
     "direction_coverage": 0.0,
@@ -121,6 +149,8 @@
     "in_distribution": true,
     "live_available": true,
     "positive_ordered_prices": true,
+    "oos_error_confidence": false,
+    "recent_error_confidence": false,
     "oos_vs_no_change": false,
     "holdout_vs_no_change": false
   },
@@ -133,6 +163,8 @@
     "holdout_sample",
     "holdout_edge",
     "interval_coverage",
+    "oos_error_confidence",
+    "recent_error_confidence",
     "oos_vs_no_change",
     "holdout_vs_no_change"
   ],
@@ -178,6 +210,26 @@
         ],
         "bias_n": 21,
         "selection_n": 20,
+        "subperiod_mae_percent": [
+          [
+            8.96162578012011,
+            8.903658786509036,
+            8.904251753541207,
+            8.913286468710984,
+            8.920113843034963,
+            9.039374681700545,
+            8.966694368560885
+          ],
+          [
+            7.436723122025127,
+            7.930277593053709,
+            7.927902522213841,
+            8.423832064082289,
+            8.396485691029524,
+            9.410941006139453,
+            9.33617394013945
+          ]
+        ],
         "selection_end_position": 4263,
         "bias_end_position": 3024,
         "interval_n": 20,
@@ -225,6 +277,26 @@
         ],
         "bias_n": 21,
         "selection_n": 20,
+        "subperiod_mae_percent": [
+          [
+            8.626085615502873,
+            8.522312924752603,
+            8.534751816496073,
+            8.500702249133374,
+            8.508092822589592,
+            8.536363953551781,
+            8.71728876991337
+          ],
+          [
+            7.65890517168638,
+            7.962191763531309,
+            7.913356035963115,
+            8.26547835537624,
+            8.197177200473089,
+            8.872051539066101,
+            8.387256150457551
+          ]
+        ],
         "selection_end_position": 4326,
         "bias_end_position": 3213,
         "interval_n": 20,
@@ -272,6 +344,26 @@
         ],
         "bias_n": 21,
         "selection_n": 20,
+        "subperiod_mae_percent": [
+          [
+            8.626085615502873,
+            8.522312924752603,
+            8.534751816496073,
+            8.500702249133374,
+            8.508092822589592,
+            8.536363953551781,
+            8.71728876991337
+          ],
+          [
+            7.65890517168638,
+            7.962191763531309,
+            7.913356035963115,
+            8.26547835537624,
+            8.197177200473089,
+            8.872051539066101,
+            8.387256150457551
+          ]
+        ],
         "selection_end_position": 4326,
         "bias_end_position": 3213,
         "interval_n": 20,
@@ -296,7 +388,7 @@
     "data_note": "Latest Yahoo continuous history, not point-in-time vintages. Missing target windows and roll dependencies excluded. This revised recipe requires prospective confirmation; historical results are research evidence.",
     "normalization": "ATR at each origin scales returns and interval residuals; no target-period volatility is used",
     "calibration": "Non-overlapping completed labels; monthly initial window 1260 bars, extended using sample counts only",
-    "selection": "Three disjoint past calibration blocks: learn bounded median residual bias; select only if >=5% lower MAE than no change; independent final block calibrates intervals and probabilities.",
+    "selection": "Directional shrinkage/bias candidate must reduce no-change MAE by at least 5% in EACH of two chronological past selection subperiods; otherwise predict no change. Final calibration block is untouched by selection.",
     "macro_features": [],
     "macro_timing": "Fixed technical recipe; current macro observations are context only, never inserted into historical training.",
     "intervals": "Outward finite-sample residual order statistics; empirical coverage is measured, not guaranteed under market drift."
@@ -311,5 +403,5 @@
     "holdout_start": "2024-03-18T21:00:00+00:00",
     "last_completed": "2026-10-16T21:00:00+00:00"
   },
-  "run_id": "20261018T145242Z-39137852169"
+  "run_id": "20261018T174151Z-39150674471"
 }

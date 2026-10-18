@@ -34,6 +34,14 @@
     "selection": null
   },
   "oos": {
+    "no_change_evidence": {
+      "n": 19,
+      "mae_gain_percentage_points": -0.8110162503247533,
+      "mae_gain_ci95": null,
+      "skill_established": false,
+      "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+    },
+    "interval_score80_percent": 52.26365368999606,
     "n": 19,
     "directional_accuracy": 0.2631578947368421,
     "direction_coverage": 1.0,
@@ -88,6 +96,14 @@
     "selective_accuracy": 0.3333333333333333
   },
   "holdout": {
+    "no_change_evidence": {
+      "n": 15,
+      "mae_gain_percentage_points": -0.9312773421876835,
+      "mae_gain_ci95": null,
+      "skill_established": false,
+      "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+    },
+    "interval_score80_percent": 55.8895266307154,
     "n": 15,
     "directional_accuracy": 0.3333333333333333,
     "direction_coverage": 1.0,
@@ -148,6 +164,8 @@
     "in_distribution": true,
     "live_available": true,
     "positive_ordered_prices": true,
+    "oos_error_confidence": false,
+    "recent_error_confidence": false,
     "oos_vs_no_change": false,
     "holdout_vs_no_change": false,
     "latest_completed_bar": true,
@@ -163,6 +181,8 @@
     "holdout_mae",
     "holdout_brier",
     "interval_coverage",
+    "oos_error_confidence",
+    "recent_error_confidence",
     "oos_vs_no_change",
     "holdout_vs_no_change"
   ],
@@ -809,15 +829,19 @@
     "last_completed": "2026-10-16T21:00:00+00:00"
   },
   "challenger_review": {
-    "recipe": "6.0",
+    "recipe": "7.0",
     "promoted": false,
     "criteria": {
+      "walk_forward_paired_confidence": false,
+      "walk_forward_interval_score": false,
       "walk_forward_sample": false,
       "walk_forward_price_improvement": false,
       "walk_forward_tail_error": false,
       "walk_forward_rmse": false,
       "walk_forward_brier": false,
       "walk_forward_coverage": false,
+      "holdout_paired_confidence": false,
+      "holdout_interval_score": false,
       "holdout_sample": false,
       "holdout_price_improvement": false,
       "holdout_tail_error": false,
@@ -833,6 +857,15 @@
         "n": 0
       },
       "holdout": {
+        "paired_error_evidence": {
+          "n": 3,
+          "mae_gain_percentage_points": -4.271435090661629,
+          "mae_gain_ci95": null,
+          "skill_established": false,
+          "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+        },
+        "current_interval_score80_percent": 63.04831557694609,
+        "previous_interval_score80_percent": 45.5213212028913,
         "n": 3,
         "current_mae_percent": 10.365990883924558,
         "previous_mae_percent": 6.094555793262929,
@@ -900,6 +933,26 @@
         ],
         "bias_n": 21,
         "selection_n": 21,
+        "subperiod_mae_percent": [
+          [
+            9.302965181767998,
+            9.107619908897922,
+            9.240155416497485,
+            8.961065841855746,
+            9.136835127023394,
+            8.741599832507596,
+            8.837621626501294
+          ],
+          [
+            8.52447247260873,
+            8.93106680925228,
+            8.326405974086063,
+            9.337661145895831,
+            8.50688942179069,
+            10.150849819182934,
+            9.268682326605408
+          ]
+        ],
         "selection_end_position": 4410,
         "bias_end_position": 3255,
         "interval_n": 20,
@@ -912,6 +965,14 @@
       "n": 0
     },
     "holdout": {
+      "no_change_evidence": {
+        "n": 3,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 63.04831557694609,
       "n": 3,
       "directional_accuracy": 0.0,
       "direction_coverage": 0.0,
@@ -951,13 +1012,22 @@
       "selective_coverage": 0.0,
       "selective_accuracy": null
     },
-    "note": "Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score, RMSE or 90th-percentile error, and 68\u201390% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required."
+    "note": "Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, positive paired-error confidence bounds, no worse interval score, Brier score, RMSE or 90th-percentile error, and 68\u201390% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required."
   },
   "previous_recipe_comparison": {
     "reference_recipe": "2.0",
     "reference_model": "Volatility-scaled Ridge return + Logistic/Platt direction; fixed recipe",
     "selection": "Paired historical research comparison for explicit promotion gates; not independent prospective evidence",
     "walk_forward": {
+      "paired_error_evidence": {
+        "n": 19,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "current_interval_score80_percent": 52.26365368999606,
+      "previous_interval_score80_percent": 52.26365368999606,
       "n": 19,
       "current_mae_percent": 9.926929219606109,
       "previous_mae_percent": 9.926929219606109,
@@ -974,6 +1044,15 @@
       "previous_bias_percent": -5.706232835645181
     },
     "holdout": {
+      "paired_error_evidence": {
+        "n": 15,
+        "mae_gain_percentage_points": 0.0,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "current_interval_score80_percent": 55.8895266307154,
+      "previous_interval_score80_percent": 55.8895266307154,
       "n": 15,
       "current_mae_percent": 9.969438554997032,
       "previous_mae_percent": 9.969438554997032,
@@ -1021,6 +1100,14 @@
       "selection": null
     },
     "oos": {
+      "no_change_evidence": {
+        "n": 19,
+        "mae_gain_percentage_points": -0.8110162503247533,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 52.26365368999606,
       "n": 19,
       "directional_accuracy": 0.2631578947368421,
       "direction_coverage": 1.0,
@@ -1075,6 +1162,14 @@
       "selective_accuracy": 0.3333333333333333
     },
     "holdout": {
+      "no_change_evidence": {
+        "n": 15,
+        "mae_gain_percentage_points": -0.9312773421876835,
+        "mae_gain_ci95": null,
+        "skill_established": false,
+        "method": "600 paired circular moving-block resamples; exploratory 95% interval, not a multiple-testing-adjusted guarantee"
+      },
+      "interval_score80_percent": 55.8895266307154,
       "n": 15,
       "directional_accuracy": 0.3333333333333333,
       "direction_coverage": 1.0,
@@ -1131,6 +1226,8 @@
       "holdout_mae",
       "holdout_brier",
       "interval_coverage",
+      "oos_error_confidence",
+      "recent_error_confidence",
       "oos_vs_no_change",
       "holdout_vs_no_change"
     ]
@@ -1140,6 +1237,7 @@
       "Too few independent test cases",
       "Price error does not consistently beat an unchanged-price forecast",
       "Directional advantage is not established",
+      "Error improvement is not statistically established",
       "Forecast range misses its coverage standard"
     ],
     "target_time": "2026-11-16T22:00:00+00:00",
@@ -1154,9 +1252,9 @@
     "strength": "UNCERTAIN DIRECTION",
     "interpretation": "Point estimate is a model scenario, not a promised price or an entry order. Flat means the predicted move is less than one tenth of recent mean error (minimum 0.0001%). The model range is a historical residual band; its measured coverage is shown."
   },
-  "cache_key": "788fefad571491b6da54ed981a18d1e5fcd0d7a5aa421afd828bed2673735d0d",
-  "model_id": "metals-causal-v1:f6542cd98615:2.0",
+  "cache_key": "436c737521fc2ee78e58c0be09681b72fa9ad2cc95cec75e1539868994fa8e9f",
+  "model_id": "metals-causal-v1:50216a73b5f1:2.0",
   "asset": "silver",
-  "source_hash": "1318b292e2b8dc8d2178fc53ce7d2314a543128403210ec19fd98ec677b371e6",
-  "run_id": "20261018T145242Z-39137852169"
+  "source_hash": "12fd473a62a6a40214e071437f0dfe0394a28a48eac7c3bb412161db865b6a9d",
+  "run_id": "20261018T174151Z-39150674471"
 }
