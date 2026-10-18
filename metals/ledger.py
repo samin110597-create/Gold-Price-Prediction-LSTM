@@ -7,8 +7,11 @@ def issue(ledger, asset, horizon, forecast, run_id, commit, source_hash, issued_
     if not live:
         return
     latency=(datetime.fromisoformat(issued_at)-datetime.fromisoformat(live["origin"])).total_seconds()
-    eligible=channel=="production" and 0<=latency<=1800
-    key = hashlib.sha256(json.dumps([asset,horizon,forecast.get("model_id",forecast["recipe_version"]),live["origin"]]).encode()).hexdigest()[:28]
+    eligible=channel in ("production","shadow") and 0<=latency<=1800
+    identity=[asset,horizon,forecast.get("model_id",forecast["recipe_version"]),live["origin"]]
+    if channel=="shadow":
+        identity.append("shadow")
+    key = hashlib.sha256(json.dumps(identity).encode()).hexdigest()[:28]
     ledger.setdefault("issued",{}).setdefault(key,{"asset":asset,"horizon":horizon,"model_version":forecast["recipe_version"],"model_id":forecast.get("model_id",forecast["recipe_version"]),"channel":channel,"origin_latency_seconds":latency,"forward_eligible":eligible,"run_id":run_id,"commit":commit,"source_hash":source_hash,"issued_at":issued_at,"horizon_bars":forecast["horizon_bars"],"unit":forecast["unit"],"status_at_issue":forecast["status"],**live})
 def resolve(ledger,frames):
     outcomes=ledger.setdefault("outcomes",{})
@@ -29,14 +32,14 @@ def resolve(ledger,frames):
         if target_time<=pd.Timestamp(record["issued_at"]):
             continue
         actual=float(frame.close.iloc[j])
-        outcomes[key]={"target_time":target_time.isoformat(),"actual_price":actual,"direction_correct":bool((record["price"]>record["reference_price"])==(actual>record["reference_price"])),"absolute_error_percent":100*abs(record["price"]-actual)/record["reference_price"],"inside_interval80":bool(record["interval80"][0]<=actual<=record["interval80"][1])}
+        outcomes[key]={"target_time":target_time.isoformat(),"actual_price":actual,"direction_correct":bool(abs(record["price"]/record["reference_price"]-1)>1e-6 and (record["price"]>record["reference_price"])==(actual>record["reference_price"])),"absolute_error_percent":100*abs(record["price"]-actual)/record["reference_price"],"inside_interval80":bool(record["interval80"][0]<=actual<=record["interval80"][1])}
 
-def forward_summary(ledger,asset,horizon,model_id):
+def forward_summary(ledger,asset,horizon,model_id,channel="production"):
     """Evaluate the exact deployed lineage, not a pool of changing model versions."""
     import numpy as np
     entries={k:r for k,r in ledger['issued'].items() if r['asset']==asset and r['horizon']==horizon
-             and r.get('model_id')==model_id and r.get('forward_eligible') and r.get('channel')=='production'}
-    resolved=[(r,ledger['outcomes'][k]) for k,r in entries.items() if k in ledger['outcomes']]
+             and r.get('model_id')==model_id and r.get('forward_eligible') and r.get('channel')==channel}
+    resolved=[(r,ledger['outcomes'][k]) for k,r in entries.items() if k in ledger.get('outcomes',{})]
     result={'issued':len(entries),'resolved':len(resolved),'model_id':model_id,
             'note':'Exact model lineage, issued within 30 minutes of origin; original estimates remain fixed. Small samples are descriptive, not proof of skill.'}
     if resolved:
@@ -47,4 +50,22 @@ def forward_summary(ledger,asset,horizon,model_id):
             mae_skill=float(1-error/baseline) if baseline else None,
             directional_accuracy=float(np.mean(((predicted>0)==(actual>0))&(abs(predicted)>1e-6))),
             coverage80=float(np.mean([o['inside_interval80'] for r,o in resolved])))
+    # Select non-overlapping windows chronologically, never by outcome quality.
+    import pandas as pd
+    independent=[]
+    last_target=None
+    candidates=[(r,o) for r,o in resolved if r.get('origin') and o.get('target_time')]
+    for record,outcome in sorted(candidates,key=lambda pair:pd.Timestamp(pair[0]['origin'])):
+        origin,target=pd.Timestamp(record['origin']),pd.Timestamp(outcome['target_time'])
+        if target<=origin or (last_target is not None and origin<last_target):
+            continue
+        independent.append((record,outcome))
+        last_target=target
+    from metals.reliability import error_evidence
+    result['nonoverlapping_resolved']=len(independent)
+    result['overlapping_or_undated_excluded']=len(resolved)-len(independent)
+    result['independent_evidence']=error_evidence(
+        [o['actual_price']/r['reference_price']-1 for r,o in independent],
+        [r['price']/r['reference_price']-1 for r,o in independent])
+    result['note']+=' All-resolved error is descriptive; confidence uses only chronological non-overlapping outcome windows. Non-overlap does not guarantee statistical independence.'
     return result

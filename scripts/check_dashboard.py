@@ -44,6 +44,7 @@ with sync_playwright() as p:
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
         page.locator('#forecast-review > summary').click()
         assert page.locator('[data-forecast]').count()==4
+        assert page.locator('[data-model-reliability]').count()==4
         assert page.locator('[data-target-date]').count()==4
         assert all(('EST' in x.inner_text() or 'EDT' in x.inner_text()) for x in page.locator('[data-target-date]').all())
         assert page.locator('[data-provider]').count()==7

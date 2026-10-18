@@ -8,6 +8,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, log_loss
 
+from metals.reliability import error_evidence, interval_score
+
 FEATURES = ["return1","return5","return20","trend","rsi","atr","range_position","flow","gap_fraction"]
 GATES = {"min_oos":100,"edge":.03,"mae_skill":.03,"min_holdout":12,"confidence_lower":0,"brier_skill":0}
 def features(f):
@@ -46,9 +48,9 @@ def metrics(records):
         if mask.any():
             bins.append({"from":left,"to":left+.2,"n":int(mask.sum()),"mean_probability":float(prob[mask].mean()),"observed_up":float(labels[mask].mean())})
     selective=(np.maximum(prob,1-prob)>=.6)&((prob>=.5)==(p>0))
-    return {"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"bias_percent":float(np.mean(p-y)*100),"rmse_percent":float(np.sqrt(np.mean((p-y)**2))*100),"p90_absolute_error_percent":float(np.quantile(abs(p-y),.9)*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
+    return {"no_change_evidence":error_evidence(y,p),"interval_score80_percent":float(interval_score(y,lo,hi).mean()*100),"n":len(y),"directional_accuracy":float(wins.mean()),"direction_coverage":float(np.mean(abs(p)>1e-6)),"neutral_policy":"Predictions within 0.0001% of zero are abstentions and do not count as directional hits","baseline_accuracy":float(baseline_wins.mean()),"edge":float(difference.mean()),"edge_ci95":[float(np.quantile(bootstrap,.025)),float(np.quantile(bootstrap,.975))],"balanced_accuracy":float(balanced_accuracy_score(labels,p>0)),"mcc":float(matthews_corrcoef(labels,p>0)),"mae_percent":float(mae*100),"bias_percent":float(np.mean(p-y)*100),"rmse_percent":float(np.sqrt(np.mean((p-y)**2))*100),"p90_absolute_error_percent":float(np.quantile(abs(p-y),.9)*100),"baseline_mae_percent":float(bmae*100),"mae_skill":float(1-mae/bmae) if bmae else None,"zero_change_mae_percent":float(abs(y).mean()*100),"atr_normalized_mae":float(np.mean(abs(y-p)/atr)),"brier":float(brier),"baseline_brier":float(base_brier),"brier_skill":float(1-brier/base_brier) if base_brier else None,"log_loss":float(log_loss(labels,prob,labels=[False,True])),"coverage80":float(np.mean((y>=lo)&(y<=hi))),"mean_interval_width_percent":float(np.mean(hi-lo)*100),"calibration_bins":bins,"selective_n":int(selective.sum()),"selective_coverage":float(selective.mean()),"selective_accuracy":float(wins[selective].mean()) if selective.any() else None}
 
-def select_bias_correction(raw, actual, scale):
+def select_bias_correction(raw, actual, scale, guarded=False):
     """Learn bounded corrections, then select on a later, disjoint past sample."""
     learn, select = np.array_split(np.arange(len(actual)), 2)
     candidates=[(0.,0.)]
@@ -63,13 +65,20 @@ def select_bias_correction(raw, actual, scale):
     best=int(np.argmin(losses))
     if losses[best]>.95*losses[0]:
         best=0
+    subperiod_losses=[]
+    if guarded:
+        # A gain in one past subperiod must not hide deterioration in the next.
+        for subset in np.array_split(select, 2):
+            subperiod_losses.append([float(np.mean(abs(actual[subset]-(w*raw[subset]+b)*scale[subset]))) for w,b in candidates])
+        eligible=[i for i in range(1,len(candidates)) if all(row[i]<.95*row[0] for row in subperiod_losses)]
+        best=min(eligible,key=lambda i:losses[i]) if eligible else 0
     weight,bias=candidates[best]
     return {'ridge_weight':weight,'return_offset':0.,'normalized_offset':bias,
             'selected_index':best,'candidates':names,'candidate_mae_percent':[v*100 for v in losses],
-            'bias_n':len(learn),'selection_n':len(select)}
+            'bias_n':len(learn),'selection_n':len(select),'subperiod_mae_percent':[[100*v for v in row] for row in subperiod_losses]}
 
 
-def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False,debiased=False):
+def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False,debiased=False,guarded=False):
     reg = make_pipeline(StandardScaler(),HuberRegressor(epsilon=1.35,alpha=20,max_iter=500) if robust else Ridge(alpha=20))
     clf = make_pipeline(StandardScaler(),LogisticRegression(C=0.1,max_iter=500))
     target=y if scale is None else y/scale
@@ -81,7 +90,7 @@ def train(x,y,fit,cal,scale=None,adaptive=False,half_life=None,robust=False,debi
         # First two thirds learn/select the correction. Final third is never used for selection.
         bias,selection,cal=np.array_split(cal,3)
         past=np.concatenate([bias,selection])
-        selector=select_bias_correction(reg.predict(x.iloc[past]),y.iloc[past].to_numpy(),scale.iloc[past].to_numpy())
+        selector=select_bias_correction(reg.predict(x.iloc[past]),y.iloc[past].to_numpy(),scale.iloc[past].to_numpy(),guarded=guarded)
         selector.update(selection_end_position=int(selection[-1]),bias_end_position=int(bias[-1]),interval_n=len(cal),
                         probability_weight=len(cal)/(len(cal)+100))
     elif adaptive:
@@ -127,11 +136,12 @@ def predict(reg,clf,calibrator,x,scale,selector,prior):
     return p,prob
 
 def evaluate(frame, horizon, hourly=False, recipe="legacy"):
-    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical","robust_recent","bias_corrected"):
+    if recipe not in ("legacy","volatility_scaled","history_selected","recent_technical","robust_recent","bias_corrected","guarded_shrinkage"):
         raise ValueError("Unknown fixed recipe")
     scaled=recipe!="legacy"
-    adaptive=recipe in ("history_selected","recent_technical","robust_recent","bias_corrected")
-    debiased=recipe=="bias_corrected"
+    adaptive=recipe in ("history_selected","recent_technical","robust_recent","bias_corrected","guarded_shrinkage")
+    debiased=recipe in ("bias_corrected","guarded_shrinkage")
+    guarded=recipe=="guarded_shrinkage"
     recent=recipe in ("recent_technical","robust_recent")
     robust=recipe=="robust_recent"
     half_life=(1500 if hourly else 252) if recent else None
@@ -198,7 +208,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         fit,cal = indices(test_start)
         if len(fit)<minfit//2 or len(cal)<(60 if debiased else 20) or len(test)==0 or y.iloc[fit].gt(0).nunique()<2 or y.iloc[cal].gt(0).nunique()<2:
             continue
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased,guarded=guarded)
         predictions,probabilities = predict(reg,clf,calibrator,x.iloc[test],scale.iloc[test].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         baseline = float(y.iloc[fit].median())
         prior = float((y.iloc[fit]>0).mean())
@@ -210,7 +220,7 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
     ood = True
     fit,cal = indices(n-1)
     if len(cal)>=(60 if debiased else 20) and len(fit)>=minfit//2 and valid_x.iloc[-1] and y.iloc[cal].gt(0).nunique()==2 and y.iloc[fit].gt(0).nunique()==2:
-        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased)
+        reg,clf,calibrator,low,high,selector = train(x,y,fit,cal,scale if scaled else None,adaptive=adaptive,half_life=half_life,robust=robust,debiased=debiased,guarded=guarded)
         ps,probs=predict(reg,clf,calibrator,x.iloc[[-1]],scale.iloc[[-1]].to_numpy(),selector,float((y.iloc[fit]>0).mean()))
         p,probability=float(ps[0]),float(probs[0])
         scaler=reg[0]
@@ -221,6 +231,8 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         live={"origin":frame.index[-1].isoformat(),"reference_price":price,"price":price*(1+p),"return":p,"probability_up":probability,"interval80":[price*(1+p+low*scale.iloc[-1]),price*(1+p+high*scale.iloc[-1])],"feature_coefficients":dict(zip(x.columns,map(float,reg[1].coef_))),"calibration_n":len(cal),"interval_calibration_n":selector["interval_n"] if selector else len(cal),"calibration_start":frame.index[cal[0]].isoformat(),"calibration_end":frame.index[cal[-1]+horizon].isoformat(),"ood_distance":live_dist,"selection":selector}
     checks = {"oos_sample":oos.get("n",0)>=100,"oos_edge":oos.get("edge",-1)>=.03,"edge_confidence":oos.get("edge_ci95",[-1])[0]>0,"oos_mae":(oos.get("mae_skill") or -1)>=.03,"oos_brier":(oos.get("brier_skill") or -1)>0,"holdout_sample":holdout.get("n",0)>=12,"holdout_edge":holdout.get("edge",-1)>0,"holdout_mae":(holdout.get("mae_skill") or -1)>0,"holdout_brier":(holdout.get("brier_skill") or -1)>0,"interval_coverage":.68<=holdout.get("coverage80",0)<=.9,"in_distribution":not ood,"live_available":live is not None,"positive_ordered_prices":live is not None and 0<live["interval80"][0]<live["interval80"][1] and live["price"]>0}
     if scaled:
+        checks["oos_error_confidence"]=oos.get("no_change_evidence",{}).get("skill_established",False)
+        checks["recent_error_confidence"]=holdout.get("no_change_evidence",{}).get("skill_established",False)
         checks["oos_vs_no_change"]=oos.get("mae_percent",float("inf"))<.97*oos.get("zero_change_mae_percent",0)
         checks["holdout_vs_no_change"]=holdout.get("mae_percent",float("inf"))<holdout.get("zero_change_mae_percent",0)
     status="VALIDATED" if all(checks.values()) else "WAIT"
@@ -256,6 +268,9 @@ def evaluate(frame, horizon, hourly=False, recipe="legacy"):
         result['integrity']['intervals']='Outward finite-sample residual order statistics; empirical coverage is measured, not guaranteed under market drift.'
         if live and live.get('selection'):
             live['selection']['bias_end']=frame.index[live['selection']['bias_end_position']+horizon].isoformat()
+    if guarded:
+        result.update(model="Volatility-scaled Ridge with stable past-only shrinkage and independent calibration",recipe_version="7.0")
+        result['integrity']['selection']='Directional shrinkage/bias candidate must reduce no-change MAE by at least 5% in EACH of two chronological past selection subperiods; otherwise predict no change. Final calibration block is untouched by selection.'
     return result
 
 
@@ -270,7 +285,7 @@ def paired_comparison(current,previous):
             continue
         a,b=map(list,zip(*pairs))
         ma,mb=metrics(a),metrics(b)
-        result[partition]={"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"],"current_rmse_percent":ma["rmse_percent"],"previous_rmse_percent":mb["rmse_percent"],"current_p90_error_percent":ma["p90_absolute_error_percent"],"previous_p90_error_percent":mb["p90_absolute_error_percent"],"current_bias_percent":ma["bias_percent"],"previous_bias_percent":mb["bias_percent"]}
+        result[partition]={"paired_error_evidence":error_evidence([r["actual_return"] for r in a],[r["predicted_return"] for r in a],[r["predicted_return"] for r in b]),"current_interval_score80_percent":ma["interval_score80_percent"],"previous_interval_score80_percent":mb["interval_score80_percent"],"n":len(pairs),"current_mae_percent":ma["mae_percent"],"previous_mae_percent":mb["mae_percent"],"mae_improvement":1-ma["mae_percent"]/mb["mae_percent"] if mb["mae_percent"] else None,"current_coverage80":ma["coverage80"],"previous_coverage80":mb["coverage80"],"current_brier":ma["brier"],"previous_brier":mb["brier"],"current_rmse_percent":ma["rmse_percent"],"previous_rmse_percent":mb["rmse_percent"],"current_p90_error_percent":ma["p90_absolute_error_percent"],"previous_p90_error_percent":mb["p90_absolute_error_percent"],"current_bias_percent":ma["bias_percent"],"previous_bias_percent":mb["bias_percent"]}
     return result
 
 
@@ -278,6 +293,8 @@ def promotion_checks(comparison):
     checks={}
     for partition in ('walk_forward','holdout'):
         m=comparison[partition]
+        checks[partition+'_paired_confidence']=m.get('paired_error_evidence',{}).get('skill_established',False)
+        checks[partition+'_interval_score']=m.get('current_interval_score80_percent',float('inf'))<=m.get('previous_interval_score80_percent',0)
         checks[partition+'_sample']=m.get('n',0)>=(100 if partition=='walk_forward' else 12)
         checks[partition+'_price_improvement']=(m.get('mae_improvement') or 0)>=.05
         checks[partition+'_tail_error']=m.get('current_p90_error_percent',float('inf'))<=m.get('previous_p90_error_percent',0)

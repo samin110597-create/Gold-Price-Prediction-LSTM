@@ -31,6 +31,8 @@ def describe(result, asset, hourly, asof):
         reasons.append('Price error does not consistently beat an unchanged-price forecast')
     if not checks.get('oos_edge',False) or not checks.get('edge_confidence',False) or not checks.get('holdout_edge',False):
         reasons.append('Directional advantage is not established')
+    if not checks.get('oos_error_confidence',False) or not checks.get('recent_error_confidence',False):
+        reasons.append('Error improvement is not statistically established')
     if not checks.get('interval_coverage',False):
         reasons.append('Forecast range misses its coverage standard')
     return {'accuracy_reasons':reasons,'target_time':target,'direction':direction,'expired':pd.Timestamp(target)<=pd.Timestamp(asof),

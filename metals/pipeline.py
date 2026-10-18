@@ -162,15 +162,15 @@ def run(raw_folder,stage,history):
                 result=cached
             else:
                 previous=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="volatility_scaled")
-                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="bias_corrected")
+                challenger=evaluate(frames[tf],bars,hourly=tf=="1h",recipe="guarded_shrinkage")
                 comparison=paired_comparison(challenger,previous)
                 print('FORECAST COMPARISON',asset,h,json.dumps(comparison),flush=True)
                 promotion=promotion_checks(comparison)
                 promoted=all(promotion.values())
                 result=challenger if promoted else previous
-                result['challenger_review']={'recipe':'6.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
+                result['challenger_review']={'recipe':'7.0','promoted':promoted,'criteria':promotion,'comparison':comparison,
                     'research':challenger['research'],'oos':challenger['oos'],'holdout':challenger['holdout'],
-                    'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, no worse Brier score, RMSE or 90th-percentile error, and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
+                    'note':'Promotion requires >=5% lower matched-date MAE in BOTH historical partitions, sufficient samples, positive paired-error confidence bounds, no worse interval score, Brier score, RMSE or 90th-percentile error, and 68–90% interval coverage. Research selection does not certify a trading edge; prospective confirmation is still required.'}
                 result["previous_recipe_comparison"]=comparison if promoted else paired_comparison(previous,previous)
                 result["previous_recipe_summary"]={k:previous[k] for k in ("status","research","oos","holdout","failed_gates")}
                 challenger['run_id']=run_id
@@ -194,6 +194,12 @@ def run(raw_folder,stage,history):
             forecasts[h]={k:v for k,v in result.items() if k!="records"}
             forecasts[h]["evidence_file"]="data/validation/"+asset+"_"+h+".json"
             issue(forecast_ledger,asset,h,result,run_id,commit,manifest["source_hash"],asof.isoformat(),channel=channel)
+            review=result.get('challenger_review',{})
+            shadow={'research':review.get('research'),'recipe_version':review.get('recipe','7.0'),
+                    'model_id':VERSION+":"+code_hash[:12]+":"+review.get('recipe','7.0'),
+                    'horizon_bars':bars,'unit':result['unit'],'status':'RESEARCH'}
+            issue(forecast_ledger,asset,h,shadow,run_id,commit,manifest['source_hash'],asof.isoformat(),
+                  channel='shadow' if channel=='production' else 'research')
             print(asset,h,result["status"],"OOS",result["oos"].get("n"),"holdout",result["holdout"].get("n"),"failed",result["failed_gates"],flush=True)
         quote_frame=frames["15m"]
         quote={"price":float(quote_frame.close.iloc[-1]),"time":quote_frame.index[-1].isoformat(),"basis":"Latest completed 15m close","stale":not reports["15m"]["latest_expected_bar_present"]}
@@ -231,6 +237,8 @@ def run(raw_folder,stage,history):
     for asset,a in payload["assets"].items():
         for h,f in a["forecasts"].items():
             f["forward_evidence"]=forward_summary(forecast_ledger,asset,h,f["model_id"])
+            shadow_id=VERSION+":"+code_hash[:12]+":"+f.get('challenger_review',{}).get('recipe','7.0')
+            f['challenger_forward_evidence']=forward_summary(forecast_ledger,asset,h,shadow_id,channel='shadow')
         ids=[key for key,r in forecast_ledger["issued"].items() if r["asset"]==asset and r.get("channel")=="production" and r.get("forward_eligible")]
         resolved=[forecast_ledger["outcomes"][key] for key in ids if key in forecast_ledger["outcomes"]]
         a["forward"]={"issued":len(ids),"resolved":len(resolved),"directional_accuracy":sum(r["direction_correct"] for r in resolved)/len(resolved) if resolved else None,"note":"Corrected immutable ledger only. Legacy results are not mixed in."}

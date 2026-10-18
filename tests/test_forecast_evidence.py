@@ -144,7 +144,7 @@ def test_lower_average_error_cannot_hide_worse_severe_errors():
     from metals.models import promotion_checks
     good=dict(n=120,mae_improvement=.1,current_p90_error_percent=3.,previous_p90_error_percent=4.,
               current_rmse_percent=2.,previous_rmse_percent=2.5,current_brier=.24,previous_brier=.25,
-              current_coverage80=.8)
+              current_coverage80=.8,current_interval_score80_percent=4.,previous_interval_score80_percent=5.,paired_error_evidence={'skill_established':True})
     pair={p:dict(good) for p in ('walk_forward','holdout')}
     assert all(promotion_checks(pair).values())
     pair['holdout']['current_p90_error_percent']=4.1
