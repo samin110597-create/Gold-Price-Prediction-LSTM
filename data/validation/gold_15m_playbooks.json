@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-07T17:45:00+00:00",
+  "cutoff": "2026-10-07T23:15:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -29,14 +29,14 @@
         },
         "RANGE_BREAKOUT": {
           "earlier_history": {
-            "n": 2,
+            "n": 3,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.6576280471103807
+              0.5615060804490177
             ],
-            "mean_gross_r": -0.7658554395554888,
-            "stops": 1,
+            "mean_gross_r": -0.8439036263703259,
+            "stops": 2,
             "timeouts": 1
           },
           "recent_holdout": {
@@ -236,14 +236,14 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": 0.36667241045274174,
-            "stops": 1,
+            "mean_gross_r": 0.025004307839556317,
+            "stops": 2,
             "timeouts": 1
           },
           "recent_holdout": {
@@ -359,6 +359,40 @@
         }
       },
       "records": [
+        {
+          "id": "6ce87a86205be84f23dda048",
+          "kind": "RANGE_BREAKOUT",
+          "direction": 1,
+          "origin": "2026-08-26T22:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-08-26T23:15:00+00:00",
+          "entry_bar_close": "2026-08-26T23:30:00+00:00",
+          "confirmation_time": "2026-08-26T23:15:00+00:00",
+          "entry": 4669.2998046875,
+          "entry_rr": 1.273751321526956,
+          "time": "2026-08-27T01:00:00+00:00",
+          "exit": 4655.403689320741,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "64e415f4a2e21a51ea95e25c",
+          "kind": "STRUCTURE_BREAK",
+          "direction": 1,
+          "origin": "2026-08-26T22:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-08-26T23:15:00+00:00",
+          "entry_bar_close": "2026-08-26T23:30:00+00:00",
+          "confirmation_time": "2026-08-26T23:15:00+00:00",
+          "entry": 4669.2998046875,
+          "entry_rr": 1.273751321526956,
+          "time": "2026-08-27T01:00:00+00:00",
+          "exit": 4655.403689320741,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
         {
           "id": "bae94ed892e38c6f0aa92943",
           "kind": "BREAKOUT_RETEST",
@@ -967,7 +1001,7 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 90,
+        "INVALIDATED": 89,
         "POOR ENTRY": 51,
         "EXPIRED": 30,
         "MISSED": 1
