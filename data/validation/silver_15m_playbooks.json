@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-07T10:30:00+00:00",
+  "cutoff": "2026-10-07T17:45:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -53,25 +53,25 @@
         },
         "BREAKOUT_RETEST": {
           "earlier_history": {
-            "n": 5,
-            "tp1_first": 0.2,
+            "n": 6,
+            "tp1_first": 0.16666666666666666,
             "wilson95": [
-              0.03622316096978745,
-              0.6244717358814613
+              0.03005258587173032,
+              0.563509436563646
             ],
-            "mean_gross_r": -0.5839719662956169,
-            "stops": 4,
+            "mean_gross_r": -0.6533099719130141,
+            "stops": 5,
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 2,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.09452865480086614,
+              0.9054713451991339
             ],
-            "mean_gross_r": -0.08027062396374311,
-            "stops": 2,
+            "mean_gross_r": 0.37959406405438534,
+            "stops": 1,
             "timeouts": 0
           }
         },
@@ -987,7 +987,7 @@
           "kind": "BREAKOUT_RETEST",
           "direction": -1,
           "origin": "2026-10-07T13:30:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "STOP TOUCHED",
           "entry_time": "2026-10-07T13:45:00+00:00",
           "entry_bar_close": "2026-10-07T14:00:00+00:00",
@@ -1270,9 +1270,9 @@
       ],
       "excluded": {
         "POOR ENTRY": 41,
-        "INVALIDATED": 93,
+        "INVALIDATED": 96,
         "MISSED": 14,
-        "EXPIRED": 23,
+        "EXPIRED": 25,
         "OVERLAP": 3
       }
     },

@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-05-28T10:00:00+00:00",
+  "cutoff": "2026-05-28T16:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -112,14 +112,14 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.0614903152761605,
+              0.7923450448735121
             ],
-            "mean_gross_r": 0.09585164285149894,
-            "stops": 1,
+            "mean_gross_r": -0.2694322380990007,
+            "stops": 2,
             "timeouts": 0
           }
         },
@@ -2684,16 +2684,32 @@
           "exit": 57.24010986594438,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "c56d7053e97656bca53d5653",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2026-10-19T09:00:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-10-19T11:00:00+00:00",
+          "entry_bar_close": "2026-10-19T12:00:00+00:00",
+          "confirmation_time": "2026-10-19T11:00:00+00:00",
+          "entry": 57.775001525878906,
+          "entry_rr": 1.091257482267387,
+          "time": "2026-10-19T14:00:00+00:00",
+          "exit": 57.46343422108348,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
         "EXPIRED": 104,
         "INVALIDATED": 269,
-        "POOR ENTRY": 111,
+        "POOR ENTRY": 113,
         "MISSED": 28,
         "OVERLAP": 9,
-        "UNAVAILABLE": 5,
-        "WATCH": 1
+        "UNAVAILABLE": 5
       }
     },
     "Strict": {
