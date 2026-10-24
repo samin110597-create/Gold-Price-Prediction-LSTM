@@ -42,6 +42,10 @@ with sync_playwright() as p:
         assert "SPOT /" in page.locator(".topline").inner_text()
         assert "not spot trading targets" in page.locator("#app").inner_text()
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
+        assert page.locator('#market-outlook').is_visible()
+        assert page.locator('[data-outlook-horizon]').count()==4
+        assert page.locator('[data-market-factor]').count()==7
+        assert page.locator('[data-outlook-summary]').inner_text()
         page.locator('#forecast-review > summary').click()
         assert page.locator('[data-forecast]').count()==4
         assert page.locator('[data-model-reliability]').count()==4
@@ -59,8 +63,8 @@ with sync_playwright() as p:
         assert page.locator('#current-quote-age').inner_text() not in ('—','unknown')
         assert page.locator('[data-technical-frame]').count()==3
         assert 'Completed' in page.locator('#technical-brief').inner_text()
-        assert 'UNVALIDATED' in page.locator('.forecast-grid').inner_text() or 'VALIDATED' in page.locator('.forecast-grid').inner_text()
-        assert 'No validated edge' not in page.locator('.forecast-grid').inner_text()
+        assert 'UNVALIDATED' in page.locator('#forecast-review .forecast-grid').inner_text() or 'VALIDATED' in page.locator('#forecast-review .forecast-grid').inner_text()
+        assert 'No validated edge' not in page.locator('#forecast-review .forecast-grid').inner_text()
         assert page.locator('#quote-age').inner_text() not in ('—','unknown')
         assert page.locator('#snapshot-age').inner_text() not in ('—','unknown')
         with page.expect_response(lambda r:'run_manifest.json?t=' in r.url):

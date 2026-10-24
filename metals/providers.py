@@ -91,6 +91,7 @@ def quote(asset, symbol, basis, price, source_time, now, **extra):
 
 def collect_provider(name, key, now):
     observations, histories, failures = [], {}, []
+    context_histories = {}
     def attempt(fn):
         try:
             fn()
@@ -172,7 +173,13 @@ def collect_provider(name, key, now):
                 if reason not in ('INVALID API KEY CONFIGURATION','ACCESS RESTRICTED','RATE LIMITED'):
                     def latest_context():
                         r=request('https://api.stlouisfed.org/fred/series/observations',{
-                            'series_id':series,'api_key':key,'file_type':'json','sort_order':'desc','limit':10})
+                            'series_id':series,'api_key':key,'file_type':'json','sort_order':'desc','limit':30})
+                        context_rows=[]
+                        for item in r.get('observations',[]):
+                            value=number(item.get('value')); date=timestamp(item.get('date'))
+                            if value is not None and date and pd.Timestamp(date)<=now:
+                                context_rows.append({'date':date,'available_at':now.isoformat(),'value':value})
+                        context_histories[series]=sorted(context_rows,key=lambda x:x['date'])
                         for item in r.get('observations',[]):
                             value=number(item.get('value')); date=timestamp(item.get('date'))
                             if value is not None and date and pd.Timestamp(date)<=now:
@@ -184,7 +191,7 @@ def collect_provider(name, key, now):
                         raise ProviderError('NO CURRENT CONTEXT')
                     attempt(latest_context)
     status='CONNECTED' if observations and not failures else 'PARTIAL' if observations else (failures[0] if failures else 'NO OBSERVATIONS')
-    return {'status':status,'observations':observations,'histories':histories,'errors':sorted(set(failures))}
+    return {'status':status,'observations':observations,'histories':histories,'context_histories':context_histories,'errors':sorted(set(failures))}
 
 def merge_caches(*caches, now=None):
     """Share request budgets across publishers without advancing observation times."""
@@ -211,7 +218,7 @@ def collect(previous=None, now=None, environ=None, names=None):
         key=environ.get(env,'').strip()
         if not key:
             entry={'status':'KEY NOT CONFIGURED','observations':[],'histories':{},'errors':[], 'checked_at':now.isoformat()}
-        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED' and (name!='fred' or prior.get('adapter_version')==3):
+        elif fetched and 0<=(now-pd.Timestamp(fetched)).total_seconds()<ttl and prior.get('status')!='KEY NOT CONFIGURED' and (name!='fred' or prior.get('adapter_version')==4):
             entry=dict(prior)
         else:
             entry=collect_provider(name,key,now)
@@ -220,13 +227,14 @@ def collect(previous=None, now=None, environ=None, names=None):
             if not entry['observations'] and prior.get('observations'):
                 entry['observations']=prior['observations']
                 entry['histories']=prior.get('histories',{})
+                entry['context_histories']=prior.get('context_histories',{})
                 entry['retained_previous']=True
-        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env,adapter_version=3)
+        entry.update(documentation=docs,refresh_seconds=ttl,secret_name=env,adapter_version=4)
         result['providers'][name]=entry
     return result
 
 def public_summary(cache):
-    return {'asof':cache['asof'],'providers':{k:{x:y for x,y in v.items() if x not in ('histories','secret_name')} for k,v in cache['providers'].items()},
+    return {'asof':cache['asof'],'providers':{k:{x:y for x,y in v.items() if x not in ('histories','context_histories','secret_name')} for k,v in cache['providers'].items()},
             'note':'Provider timestamps and instrument bases are distinct. API access does not imply streaming or an exchange real-time entitlement. Keys stay in GitHub Actions.'}
 
 def macro_features(index, cache):

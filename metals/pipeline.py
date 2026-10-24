@@ -13,6 +13,7 @@ from metals.structure import scan, families
 from metals.models import evaluate, features, paired_comparison, promotion_checks
 from metals.providers import collect, public_summary, macro_features, merge_caches
 from metals.outlook import describe, paths, technical_brief
+from metals.market_brief import context_factors, build_brief, releases
 from metals.setups import build, freeze, geometry
 from metals.ledger import issue, resolve, forward_summary
 from metals.signal_audit import evaluate_events
@@ -233,6 +234,11 @@ def run(raw_folder,stage,history):
     aligned=pd.concat([all_frames["gold"]["1d"].close,all_frames["silver"]["1d"].close],axis=1,join="inner").dropna()
     payload["context"]["gold_silver_ratio"]={"value":float(aligned.iloc[-1,0]/aligned.iloc[-1,1]),"source_time":aligned.index[-1].isoformat(),"status":"CONTEXT ONLY"}
     payload["context"]["event_calendar"]={"status":"UNAVAILABLE","note":"No verified scheduled-release feed connected"}
+    factors=context_factors(raw_folder,provider_cache,payload["context"],asof)
+    previous_dashboard=read(history/"dashboard.json",{})
+    payload["policy_releases"]=releases(previous_dashboard.get("policy_releases"),asof)
+    for asset,a in payload["assets"].items():
+        a["market_brief"]=build_brief(asset,a,factors,asof)
     resolve(forecast_ledger,all_frames)
     for asset,a in payload["assets"].items():
         for h,f in a["forecasts"].items():
