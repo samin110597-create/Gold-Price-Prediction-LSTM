@@ -14,9 +14,10 @@
 <script src="assets/signals.js?v=2"></script>
 <script src="assets/evidence.js?v=9"></script>
 <script src="assets/outlook.js?v=1"></script>
-<script src="assets/feed.js?v=6"></script>
-<script src="assets/spot-technicals.js?v=2"></script>
-<script src="assets/live.js?v=3"></script>
+<script src="assets/feed.js?v=7"></script>
+<script src="assets/spot-technicals.js?v=3"></script>
+<script src="assets/live.js?v=4"></script>
+<script src="assets/current-outlook.js?v=1"></script>
 <script>
 'use strict';
 let data,asset='gold',mode='Strict',tf='1d';
@@ -41,7 +42,7 @@ const fcards=forecastCards(a,snapshotStale);
 const indicators=['rsi','adx','plus_di','minus_di','macd','macd_signal','macd_hist','atr','stoch_k','stoch_d','mfi','cmf','relative_volume','rolling_vwap20','ema9','ema20','ema50','ema100','ema200','sma50','sma200','bb_upper','bb_lower','donchian_high','donchian_low'];
 $('#app').innerHTML=
 '<div class="topline"><div><div class="eyebrow">'+a.name+' SPOT / '+(asset==='gold'?'XAU/USD':'XAG/USD')+'</div><div class="price" data-testid="price">'+(displayQuote?'$'+n(displayQuote.price):'Unavailable')+'</div><div class="symbol" id="spot-price-basis">'+(displayQuote?escape(displayQuote.basis)+' · Last reported '+time(displayQuote.time):'No timestamped spot quote available')+'</div></div><div>'+'<span class="badge wait" id="spot-price-status">'+escape(spotStatus(displayQuote))+'</span>'+'<div class="symbol">Price + candle technicals · 15-minute refresh</div></div></div>'+
-technicalPanel()+outlookPanel(a,snapshotStale)+currentPanel()+feedPanel()+
+currentOutlookPanel()+technicalPanel()+'<details id="scheduled-research" class="panel" style="margin:16px 0"><summary>Scheduled futures forecasts & dated macro research — separate from current spot outlook</summary>'+outlookPanel(a,snapshotStale)+'</details>'+currentPanel()+feedPanel()+
 '<div class="notice"><strong>Instrument mismatch:</strong> The live technicals above use matching biquote XAUUSD/XAGUSD broker prices and candles. Gold API and Alpha Vantage supply backup spot quotes when the matching feed is unavailable; backup quotes do not update the broker technicals. Charts, technical levels, entry zones and experimental forecasts below use Yahoo continuous futures '+escape(a.symbol)+'. They are not spot trading targets. No offset or conversion is applied; the reported Yahoo quote has not been independently verified for a matching contract.</div>'+
 ((!a.fresh||snapshotStale)?'<div class="notice">'+(snapshotIsStale()?'Snapshot is over 30 minutes old. ':quoteIsStale()?'Quote or intraday bars are stale. ':'')+'Missing latest completed bars: '+escape(Object.entries(a.timeframes).filter(([t,d])=>!d.quality.latest_expected_bar_present).map(([t])=>t.toUpperCase()).join(', ')||'none')+'. Strict setups require all timeframes; check the selected mode and signal status.</div>':'')+
 '<div class="grid">'+technicalBrief(technical,technicalStale)+

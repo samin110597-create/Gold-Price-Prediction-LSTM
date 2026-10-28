@@ -5,11 +5,11 @@ function outlookPanel(a, stale){
  const price=v=>Number.isFinite(v)?'$'+n(v,2):'Unavailable';
  const fresh=!stale&&a.timeframes['4h'].quality.latest_expected_bar_present&&a.timeframes['1d'].quality.latest_expected_bar_present;
  const p=a.price_paths;
- const summary=fresh?b.summary:'This snapshot is stale or incomplete. Its prior view is shown for reference only; wait for refreshed evidence.';
+ const summary=fresh?b.summary:'This scheduled research snapshot is older or incomplete. Use the current spot outlook above for the latest price-and-candle assessment.';
  const factors=b.factors||[], reports=b.reports||[];
  const color=impact=>impact==='HEADWIND'?'down':impact==='TAILWIND'?'up':'wait';
  return `<section class="panel span12" id="market-outlook">
- <div class="panel-head"><h2>${escape(a.name)}: where could the price go?</h2>${badge(fresh?b.bias+' TECHNICAL BIAS':'STALE / INCOMPLETE · WAIT')}</div>
+ <div class="panel-head"><h2>${escape(a.name)}: scheduled futures research</h2>${badge(fresh?b.bias+' TECHNICAL BIAS':'STALE / INCOMPLETE · WAIT')}</div>
  <p class="outlook-summary" data-outlook-summary>${escape(summary)}</p>
  <p>${escape(b.horizon)}<br><small>Data used from ${time(b.asof)}. Price levels below are ${escape(a.symbol)} continuous futures, USD/oz — not spot targets.</small></p>
  <div class="path-grid">

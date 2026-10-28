@@ -42,6 +42,9 @@ with sync_playwright() as p:
         assert "SPOT /" in page.locator(".topline").inner_text()
         assert "not spot trading targets" in page.locator("#app").inner_text()
         assert 'delayed snapshots' in page.locator('.feed-panel').inner_text()
+        assert page.locator('#current-outlook').is_visible()
+        if page.locator('#scheduled-research').get_attribute('open') is None:
+            page.locator('#scheduled-research > summary').click()
         assert page.locator('#market-outlook').is_visible()
         assert page.locator('[data-outlook-horizon]').count()==4
         assert page.locator('[data-market-factor]').count()==7
@@ -67,6 +70,13 @@ with sync_playwright() as p:
         assert 'No validated edge' not in page.locator('#forecast-review .forecast-grid').inner_text()
         assert page.locator('#quote-age').inner_text() not in ('—','unknown')
         assert page.locator('#snapshot-age').inner_text() not in ('—','unknown')
+        page.wait_for_function('!spotBusy && Date.now()-spotLastAttempt >= 5000')
+        with page.expect_response(lambda r:'biquote.io/api/latest' in r.url):
+            page.locator('#refresh-outlook').click()
+        page.wait_for_function('!spotBusy')
+        if args.spot_feed == 'fixtures':
+            assert 'LATEST SPOT PRICE + CANDLES' in page.locator('#current-outlook').inner_text()
+            assert page.locator('[data-current-direction]').count()==1
         with page.expect_response(lambda r:'run_manifest.json?t=' in r.url):
             page.locator('#refresh-market').click()
         page.wait_for_function("document.querySelector('#refresh-market').disabled === false")

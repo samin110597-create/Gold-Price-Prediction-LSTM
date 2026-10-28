@@ -8,15 +8,15 @@ function validateDirectSpot(raw,key,previous,now=Date.now()){
  if(previous&&at<Date.parse(previous.source_time))throw Error('Older spot observation rejected');
  return {asset:key,symbol,basis:'Spot USD/oz',price:raw.price,source_time:raw.updatedAt,retrieved_at:new Date(now).toISOString(),currency:'USD'};
 }
-async function loadSpotQuotes(){
+async function loadSpotQuotes(force=false){
  // Price and candle requests share the user's 15-minute refresh budget.
- if(spotBusy||(spotLastAttempt!==null&&Date.now()-spotLastAttempt<900000))return;
+ if(spotBusy||(spotLastAttempt!==null&&Date.now()-spotLastAttempt<(force?5000:900000)))return;
  spotBusy=true;spotLastAttempt=Date.now();
- const technicalRefresh=typeof loadSpotTechnicals==='function'?loadSpotTechnicals():Promise.resolve();
+ const technicalRefresh=typeof loadSpotTechnicals==='function'?loadSpotTechnicals(force):Promise.resolve();
  await Promise.all(['gold','silver'].map(async key=>{
   const controller=new AbortController(),deadline=setTimeout(()=>controller.abort(),10000);
   try{
-   const response=await fetch('https://api.gold-api.com/price/'+(key==='gold'?'XAU':'XAG'),{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});
+   const response=await fetch('https://api.gold-api.com/price/'+(key==='gold'?'XAU':'XAG'),{cache:'no-store',signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});
    if(!response.ok)throw Error('Spot HTTP '+response.status);
    const previous=directSpot.observations.find(q=>q.asset===key);
    const q=validateDirectSpot(await response.json(),key,previous);
@@ -36,6 +36,7 @@ function refreshSpotDisplay(){
  const panel=document.querySelector('#current-market');if(panel)panel.outerHTML=currentPanel();
  const health=document.querySelector('#provider-health');if(health)health.outerHTML=providerPanel();
  if(typeof renderSpotTechnicals==='function')renderSpotTechnicals();
+ if(typeof renderCurrentOutlook==='function')renderCurrentOutlook();
  refreshSpotLabels();
 }
 function refreshSpotLabels(){
@@ -43,7 +44,7 @@ function refreshSpotLabels(){
  const q=primarySpotQuote();
  for(const id of ['spot-price-status','spot-panel-status','spot-detail-status']){const el=document.querySelector('#'+id);if(el)el.textContent=spotStatus(q);}
  const age=document.querySelector('#spot-quote-age');if(age&&q)age.textContent=ageLabel(q.time);
- const button=document.querySelector('#refresh-spot');if(button){const remaining=spotLastAttempt===null?0:Math.max(0,Math.ceil((900000-(Date.now()-spotLastAttempt))/1000));button.disabled=spotBusy||remaining>0;button.textContent=spotBusy?'Refreshing price + technicals…':remaining?'Next refresh in '+Math.ceil(remaining/60)+' min':'Refresh price + technicals';button.onclick=()=>loadSpotQuotes();}
+ for(const id of ['refresh-spot','refresh-outlook']){const button=document.querySelector('#'+id);if(button){const cooling=spotLastAttempt!==null&&Date.now()-spotLastAttempt<5000;button.disabled=spotBusy||cooling;button.textContent=spotBusy?'Fetching latest prices + candles…':'Refresh latest data now';button.onclick=()=>{loadSpotQuotes(true);loadCurrentMarket();loadMarketSnapshot();};}}
 }
 
 function validateCurrentMarket(next){
@@ -129,6 +130,6 @@ async function loadCurrentMarket(){
 function startCurrentMarket(){
  loadCurrentMarket();loadSpotQuotes();
  setInterval(()=>{if(!document.hidden){loadCurrentMarket();loadSpotQuotes();}},900000);
- setInterval(()=>{const el=document.querySelector('#current-quote-age');if(el&&data)el.textContent=ageLabel(newestFuturesQuote().time);refreshSpotLabels();if(typeof spotTechnicalState!=='undefined'&&data){const el=document.querySelector('#technical-status');if(el)el.textContent=technicalStatus(asset);}},1000);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden&&(spotLastAttempt===null||Date.now()-spotLastAttempt>=900000)){loadCurrentMarket();loadSpotQuotes();}});
+ setInterval(()=>{const el=document.querySelector('#current-quote-age');if(el&&data)el.textContent=ageLabel(newestFuturesQuote().time);refreshSpotLabels();if(typeof spotTechnicalState!=='undefined'&&data){const el=document.querySelector('#technical-status');if(el)el.textContent=technicalStatus(asset);if(typeof checkCurrentOutlookAge==='function')checkCurrentOutlookAge();}},1000);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&(spotLastAttempt===null||Date.now()-spotLastAttempt>=60000)){loadCurrentMarket();loadSpotQuotes(true);loadMarketSnapshot();}});
 }

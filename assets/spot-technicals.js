@@ -69,11 +69,11 @@ function buildTechnicalFrame(series,q,now=Date.now()){
 }
 async function technicalJson(url){
  const controller=new AbortController(),deadline=setTimeout(()=>controller.abort(),12000);
- try{const response=await fetch(url,{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});if(!response.ok)throw Error('Candle feed unavailable');return await response.json();}
+ try{const response=await fetch(url+(url.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store',signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});if(!response.ok)throw Error('Candle feed unavailable');return await response.json();}
  finally{clearTimeout(deadline);}
 }
-async function loadSpotTechnicals(){
- if(spotTechnicalBusy||(spotTechnicalAttempt!==null&&Date.now()-spotTechnicalAttempt<900000))return;
+async function loadSpotTechnicals(force=false){
+ if(spotTechnicalBusy||(spotTechnicalAttempt!==null&&Date.now()-spotTechnicalAttempt<(force?5000:900000)))return;
  spotTechnicalBusy=true;spotTechnicalAttempt=Date.now();
  try{
   // Fetch bars first, then the matching provider's quote; commit each metal atomically.
