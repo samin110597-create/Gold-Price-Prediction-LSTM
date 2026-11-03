@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-22T03:45:00+00:00",
+  "cutoff": "2026-10-22T10:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -43,13 +43,13 @@
             "timeouts": 2
           },
           "recent_holdout": {
-            "n": 1,
-            "tp1_first": 0.0,
+            "n": 2,
+            "tp1_first": 0.5,
             "wilson95": [
-              0,
-              0.7934567085261071
+              0.09452865480086614,
+              0.9054713451991339
             ],
-            "mean_gross_r": -1.0,
+            "mean_gross_r": 0.3504972376037777,
             "stops": 1,
             "timeouts": 0
           }
@@ -67,10 +67,13 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
+            "n": 1,
+            "tp1_first": 1.0,
+            "wilson95": [
+              0.20654329147389294,
+              1
+            ],
+            "mean_gross_r": 1.1376942031330062,
             "stops": 0,
             "timeouts": 0
           }
@@ -1376,14 +1379,48 @@
           "exit": 50.187723127115355,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "e60337af15d68f5c2f08f6d7",
+          "kind": "RANGE_BREAKOUT",
+          "direction": -1,
+          "origin": "2026-11-03T04:45:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-03T05:30:00+00:00",
+          "entry_bar_close": "2026-11-03T05:45:00+00:00",
+          "confirmation_time": "2026-11-03T05:30:00+00:00",
+          "entry": 49.5,
+          "entry_rr": 1.7009944752075554,
+          "time": "2026-11-03T07:00:00+00:00",
+          "exit": 49.08000183105469,
+          "gross_r": 1.7009944752075554,
+          "ambiguous": false
+        },
+        {
+          "id": "09667fae8e342bc377fea6a6",
+          "kind": "BREAKOUT_RETEST",
+          "direction": -1,
+          "origin": "2026-11-03T05:30:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-03T05:45:00+00:00",
+          "entry_bar_close": "2026-11-03T06:00:00+00:00",
+          "confirmation_time": "2026-11-03T05:45:00+00:00",
+          "entry": 49.400001525878906,
+          "entry_rr": 1.1376942031330062,
+          "time": "2026-11-03T07:00:00+00:00",
+          "exit": 49.08000183105469,
+          "gross_r": 1.1376942031330062,
+          "ambiguous": false
         }
       ],
       "excluded": {
         "INVALIDATED": 87,
         "MISSED": 14,
         "POOR ENTRY": 37,
-        "EXPIRED": 26,
-        "OVERLAP": 3
+        "EXPIRED": 27,
+        "OVERLAP": 4
       }
     },
     "Strict": {
@@ -1425,10 +1462,13 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
+            "n": 1,
+            "tp1_first": 1.0,
+            "wilson95": [
+              0.20654329147389294,
+              1
+            ],
+            "mean_gross_r": 1.7009944752075554,
             "stops": 0,
             "timeouts": 0
           }
@@ -1849,13 +1889,30 @@
           "exit": 50.47999954223633,
           "gross_r": 2.4716616904477187,
           "ambiguous": false
+        },
+        {
+          "id": "e60337af15d68f5c2f08f6d7",
+          "kind": "RANGE_BREAKOUT",
+          "direction": -1,
+          "origin": "2026-11-03T04:45:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-03T05:30:00+00:00",
+          "entry_bar_close": "2026-11-03T05:45:00+00:00",
+          "confirmation_time": "2026-11-03T05:30:00+00:00",
+          "entry": 49.5,
+          "entry_rr": 1.7009944752075554,
+          "time": "2026-11-03T07:00:00+00:00",
+          "exit": 49.08000183105469,
+          "gross_r": 1.7009944752075554,
+          "ambiguous": false
         }
       ],
       "excluded": {
-        "POOR ENTRY": 11,
+        "POOR ENTRY": 13,
         "INVALIDATED": 15,
         "MISSED": 4,
-        "EXPIRED": 7
+        "EXPIRED": 8
       }
     }
   }
