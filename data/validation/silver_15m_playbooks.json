@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-23T00:45:00+00:00",
+  "cutoff": "2026-10-23T07:15:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -43,14 +43,14 @@
             "timeouts": 2
           },
           "recent_holdout": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": -0.09966850826414819,
-            "stops": 2,
+            "mean_gross_r": -0.32475138119811114,
+            "stops": 3,
             "timeouts": 0
           }
         },
@@ -326,25 +326,25 @@
         },
         "VWAP_RECLAIM": {
           "earlier_history": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.0614903152761605,
+              0.7923450448735121
             ],
-            "mean_gross_r": 0.15634283421373174,
-            "stops": 1,
+            "mean_gross_r": -0.22910477719084552,
+            "stops": 2,
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 2,
-            "tp1_first": 0.5,
+            "n": 1,
+            "tp1_first": 1.0,
             "wilson95": [
-              0.09452865480086614,
-              0.9054713451991339
+              0.20654329147389294,
+              1
             ],
-            "mean_gross_r": 0.27580211409267663,
-            "stops": 1,
+            "mean_gross_r": 1.5516042281853533,
+            "stops": 0,
             "timeouts": 0
           }
         },
@@ -1232,7 +1232,7 @@
           "kind": "VWAP_RECLAIM",
           "direction": -1,
           "origin": "2026-10-23T03:00:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "STOP TOUCHED",
           "entry_time": "2026-10-23T03:15:00+00:00",
           "entry_bar_close": "2026-10-23T03:30:00+00:00",
@@ -1445,6 +1445,23 @@
           "entry_rr": 1.560822519855296,
           "time": "2026-11-03T21:00:00+00:00",
           "exit": 49.679391811519245,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "07384381aee6c3241561d10e",
+          "kind": "RANGE_BREAKOUT",
+          "direction": 1,
+          "origin": "2026-11-04T10:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-11-04T10:30:00+00:00",
+          "entry_bar_close": "2026-11-04T10:45:00+00:00",
+          "confirmation_time": "2026-11-04T10:30:00+00:00",
+          "entry": 52.154998779296875,
+          "entry_rr": 1.2222983357791761,
+          "time": "2026-11-04T12:15:00+00:00",
+          "exit": 51.94228300556171,
           "gross_r": -1.0,
           "ambiguous": false
         }
