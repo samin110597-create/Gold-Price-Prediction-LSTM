@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-23T15:00:00+00:00",
+  "cutoff": "2026-10-23T20:30:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -295,14 +295,11 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
+            "stops": 0,
             "timeouts": 0
           }
         },
@@ -981,23 +978,6 @@
           "ambiguous": false
         },
         {
-          "id": "fad84e52ac5b6a8e80af6c81",
-          "kind": "FLOW_TURN",
-          "direction": -1,
-          "origin": "2026-10-23T19:45:00+00:00",
-          "partition": "recent_holdout",
-          "state": "STOP TOUCHED",
-          "entry_time": "2026-10-23T20:15:00+00:00",
-          "entry_bar_close": "2026-10-23T20:30:00+00:00",
-          "confirmation_time": "2026-10-23T20:15:00+00:00",
-          "entry": 4009.89990234375,
-          "entry_rr": 1.041854693850048,
-          "time": "2026-10-25T22:30:00+00:00",
-          "exit": 4015.0828730359444,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
           "id": "8bdc70a2cf0b5d1ef4e7b835",
           "kind": "EMA_PULLBACK",
           "direction": 1,
@@ -1210,9 +1190,10 @@
       "excluded": {
         "EXPIRED": 31,
         "POOR ENTRY": 53,
-        "INVALIDATED": 97,
+        "INVALIDATED": 98,
         "MISSED": 2,
-        "OVERLAP": 3
+        "OVERLAP": 3,
+        "PARTITION_BOUNDARY": 1
       }
     },
     "Strict": {
