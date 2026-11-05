@@ -2,20 +2,20 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-06-16T02:00:00+00:00",
+  "cutoff": "2026-06-16T06:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.6666666666666666,
+            "n": 4,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.2076549551264879,
-              0.9385096847238394
+              0.15003570882017148,
+              0.8499642911798285
             ],
-            "mean_gross_r": 0.8871865243488882,
-            "stops": 0,
+            "mean_gross_r": 0.41538989326166625,
+            "stops": 1,
             "timeouts": 1
           },
           "recent_holdout": {
@@ -38,7 +38,7 @@
               0.0614903152761605,
               0.7923450448735121
             ],
-            "mean_gross_r": 0.2006318512821239,
+            "mean_gross_r": 0.20058544485265348,
             "stops": 2,
             "timeouts": 0
           },
@@ -62,7 +62,7 @@
               0.045586062644636216,
               0.6993639475573634
             ],
-            "mean_gross_r": -0.13147375477292433,
+            "mean_gross_r": -0.13148161800260444,
             "stops": 2,
             "timeouts": 1
           },
@@ -98,14 +98,14 @@
         },
         "RSI_RECLAIM": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 1.0,
+            "n": 2,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.20654329147389294,
-              1
+              0.09452865480086614,
+              0.9054713451991339
             ],
-            "mean_gross_r": 1.419094333510834,
-            "stops": 0,
+            "mean_gross_r": 0.20954716675541696,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -326,7 +326,7 @@
               0.5100999795960008,
               1
             ],
-            "mean_gross_r": 1.412583348030334,
+            "mean_gross_r": 1.4125595218648108,
             "stops": 0,
             "timeouts": 0
           },
@@ -376,10 +376,10 @@
           "entry_bar_close": "2024-11-21T11:00:00+00:00",
           "confirmation_time": "2024-11-21T07:00:00+00:00",
           "entry": 2663.699951171875,
-          "entry_rr": 2.6018955538463717,
+          "entry_rr": 2.6017563345579604,
           "time": "2024-11-22T22:00:00+00:00",
           "exit": 2718.300048828125,
-          "gross_r": 2.6018955538463717,
+          "gross_r": 2.6017563345579604,
           "ambiguous": false
         },
         {
@@ -393,10 +393,10 @@
           "entry_bar_close": "2024-11-21T15:00:00+00:00",
           "confirmation_time": "2024-11-21T11:00:00+00:00",
           "entry": 2672.5,
-          "entry_rr": 2.203475804872137,
+          "entry_rr": 2.203380500210044,
           "time": "2024-11-22T22:00:00+00:00",
           "exit": 2718.300048828125,
-          "gross_r": 2.203475804872137,
+          "gross_r": 2.203380500210044,
           "ambiguous": false
         },
         {
@@ -410,10 +410,44 @@
           "entry_bar_close": "2024-11-22T07:00:00+00:00",
           "confirmation_time": "2024-11-22T03:00:00+00:00",
           "entry": 2688.39990234375,
-          "entry_rr": 1.1430335689203652,
+          "entry_rr": 1.1430021160016448,
           "time": "2024-11-22T22:00:00+00:00",
           "exit": 2718.300048828125,
-          "gross_r": 1.1430335689203652,
+          "gross_r": 1.1430021160016448,
+          "ambiguous": false
+        },
+        {
+          "id": "6d15bbc1dde0c864fd568fb1",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2024-11-27T07:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2024-11-27T15:00:00+00:00",
+          "entry_bar_close": "2024-11-27T19:00:00+00:00",
+          "confirmation_time": "2024-11-27T15:00:00+00:00",
+          "entry": 2650.300048828125,
+          "entry_rr": 4.237030749266553,
+          "time": "2024-11-27T22:00:00+00:00",
+          "exit": 2634.2510739624668,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "5fcd2da307efef114e84d1e3",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2024-11-27T07:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2024-11-27T15:00:00+00:00",
+          "entry_bar_close": "2024-11-27T19:00:00+00:00",
+          "confirmation_time": "2024-11-27T15:00:00+00:00",
+          "entry": 2650.300048828125,
+          "entry_rr": 4.237030749266553,
+          "time": "2024-11-27T22:00:00+00:00",
+          "exit": 2634.2510739624668,
+          "gross_r": -1.0,
           "ambiguous": false
         },
         {
@@ -427,9 +461,9 @@
           "entry_bar_close": "2025-02-13T11:00:00+00:00",
           "confirmation_time": "2025-02-13T07:00:00+00:00",
           "entry": 2942.89990234375,
-          "entry_rr": 1.3484281501593847,
+          "entry_rr": 1.3484281501593525,
           "time": "2025-02-14T19:00:00+00:00",
-          "exit": 2923.914762013341,
+          "exit": 2923.9147620133404,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -911,11 +945,14 @@
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -938,7 +975,7 @@
               0.0614903152761605,
               0.7923450448735121
             ],
-            "mean_gross_r": 0.3495549872032197,
+            "mean_gross_r": 0.3494951202827912,
             "stops": 2,
             "timeouts": 0
           },
@@ -995,11 +1032,14 @@
         },
         "RSI_RECLAIM": {
           "earlier_history": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -1202,7 +1242,7 @@
               0.20654329147389294,
               1
             ],
-            "mean_gross_r": 2.203475804872137,
+            "mean_gross_r": 2.203380500210044,
             "stops": 0,
             "timeouts": 0
           },
@@ -1249,10 +1289,10 @@
           "entry_bar_close": "2024-11-21T15:00:00+00:00",
           "confirmation_time": "2024-11-21T11:00:00+00:00",
           "entry": 2672.5,
-          "entry_rr": 2.203475804872137,
+          "entry_rr": 2.203380500210044,
           "time": "2024-11-22T22:00:00+00:00",
           "exit": 2718.300048828125,
-          "gross_r": 2.203475804872137,
+          "gross_r": 2.203380500210044,
           "ambiguous": false
         },
         {
@@ -1266,10 +1306,44 @@
           "entry_bar_close": "2024-11-21T22:00:00+00:00",
           "confirmation_time": "2024-11-21T19:00:00+00:00",
           "entry": 2675.10009765625,
-          "entry_rr": 3.048664961609659,
+          "entry_rr": 3.0484853608483737,
           "time": "2024-11-22T22:00:00+00:00",
           "exit": 2718.300048828125,
-          "gross_r": 3.048664961609659,
+          "gross_r": 3.0484853608483737,
+          "ambiguous": false
+        },
+        {
+          "id": "6d15bbc1dde0c864fd568fb1",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2024-11-27T07:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2024-11-27T15:00:00+00:00",
+          "entry_bar_close": "2024-11-27T19:00:00+00:00",
+          "confirmation_time": "2024-11-27T15:00:00+00:00",
+          "entry": 2650.300048828125,
+          "entry_rr": 4.237030749266553,
+          "time": "2024-11-27T22:00:00+00:00",
+          "exit": 2634.2510739624668,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "5fcd2da307efef114e84d1e3",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2024-11-27T07:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2024-11-27T15:00:00+00:00",
+          "entry_bar_close": "2024-11-27T19:00:00+00:00",
+          "confirmation_time": "2024-11-27T15:00:00+00:00",
+          "entry": 2650.300048828125,
+          "entry_rr": 4.237030749266553,
+          "time": "2024-11-27T22:00:00+00:00",
+          "exit": 2634.2510739624668,
+          "gross_r": -1.0,
           "ambiguous": false
         },
         {
