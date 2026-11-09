@@ -2,66 +2,45 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-27T23:00:00+00:00",
+  "cutoff": "2026-10-28T11:15:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
         "EMA_PULLBACK": {
           "earlier_history": {
-            "n": 7,
-            "tp1_first": 0.5714285714285714,
+            "n": 8,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.2504542304090258,
-              0.8417830777373732
+              0.21521252682444186,
+              0.7847874731755582
             ],
-            "mean_gross_r": 0.3154561321287766,
+            "mean_gross_r": 0.21941787527452786,
             "stops": 3,
-            "timeouts": 0
+            "timeouts": 1
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
+            "n": 2,
+            "tp1_first": 1.0,
+            "wilson95": [
+              0.34237195288961925,
+              1
+            ],
+            "mean_gross_r": 1.3061467207305204,
             "stops": 0,
             "timeouts": 0
           }
         },
         "RANGE_BREAKOUT": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": -0.31936300555941116,
+            "mean_gross_r": 0.19982389839522574,
             "stops": 2,
-            "timeouts": 0
-          },
-          "recent_holdout": {
-            "n": 3,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.5615060804490177
-            ],
-            "mean_gross_r": 0.8934902943519822,
-            "stops": 1,
-            "timeouts": 2
-          }
-        },
-        "BREAKOUT_RETEST": {
-          "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.5615060804490177
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 3,
-            "timeouts": 0
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 2,
@@ -70,24 +49,37 @@
               0,
               0.6576280471103807
             ],
+            "mean_gross_r": 0.46154313639840516,
+            "stops": 1,
+            "timeouts": 1
+          }
+        },
+        "BREAKOUT_RETEST": {
+          "earlier_history": {
+            "n": 4,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.48990002040399916
+            ],
             "mean_gross_r": -1.0,
-            "stops": 2,
+            "stops": 4,
+            "timeouts": 0
+          },
+          "recent_holdout": {
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           }
         },
         "SQUEEZE_RELEASE": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 1.0,
-            "wilson95": [
-              0.20654329147389294,
-              1
-            ],
-            "mean_gross_r": 1.2467445836975148,
-            "stops": 0,
-            "timeouts": 0
-          },
-          "recent_holdout": {
             "n": 1,
             "tp1_first": 0.0,
             "wilson95": [
@@ -97,43 +89,6 @@
             "mean_gross_r": 1.7573846102591364,
             "stops": 0,
             "timeouts": 1
-          }
-        },
-        "RSI_RECLAIM": {
-          "earlier_history": {
-            "n": 5,
-            "tp1_first": 0.4,
-            "wilson95": [
-              0.1176182311592533,
-              0.769280067791163
-            ],
-            "mean_gross_r": -0.12868731523229301,
-            "stops": 3,
-            "timeouts": 0
-          },
-          "recent_holdout": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": -1.0,
-            "stops": 1,
-            "timeouts": 0
-          }
-        },
-        "MACD_TURN": {
-          "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.6666666666666666,
-            "wilson95": [
-              0.2076549551264879,
-              0.9385096847238394
-            ],
-            "mean_gross_r": 0.6609418585954133,
-            "stops": 1,
-            "timeouts": 0
           },
           "recent_holdout": {
             "n": 0,
@@ -144,16 +99,64 @@
             "timeouts": 0
           }
         },
-        "ENGULFING_REJECTION": {
+        "RSI_RECLAIM": {
           "earlier_history": {
+            "n": 6,
+            "tp1_first": 0.3333333333333333,
+            "wilson95": [
+              0.09676933255921683,
+              0.7000116786584712
+            ],
+            "mean_gross_r": -0.18271441647777972,
+            "stops": 3,
+            "timeouts": 1
+          },
+          "recent_holdout": {
+            "n": 2,
+            "tp1_first": 0.5,
+            "wilson95": [
+              0.09452865480086614,
+              0.9054713451991339
+            ],
+            "mean_gross_r": 0.2799980881959405,
+            "stops": 1,
+            "timeouts": 0
+          }
+        },
+        "MACD_TURN": {
+          "earlier_history": {
+            "n": 3,
+            "tp1_first": 0.3333333333333333,
+            "wilson95": [
+              0.0614903152761605,
+              0.7923450448735121
+            ],
+            "mean_gross_r": -0.05894116849300013,
+            "stops": 1,
+            "timeouts": 1
+          },
+          "recent_holdout": {
             "n": 1,
             "tp1_first": 1.0,
             "wilson95": [
               0.20654329147389294,
               1
             ],
-            "mean_gross_r": 1.9561049833431456,
+            "mean_gross_r": 1.559996176391881,
             "stops": 0,
+            "timeouts": 0
+          }
+        },
+        "ENGULFING_REJECTION": {
+          "earlier_history": {
+            "n": 2,
+            "tp1_first": 0.5,
+            "wilson95": [
+              0.09452865480086614,
+              0.9054713451991339
+            ],
+            "mean_gross_r": 0.4780524916715728,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -240,25 +243,25 @@
         "STRUCTURE_BREAK": {
           "earlier_history": {
             "n": 3,
-            "tp1_first": 0.6666666666666666,
+            "tp1_first": 0.3333333333333333,
             "wilson95": [
-              0.2076549551264879,
-              0.9385096847238394
+              0.0614903152761605,
+              0.7923450448735121
             ],
-            "mean_gross_r": 1.1128424230097433,
+            "mean_gross_r": 1.1297042402427797,
             "stops": 1,
-            "timeouts": 0
+            "timeouts": 1
           },
           "recent_holdout": {
-            "n": 3,
+            "n": 2,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.5615060804490177
+              0.6576280471103807
             ],
-            "mean_gross_r": 0.8934902943519822,
+            "mean_gross_r": 0.46154313639840516,
             "stops": 1,
-            "timeouts": 2
+            "timeouts": 1
           }
         },
         "REVERSAL_CONFIRMED": {
@@ -281,14 +284,14 @@
         },
         "FLOW_TURN": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.6666666666666666,
+            "n": 4,
+            "tp1_first": 0.5,
             "wilson95": [
-              0.2076549551264879,
-              0.9385096847238394
+              0.15003570882017148,
+              0.8499642911798285
             ],
-            "mean_gross_r": 0.8637679351606837,
-            "stops": 1,
+            "mean_gross_r": 0.3978259513705128,
+            "stops": 2,
             "timeouts": 0
           },
           "recent_holdout": {
@@ -323,15 +326,15 @@
         },
         "VWAP_RECLAIM": {
           "earlier_history": {
-            "n": 3,
-            "tp1_first": 0.3333333333333333,
+            "n": 4,
+            "tp1_first": 0.25,
             "wilson95": [
-              0.0614903152761605,
-              0.7923450448735121
+              0.045586062644636216,
+              0.6993639475573634
             ],
-            "mean_gross_r": 0.029657760399758093,
+            "mean_gross_r": -0.09096916037648473,
             "stops": 2,
-            "timeouts": 0
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 1,
@@ -353,90 +356,21 @@
               0.1176182311592533,
               0.769280067791163
             ],
-            "mean_gross_r": 0.1468093847325612,
+            "mean_gross_r": 0.548198000888344,
             "stops": 2,
             "timeouts": 1
           },
           "recent_holdout": {
-            "n": 1,
-            "tp1_first": 0.0,
-            "wilson95": [
-              0,
-              0.7934567085261071
-            ],
-            "mean_gross_r": 1.7573846102591364,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
             "stops": 0,
-            "timeouts": 1
+            "timeouts": 0
           }
         }
       },
       "records": [
-        {
-          "id": "a3f1afc5c00e653f45ea2b2a",
-          "kind": "MACD_TURN",
-          "direction": -1,
-          "origin": "2026-09-14T07:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-09-14T07:30:00+00:00",
-          "entry_bar_close": "2026-09-14T07:45:00+00:00",
-          "confirmation_time": "2026-09-14T07:30:00+00:00",
-          "entry": 4357.2001953125,
-          "entry_rr": 1.706799158560027,
-          "time": "2026-09-14T09:30:00+00:00",
-          "exit": 4333.0,
-          "gross_r": 1.706799158560027,
-          "ambiguous": false
-        },
-        {
-          "id": "1876dadeece4b0f74986eda8",
-          "kind": "STRUCTURE_BREAK",
-          "direction": -1,
-          "origin": "2026-09-14T07:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-09-14T07:30:00+00:00",
-          "entry_bar_close": "2026-09-14T07:45:00+00:00",
-          "confirmation_time": "2026-09-14T07:30:00+00:00",
-          "entry": 4357.2001953125,
-          "entry_rr": 1.706799158560027,
-          "time": "2026-09-14T09:30:00+00:00",
-          "exit": 4333.0,
-          "gross_r": 1.706799158560027,
-          "ambiguous": false
-        },
-        {
-          "id": "a81bc433cbc97ac6947d7b4c",
-          "kind": "SQUEEZE_RELEASE",
-          "direction": -1,
-          "origin": "2026-09-14T07:30:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-09-14T08:00:00+00:00",
-          "entry_bar_close": "2026-09-14T08:15:00+00:00",
-          "confirmation_time": "2026-09-14T08:00:00+00:00",
-          "entry": 4350.89990234375,
-          "entry_rr": 1.2467445836975148,
-          "time": "2026-09-14T09:30:00+00:00",
-          "exit": 4333.0,
-          "gross_r": 1.2467445836975148,
-          "ambiguous": false
-        },
-        {
-          "id": "9014f1b7ed2781dd64d1d6d4",
-          "kind": "INSIDE_BREAKOUT",
-          "direction": 1,
-          "origin": "2026-09-14T15:45:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2026-09-14T16:30:00+00:00",
-          "entry_bar_close": "2026-09-14T16:45:00+00:00",
-          "confirmation_time": "2026-09-14T16:30:00+00:00",
-          "entry": 4340.7998046875,
-          "entry_rr": 1.9966532110046797,
-          "time": "2026-09-14T22:30:00+00:00",
-          "gross_r": -0.24955847051977767
-        },
         {
           "id": "47c5663fce3a4e0a6bde3ea5",
           "kind": "BREAKOUT_RETEST",
@@ -448,9 +382,103 @@
           "entry_bar_close": "2026-09-14T17:15:00+00:00",
           "confirmation_time": "2026-09-14T17:00:00+00:00",
           "entry": 4356.5,
-          "entry_rr": 1.207337566635428,
+          "entry_rr": 1.2073819464817004,
           "time": "2026-09-14T19:30:00+00:00",
-          "exit": 4339.023448089956,
+          "exit": 4339.024090477139,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "123b4f2a3a16ca94a7ef84eb",
+          "kind": "EMA_PULLBACK",
+          "direction": -1,
+          "origin": "2026-09-14T19:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-09-14T19:45:00+00:00",
+          "entry_bar_close": "2026-09-14T20:00:00+00:00",
+          "confirmation_time": "2026-09-14T19:45:00+00:00",
+          "entry": 4332.39990234375,
+          "entry_rr": 1.0205789141275847,
+          "time": "2026-09-15T01:45:00+00:00",
+          "gross_r": -0.4528499227052132
+        },
+        {
+          "id": "48484b54f8a105d74c16d9d5",
+          "kind": "RSI_RECLAIM",
+          "direction": -1,
+          "origin": "2026-09-14T19:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-09-14T19:45:00+00:00",
+          "entry_bar_close": "2026-09-14T20:00:00+00:00",
+          "confirmation_time": "2026-09-14T19:45:00+00:00",
+          "entry": 4332.39990234375,
+          "entry_rr": 1.0205789141275847,
+          "time": "2026-09-15T01:45:00+00:00",
+          "gross_r": -0.4528499227052132
+        },
+        {
+          "id": "be8941ebb6f66109a843ff15",
+          "kind": "MACD_TURN",
+          "direction": -1,
+          "origin": "2026-09-14T19:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-09-14T19:45:00+00:00",
+          "entry_bar_close": "2026-09-14T20:00:00+00:00",
+          "confirmation_time": "2026-09-14T19:45:00+00:00",
+          "entry": 4332.39990234375,
+          "entry_rr": 1.0205789141275847,
+          "time": "2026-09-15T01:45:00+00:00",
+          "gross_r": -0.4528499227052132
+        },
+        {
+          "id": "ced8be0fec1e2f1eead6cd0e",
+          "kind": "VWAP_RECLAIM",
+          "direction": -1,
+          "origin": "2026-09-14T19:30:00+00:00",
+          "partition": "earlier_history",
+          "state": "TIMEOUT",
+          "entry_time": "2026-09-14T19:45:00+00:00",
+          "entry_bar_close": "2026-09-14T20:00:00+00:00",
+          "confirmation_time": "2026-09-14T19:45:00+00:00",
+          "entry": 4332.39990234375,
+          "entry_rr": 1.0205789141275847,
+          "time": "2026-09-15T01:45:00+00:00",
+          "gross_r": -0.4528499227052132
+        },
+        {
+          "id": "ddcbe715133e249ac028a113",
+          "kind": "FLOW_TURN",
+          "direction": -1,
+          "origin": "2026-09-14T23:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-14T23:15:00+00:00",
+          "entry_bar_close": "2026-09-14T23:30:00+00:00",
+          "confirmation_time": "2026-09-14T23:15:00+00:00",
+          "entry": 4332.89990234375,
+          "entry_rr": 1.4940057909406743,
+          "time": "2026-09-15T01:15:00+00:00",
+          "exit": 4339.660316337789,
+          "gross_r": -1.0,
+          "ambiguous": false
+        },
+        {
+          "id": "9ef78284e236fcb6fc8ad233",
+          "kind": "ENGULFING_REJECTION",
+          "direction": -1,
+          "origin": "2026-09-14T23:00:00+00:00",
+          "partition": "earlier_history",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-14T23:15:00+00:00",
+          "entry_bar_close": "2026-09-14T23:30:00+00:00",
+          "confirmation_time": "2026-09-14T23:15:00+00:00",
+          "entry": 4332.89990234375,
+          "entry_rr": 1.4940057909406743,
+          "time": "2026-09-15T01:15:00+00:00",
+          "exit": 4339.660316337789,
           "gross_r": -1.0,
           "ambiguous": false
         },
@@ -1003,7 +1031,7 @@
           "kind": "RANGE_BREAKOUT",
           "direction": -1,
           "origin": "2026-10-28T01:45:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "TIMEOUT",
           "entry_time": "2026-10-28T02:00:00+00:00",
           "entry_bar_close": "2026-10-28T02:15:00+00:00",
@@ -1018,7 +1046,7 @@
           "kind": "SQUEEZE_RELEASE",
           "direction": -1,
           "origin": "2026-10-28T01:45:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "TIMEOUT",
           "entry_time": "2026-10-28T02:00:00+00:00",
           "entry_bar_close": "2026-10-28T02:15:00+00:00",
@@ -1033,7 +1061,7 @@
           "kind": "INSIDE_BREAKOUT",
           "direction": -1,
           "origin": "2026-10-28T01:45:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "TIMEOUT",
           "entry_time": "2026-10-28T02:00:00+00:00",
           "entry_bar_close": "2026-10-28T02:15:00+00:00",
@@ -1048,7 +1076,7 @@
           "kind": "STRUCTURE_BREAK",
           "direction": -1,
           "origin": "2026-10-28T01:45:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "TIMEOUT",
           "entry_time": "2026-10-28T02:00:00+00:00",
           "entry_bar_close": "2026-10-28T02:15:00+00:00",
@@ -1063,7 +1091,7 @@
           "kind": "BREAKOUT_RETEST",
           "direction": -1,
           "origin": "2026-10-28T04:45:00+00:00",
-          "partition": "recent_holdout",
+          "partition": "earlier_history",
           "state": "STOP TOUCHED",
           "entry_time": "2026-10-28T05:00:00+00:00",
           "entry_bar_close": "2026-10-28T05:15:00+00:00",
@@ -1206,14 +1234,82 @@
           "exit": 4077.5248854419783,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "034ac1d2a052d64d15e85364",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
+        },
+        {
+          "id": "31ec37e6fc8e7dc69acc5ed3",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
+        },
+        {
+          "id": "9f796f22e95abca8a66967af",
+          "kind": "MACD_TURN",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
+        },
+        {
+          "id": "1ad23959ade63fb40eb738d6",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-11-09T15:30:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T16:00:00+00:00",
+          "entry_bar_close": "2026-11-09T16:15:00+00:00",
+          "confirmation_time": "2026-11-09T16:00:00+00:00",
+          "entry": 4130.0,
+          "entry_rr": 1.0522972650691598,
+          "time": "2026-11-09T16:15:00+00:00",
+          "exit": 4138.2001953125,
+          "gross_r": 1.0522972650691598,
+          "ambiguous": false
         }
       ],
       "excluded": {
-        "INVALIDATED": 102,
-        "POOR ENTRY": 46,
+        "POOR ENTRY": 48,
+        "INVALIDATED": 101,
+        "OVERLAP": 4,
         "EXPIRED": 30,
-        "MISSED": 2,
-        "OVERLAP": 3
+        "MISSED": 2
       }
     },
     "Strict": {
@@ -1231,10 +1327,13 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
+            "n": 1,
+            "tp1_first": 1.0,
+            "wilson95": [
+              0.20654329147389294,
+              1
+            ],
+            "mean_gross_r": 1.559996176391881,
             "stops": 0,
             "timeouts": 0
           }
@@ -1301,39 +1400,45 @@
         },
         "RSI_RECLAIM": {
           "earlier_history": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
+            "n": 1,
+            "tp1_first": 0.0,
+            "wilson95": [
+              0,
+              0.7934567085261071
+            ],
+            "mean_gross_r": -1.0,
+            "stops": 1,
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 0,
-            "tp1_first": null,
-            "wilson95": null,
-            "mean_gross_r": null,
-            "stops": 0,
-            "timeouts": 0
-          }
-        },
-        "MACD_TURN": {
-          "earlier_history": {
             "n": 1,
             "tp1_first": 1.0,
             "wilson95": [
               0.20654329147389294,
               1
             ],
-            "mean_gross_r": 1.706799158560027,
+            "mean_gross_r": 1.559996176391881,
             "stops": 0,
             "timeouts": 0
-          },
-          "recent_holdout": {
+          }
+        },
+        "MACD_TURN": {
+          "earlier_history": {
             "n": 0,
             "tp1_first": null,
             "wilson95": null,
             "mean_gross_r": null,
+            "stops": 0,
+            "timeouts": 0
+          },
+          "recent_holdout": {
+            "n": 1,
+            "tp1_first": 1.0,
+            "wilson95": [
+              0.20654329147389294,
+              1
+            ],
+            "mean_gross_r": 1.559996176391881,
             "stops": 0,
             "timeouts": 0
           }
@@ -1430,13 +1535,10 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 1,
-            "tp1_first": 1.0,
-            "wilson95": [
-              0.20654329147389294,
-              1
-            ],
-            "mean_gross_r": 1.706799158560027,
+            "n": 0,
+            "tp1_first": null,
+            "wilson95": null,
+            "mean_gross_r": null,
             "stops": 0,
             "timeouts": 0
           },
@@ -1551,37 +1653,20 @@
       },
       "records": [
         {
-          "id": "a3f1afc5c00e653f45ea2b2a",
-          "kind": "MACD_TURN",
+          "id": "a8ec4172ebe17736dd54ab27",
+          "kind": "RSI_RECLAIM",
           "direction": -1,
-          "origin": "2026-09-14T07:00:00+00:00",
+          "origin": "2026-09-14T22:15:00+00:00",
           "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-09-14T07:30:00+00:00",
-          "entry_bar_close": "2026-09-14T07:45:00+00:00",
-          "confirmation_time": "2026-09-14T07:30:00+00:00",
-          "entry": 4357.2001953125,
-          "entry_rr": 1.706799158560027,
-          "time": "2026-09-14T09:30:00+00:00",
-          "exit": 4333.0,
-          "gross_r": 1.706799158560027,
-          "ambiguous": false
-        },
-        {
-          "id": "1876dadeece4b0f74986eda8",
-          "kind": "STRUCTURE_BREAK",
-          "direction": -1,
-          "origin": "2026-09-14T07:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "OBJECTIVE TOUCHED",
-          "entry_time": "2026-09-14T07:30:00+00:00",
-          "entry_bar_close": "2026-09-14T07:45:00+00:00",
-          "confirmation_time": "2026-09-14T07:30:00+00:00",
-          "entry": 4357.2001953125,
-          "entry_rr": 1.706799158560027,
-          "time": "2026-09-14T09:30:00+00:00",
-          "exit": 4333.0,
-          "gross_r": 1.706799158560027,
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-09-14T22:30:00+00:00",
+          "entry_bar_close": "2026-09-14T22:45:00+00:00",
+          "confirmation_time": "2026-09-14T22:30:00+00:00",
+          "entry": 4336.10009765625,
+          "entry_rr": 1.5992566284839977,
+          "time": "2026-09-15T01:30:00+00:00",
+          "exit": 4344.416644689329,
+          "gross_r": -1.0,
           "ambiguous": false
         },
         {
@@ -1753,11 +1838,62 @@
           "exit": 4030.7981477043,
           "gross_r": -1.0,
           "ambiguous": false
+        },
+        {
+          "id": "034ac1d2a052d64d15e85364",
+          "kind": "EMA_PULLBACK",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
+        },
+        {
+          "id": "31ec37e6fc8e7dc69acc5ed3",
+          "kind": "RSI_RECLAIM",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
+        },
+        {
+          "id": "9f796f22e95abca8a66967af",
+          "kind": "MACD_TURN",
+          "direction": 1,
+          "origin": "2026-11-09T11:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "OBJECTIVE TOUCHED",
+          "entry_time": "2026-11-09T11:30:00+00:00",
+          "entry_bar_close": "2026-11-09T11:45:00+00:00",
+          "confirmation_time": "2026-11-09T11:30:00+00:00",
+          "entry": 4114.60009765625,
+          "entry_rr": 1.559996176391881,
+          "time": "2026-11-09T12:45:00+00:00",
+          "exit": 4127.60009765625,
+          "gross_r": 1.559996176391881,
+          "ambiguous": false
         }
       ],
       "excluded": {
-        "INVALIDATED": 25,
-        "POOR ENTRY": 14,
+        "POOR ENTRY": 20,
+        "INVALIDATED": 24,
         "EXPIRED": 8,
         "OVERLAP": 1
       }
