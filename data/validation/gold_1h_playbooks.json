@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-06-16T18:00:00+00:00",
+  "cutoff": "2026-06-17T01:00:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -32,15 +32,15 @@
         },
         "RANGE_BREAKOUT": {
           "earlier_history": {
-            "n": 15,
-            "tp1_first": 0.4666666666666667,
+            "n": 13,
+            "tp1_first": 0.5384615384615384,
             "wilson95": [
-              0.24809225259746442,
-              0.6988336984894921
+              0.2914343243183205,
+              0.7679424569851186
             ],
-            "mean_gross_r": 0.45205466001900657,
-            "stops": 6,
-            "timeouts": 2
+            "mean_gross_r": 0.5312999488268073,
+            "stops": 5,
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 2,
@@ -56,15 +56,15 @@
         },
         "BREAKOUT_RETEST": {
           "earlier_history": {
-            "n": 8,
-            "tp1_first": 0.375,
+            "n": 7,
+            "tp1_first": 0.42857142857142855,
             "wilson95": [
-              0.13684175946152105,
-              0.6942621454161981
+              0.15821692226262685,
+              0.7495457695909742
             ],
-            "mean_gross_r": 0.2464768871915643,
+            "mean_gross_r": 0.09212238355040106,
             "stops": 4,
-            "timeouts": 1
+            "timeouts": 0
           },
           "recent_holdout": {
             "n": 5,
@@ -80,15 +80,15 @@
         },
         "SQUEEZE_RELEASE": {
           "earlier_history": {
-            "n": 6,
-            "tp1_first": 0.6666666666666666,
+            "n": 5,
+            "tp1_first": 0.8,
             "wilson95": [
-              0.29998832134152864,
-              0.9032306674407831
+              0.3755282641185388,
+              0.9637768390302125
             ],
-            "mean_gross_r": 0.775074753797317,
+            "mean_gross_r": 0.7553055914408802,
             "stops": 1,
-            "timeouts": 1
+            "timeouts": 0
           },
           "recent_holdout": {
             "n": 1,
@@ -128,15 +128,15 @@
         },
         "MACD_TURN": {
           "earlier_history": {
-            "n": 4,
-            "tp1_first": 0.5,
+            "n": 3,
+            "tp1_first": 0.6666666666666666,
             "wilson95": [
-              0.15003570882017148,
-              0.8499642911798285
+              0.2076549551264879,
+              0.9385096847238394
             ],
-            "mean_gross_r": 1.183941857420209,
+            "mean_gross_r": 1.2872822880480774,
             "stops": 0,
-            "timeouts": 2
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 1,
@@ -260,15 +260,15 @@
         },
         "STRUCTURE_BREAK": {
           "earlier_history": {
-            "n": 8,
-            "tp1_first": 0.375,
+            "n": 7,
+            "tp1_first": 0.42857142857142855,
             "wilson95": [
-              0.13684175946152105,
-              0.6942621454161981
+              0.15821692226262685,
+              0.7495457695909742
             ],
-            "mean_gross_r": 0.6895339324631296,
+            "mean_gross_r": 0.6631929848812047,
             "stops": 3,
-            "timeouts": 2
+            "timeouts": 1
           },
           "recent_holdout": {
             "n": 4,
@@ -311,7 +311,7 @@
               0.0614903152761605,
               0.7923450448735121
             ],
-            "mean_gross_r": -0.3128497693344758,
+            "mean_gross_r": -0.3128497693487751,
             "stops": 2,
             "timeouts": 0
           },
@@ -396,98 +396,6 @@
       },
       "records": [
         {
-          "id": "c5ba471be00785a88d760d07",
-          "kind": "RANGE_BREAKOUT",
-          "direction": 1,
-          "origin": "2024-11-19T10:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "STOP TOUCHED",
-          "entry_time": "2024-11-19T11:00:00+00:00",
-          "entry_bar_close": "2024-11-19T12:00:00+00:00",
-          "confirmation_time": "2024-11-19T11:00:00+00:00",
-          "entry": 2638.89990234375,
-          "entry_rr": 4.271437465346936,
-          "time": "2024-11-19T15:00:00+00:00",
-          "exit": 2628.6691086900846,
-          "gross_r": -1.0,
-          "ambiguous": false
-        },
-        {
-          "id": "ed07c7302305492ebba68570",
-          "kind": "RANGE_BREAKOUT",
-          "direction": 1,
-          "origin": "2024-11-20T15:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2024-11-20T16:00:00+00:00",
-          "entry_bar_close": "2024-11-20T17:00:00+00:00",
-          "confirmation_time": "2024-11-20T16:00:00+00:00",
-          "entry": 2652.39990234375,
-          "entry_rr": 1.9406163421692069,
-          "time": "2024-11-21T13:00:00+00:00",
-          "gross_r": 0.8739205655366034
-        },
-        {
-          "id": "472c50e14be0f0d9ba09eb5d",
-          "kind": "SQUEEZE_RELEASE",
-          "direction": 1,
-          "origin": "2024-11-20T15:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2024-11-20T16:00:00+00:00",
-          "entry_bar_close": "2024-11-20T17:00:00+00:00",
-          "confirmation_time": "2024-11-20T16:00:00+00:00",
-          "entry": 2652.39990234375,
-          "entry_rr": 1.9406163421692069,
-          "time": "2024-11-21T13:00:00+00:00",
-          "gross_r": 0.8739205655366034
-        },
-        {
-          "id": "c1efc90cd91e5563d4a5ce73",
-          "kind": "MACD_TURN",
-          "direction": 1,
-          "origin": "2024-11-20T15:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2024-11-20T16:00:00+00:00",
-          "entry_bar_close": "2024-11-20T17:00:00+00:00",
-          "confirmation_time": "2024-11-20T16:00:00+00:00",
-          "entry": 2652.39990234375,
-          "entry_rr": 1.9406163421692069,
-          "time": "2024-11-21T13:00:00+00:00",
-          "gross_r": 0.8739205655366034
-        },
-        {
-          "id": "d5c55917836a4de37663e709",
-          "kind": "STRUCTURE_BREAK",
-          "direction": 1,
-          "origin": "2024-11-20T15:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2024-11-20T16:00:00+00:00",
-          "entry_bar_close": "2024-11-20T17:00:00+00:00",
-          "confirmation_time": "2024-11-20T16:00:00+00:00",
-          "entry": 2652.39990234375,
-          "entry_rr": 1.9406163421692069,
-          "time": "2024-11-21T13:00:00+00:00",
-          "gross_r": 0.8739205655366034
-        },
-        {
-          "id": "8413cad28db9ff8ef3e3f3a4",
-          "kind": "BREAKOUT_RETEST",
-          "direction": 1,
-          "origin": "2024-11-20T16:00:00+00:00",
-          "partition": "earlier_history",
-          "state": "TIMEOUT",
-          "entry_time": "2024-11-20T17:00:00+00:00",
-          "entry_bar_close": "2024-11-20T18:00:00+00:00",
-          "confirmation_time": "2024-11-20T17:00:00+00:00",
-          "entry": 2654.0,
-          "entry_rr": 2.7303170374780796,
-          "time": "2024-11-21T14:00:00+00:00",
-          "gross_r": 1.3269584126797072
-        },
-        {
           "id": "48289420ee21e677eb35186e",
           "kind": "SQUEEZE_RELEASE",
           "direction": 1,
@@ -498,10 +406,10 @@
           "entry_bar_close": "2024-11-27T08:00:00+00:00",
           "confirmation_time": "2024-11-27T07:00:00+00:00",
           "entry": 2648.0,
-          "entry_rr": 1.0614506919965727,
+          "entry_rr": 1.0614506919536746,
           "time": "2024-11-27T09:00:00+00:00",
           "exit": 2659.0,
-          "gross_r": 1.0614506919965727,
+          "gross_r": 1.0614506919536746,
           "ambiguous": false
         },
         {
@@ -515,10 +423,10 @@
           "entry_bar_close": "2024-11-27T08:00:00+00:00",
           "confirmation_time": "2024-11-27T07:00:00+00:00",
           "entry": 2648.0,
-          "entry_rr": 1.0614506919965727,
+          "entry_rr": 1.0614506919536746,
           "time": "2024-11-27T09:00:00+00:00",
           "exit": 2659.0,
-          "gross_r": 1.0614506919965727,
+          "gross_r": 1.0614506919536746,
           "ambiguous": false
         },
         {
@@ -2460,12 +2368,12 @@
         }
       ],
       "excluded": {
-        "INVALIDATED": 253,
+        "INVALIDATED": 248,
         "EXPIRED": 107,
         "MISSED": 29,
-        "OVERLAP": 8,
-        "POOR ENTRY": 126,
-        "UNAVAILABLE": 6
+        "POOR ENTRY": 125,
+        "UNAVAILABLE": 6,
+        "OVERLAP": 6
       }
     },
     "Strict": {
