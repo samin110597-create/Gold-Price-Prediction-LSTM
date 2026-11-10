@@ -2,7 +2,7 @@
   "version": "technical-playbooks-v1",
   "status": "DESCRIPTIVE REPLAY \u2014 NOT CALIBRATED",
   "note": "Fixed signal, later close confirmation, next-bar open, frozen TP1/stop. Stop-first on ambiguous bars; adverse stop gaps at open. No overlapping positions within a rule/direction. Final 20% shown separately; no parameter selection. Gross results exclude fees/slippage and are not a future probability.",
-  "cutoff": "2026-10-29T07:00:00+00:00",
+  "cutoff": "2026-10-29T11:30:00+00:00",
   "modes": {
     "Adaptive": {
       "by_rule": {
@@ -67,14 +67,14 @@
             "timeouts": 0
           },
           "recent_holdout": {
-            "n": 1,
+            "n": 2,
             "tp1_first": 0.0,
             "wilson95": [
               0,
-              0.7934567085261071
+              0.6576280471103807
             ],
             "mean_gross_r": -1.0,
-            "stops": 1,
+            "stops": 2,
             "timeouts": 0
           }
         },
@@ -1317,11 +1317,28 @@
           "exit": 4138.2001953125,
           "gross_r": 1.0522972650691598,
           "ambiguous": false
+        },
+        {
+          "id": "e327e35b80767ad6f3f45a76",
+          "kind": "BREAKOUT_RETEST",
+          "direction": -1,
+          "origin": "2026-11-10T17:15:00+00:00",
+          "partition": "recent_holdout",
+          "state": "STOP TOUCHED",
+          "entry_time": "2026-11-10T17:45:00+00:00",
+          "entry_bar_close": "2026-11-10T18:00:00+00:00",
+          "confirmation_time": "2026-11-10T17:45:00+00:00",
+          "entry": 4028.199951171875,
+          "entry_rr": 1.4089947709628245,
+          "time": "2026-11-10T18:45:00+00:00",
+          "exit": 4033.4518530924856,
+          "gross_r": -1.0,
+          "ambiguous": false
         }
       ],
       "excluded": {
         "POOR ENTRY": 48,
-        "INVALIDATED": 102,
+        "INVALIDATED": 103,
         "OVERLAP": 4,
         "EXPIRED": 30,
         "MISSED": 2
@@ -1908,7 +1925,7 @@
       ],
       "excluded": {
         "POOR ENTRY": 20,
-        "INVALIDATED": 24,
+        "INVALIDATED": 25,
         "EXPIRED": 8,
         "OVERLAP": 1
       }
